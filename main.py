@@ -11,7 +11,7 @@ pygame.init()
 pygame.display.set_caption("Shrubbery Quest")
 
 BG_COLOR = (255, 255, 255)
-WIDTH, HEIGHT = 1200, 800
+WIDTH, HEIGHT = 1200, 800 #Exact size of figma levels, 1-1 for design purposes
 FPS = 60
 PLAYER_VEL = 5
 PLAYER_X_POS=0
