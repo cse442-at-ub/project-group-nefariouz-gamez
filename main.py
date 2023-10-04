@@ -14,6 +14,8 @@ BG_COLOR = (255, 255, 255)
 WIDTH, HEIGHT = 1080, 720
 FPS = 60
 PLAYER_VEL = 5
+PLAYER_X_POS=0
+PLAYER_Y_POS=0
 
 window = pygame.display.set_mode((WIDTH, HEIGHT))
 
