@@ -11,7 +11,7 @@ pygame.init()
 pygame.display.set_caption("Shrubbery Quest")
 
 BG_COLOR = (255, 255, 255)
-WIDTH, HEIGHT = 1080, 720
+WIDTH, HEIGHT = 1200, 800
 FPS = 60
 PLAYER_VEL = 5
 PLAYER_X_POS=0
