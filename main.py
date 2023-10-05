@@ -61,6 +61,9 @@ class Player(pygame.sprite.Sprite):
         self.y_vel=-GRAVITY*10
         self.inair=True
 
+    def update(self):
+        x=0
+        #Need Sprites
     def draw(self, win):
         pygame.draw.rect(win,self.COLOR, self.rect)
 
@@ -89,7 +92,7 @@ class Object(pygame.sprite.Sprite):
         self.tiles=[]
         for i in range(self.width // iwidth+1):#Get image to cover entire size
             for j in range(self.height // iheight+1):
-                pos = (i * iwidth+1, j * iheight+1)
+                pos = (i * iwidth, j * iheight)
                 self.tiles.append(pos)
     def draw(self, win):
         for tile in self.tiles:
@@ -109,6 +112,10 @@ def draw(window, background, bg_image,player,objects):
 
     pygame.display.update()
 
+
+def collide(player, objects, dx):
+    player.move(dx,0)
+    player.update()
 
 def handle_vertical_collision(player, objects, dy):
     collided_objects = []
@@ -134,6 +141,11 @@ def getInput(player, objects):
         player.move_left(PLAYER_VEL)
     if keys[pygame.K_d]:
         player.move_right(PLAYER_VEL)
+    if keys[pygame.K_KP_ENTER]:
+        #if(player.losCTREE):#Checks if there is a tree in the players close line of sight
+            #player.losCTREE.break()#If there is, break it.
+        #Handle cutting of shrubs
+        x=0#placeholder
     handle_vertical_collision(player,objects,player.y_vel)
 
 def main(window):
