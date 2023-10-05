@@ -1,4 +1,5 @@
 # environment setup taken from freeCodeCamp.org on Youtube: https://www.youtube.com/watch?v=6gLeplbqtqg
+# basis for player movement/collision, background setup from same source
 
 import os
 import random
@@ -11,7 +12,7 @@ from os.path import isfile, join
 pygame.init()
 
 pygame.display.set_caption("Shrubbery Quest")
-
+GRAVITY=1#Rate at which objects and players fall
 WIDTH, HEIGHT = 1200, 800 #Exact size of figma levels, 1-1 for design purposes
 FPS = 60
 PLAYER_VEL=4 #Player Movement speed
@@ -25,8 +26,10 @@ class Player(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x,y,w,h)
         self.x_pos=x
         self.y_pos=y
+        self.inair=False
         self.x_vel=0
         self.y_vel=0
+        self.air_time=0
         self.mask=None
 
     def move(self, dx, dy):
@@ -41,7 +44,22 @@ class Player(pygame.sprite.Sprite):
         #Future: Handle direction change
 
     def loop(self, fps):
+        self.y_vel+=min(1,(self.air_time/fps)*GRAVITY)
         self.move(self.x_vel,self.y_vel)
+        self.air_time+=1
+
+    def landed(self):
+        self.air_time = 0
+        self.y_vel = 0
+        self.inair=False
+
+    def hit_head(self):
+        self.count = 0
+        self.y_vel = 0
+
+    def jump(self):
+        self.y_vel=-GRAVITY*10
+        self.inair=True
 
     def draw(self, win):
         pygame.draw.rect(win,self.COLOR, self.rect)
@@ -91,6 +109,33 @@ def draw(window, background, bg_image,player,objects):
 
     pygame.display.update()
 
+
+def handle_vertical_collision(player, objects, dy):
+    collided_objects = []
+    for obj in objects:
+        if pygame.sprite.collide_rect(player,obj):#Collide mask?
+            if dy > 0:
+                player.rect.bottom = obj.rect.top
+                player.landed()
+            elif dy < 0:
+                player.rect.top = obj.rect.bottom
+                player.hit_head()
+            collided_objects.append(obj)
+    return collided_objects
+
+
+def getInput(player, objects):
+    keys=pygame.key.get_pressed()
+    player.x_vel=0 #Reset
+    if keys[pygame.K_w]:
+        if player.inair==False:
+            player.jump()
+    if keys[pygame.K_a]:
+        player.move_left(PLAYER_VEL)
+    if keys[pygame.K_d]:
+        player.move_right(PLAYER_VEL)
+    handle_vertical_collision(player,objects,player.y_vel)
+
 def main(window):
     clock = pygame.time.Clock()
     background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
@@ -115,6 +160,8 @@ def main(window):
             if event.type == pygame.QUIT:
                 run = False
                 break
+        playerOne.loop(FPS)
+        getInput(playerOne,objects)
         draw(window, background, bg_image,playerOne,objects)
     pygame.quit()
     quit()
