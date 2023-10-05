@@ -151,13 +151,13 @@ def getInput(player, objects):
 def main(window):
     clock = pygame.time.Clock()
     background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
-    playerOne=Player(100,100,30,64)
+    playerOne=Player(950,100,30,64)
 
     objects=[]
-    start=Object(890,645,152,75,"LogPlatform.png")
-    base=Object(0,720,1200,80,"LogPlatform.png")
-    plat2=Object(502,645,264,75,"LogPlatform.png")
-    plat3=Object(0,624,361,96,"LogPlatform.png")
+    start=Object(890,645,152,75,"Ground Block.png")
+    base=Object(0,720,1200,80,"Ground Block.png")
+    plat2=Object(502,645,264,75,"Ground Block.png")
+    plat3=Object(0,624,361,96,"Ground Block.png")
     objects.append(start)
     objects.append(base)
     objects.append(plat2)
