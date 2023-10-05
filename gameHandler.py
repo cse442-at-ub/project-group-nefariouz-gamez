@@ -141,29 +141,29 @@ def getInput(player, objects):
         player.move_left(PLAYER_VEL)
     if keys[pygame.K_d]:
         player.move_right(PLAYER_VEL)
-    if keys[pygame.K_KP_ENTER]:
+    if keys[pygame.K_e]:
         #if(player.losCTREE):#Checks if there is a tree in the players close line of sight
             #player.losCTREE.break()#If there is, break it.
         #Handle cutting of shrubs
         x=0#placeholder
     handle_vertical_collision(player,objects,player.y_vel)
 
+
+lOne=[]
+start=Object(890,645,152,75,"Ground Block.png")
+base=Object(0,720,1200,80,"Ground Block.png")
+plat2=Object(502,645,264,75,"Ground Block.png")
+plat3=Object(0,624,361,96,"Ground Block.png")
+lOne.append(start)
+lOne.append(base)
+lOne.append(plat2)
+lOne.append(plat3)
+
 def main(window):
     clock = pygame.time.Clock()
     background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
     playerOne=Player(950,100,30,64)
 
-    objects=[]
-    start=Object(890,645,152,75,"Ground Block.png")
-    base=Object(0,720,1200,80,"Ground Block.png")
-    plat2=Object(502,645,264,75,"Ground Block.png")
-    plat3=Object(0,624,361,96,"Ground Block.png")
-    objects.append(start)
-    objects.append(base)
-    objects.append(plat2)
-    objects.append(plat3)
-
-    
     run = True
     while run:
         clock.tick(FPS)
@@ -173,8 +173,8 @@ def main(window):
                 run = False
                 break
         playerOne.loop(FPS)
-        getInput(playerOne,objects)
-        draw(window, background, bg_image,playerOne,objects)
+        getInput(playerOne,lOne)
+        draw(window, background, bg_image,playerOne,lOne)
     pygame.quit()
     quit()
 
