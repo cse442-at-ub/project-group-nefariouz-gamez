@@ -16,7 +16,7 @@ pygame.display.set_caption('Shrubbery Quest: Between Screen Menu Demo')
 #load images
 continue_btn_img = pygame.image.load("Assets/ContinueButton.png").convert_alpha()
 exitToMain_btn_img = pygame.image.load("Assets/ExitToMainBut.png").convert_alpha()
-background_img = pygame.image.load("Assets/Bakckground.png").convert_alpha()
+background_img = pygame.image.load("Assets/Background.png").convert_alpha()
 # bg = Background()
 
 # #background Class
@@ -29,28 +29,55 @@ background_img = pygame.image.load("Assets/Bakckground.png").convert_alpha()
 
 #button Class
 class Button():
-    def __init__(self, x, y, image):
-        self.image = image
+    def __init__(self, x, y, image, scale):
+        width = image.get_width()
+        height = image.get_height()
+        self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
         self.rect = self.image.get_rect()
         self.rect.topleft = (x,y)
+        #set mouse click so click only register once
+        self.clicked = False
+        self.changeScale = scale
 
     def draw(self):
+        action = False
+        #get mouse position
+        pos = pygame.mouse.get_pos()
+
+        #check if mouse over button
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+                self.clicked = True
+                action = True
+
+        #reset mouse click
+        if pygame.mouse.get_pressed()[0] == 0:
+            self.clicked = False
+        #draw button on screen
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
-continue_button = Button(100, 200, continue_btn_img)
-exitToMain_button = Button(450, 200, exitToMain_btn_img)
+        return action
+
+continue_button = Button(450, 400, continue_btn_img, 1)
+exitToMain_button = Button(450, 520, exitToMain_btn_img, 1)
 
 #main loop
-run = True
-while run:
+betweenlvl = True
+while betweenlvl:
 
+    #set background
     screen.blit(background_img, (0,0))
-
+    
+    #draw buttons
+    if continue_button.draw():
+        print("CONTINUE")
+    if exitToMain_button.draw():
+        print("EXIT")
 
     # event handler
     for event in pygame.event.get():
         #quit game
         if event.type == pygame.QUIT:
-            run=False
+            betweenlvl=False
     pygame.display.update()
 pygame.quit()
