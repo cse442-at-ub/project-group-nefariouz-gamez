@@ -6,6 +6,8 @@ import pygame
 from os import listdir
 #from os.path import isfile, join
 
+pygame.init()
+
 #Window parameteres
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 800
@@ -34,7 +36,7 @@ class Button():
         height = image.get_height()
         self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
         self.rect = self.image.get_rect()
-        self.rect.topleft = (x,y)
+        self.rect.center = (x,y)
         #set mouse click so click only register once
         self.clicked = False
         self.changeScale = scale
@@ -58,8 +60,37 @@ class Button():
 
         return action
 
-continue_button = Button(450, 400, continue_btn_img, 1)
-exitToMain_button = Button(450, 520, exitToMain_btn_img, 1)
+continue_button = Button(600, 400, continue_btn_img, 1)
+exitToMain_button = Button(600, 520, exitToMain_btn_img, 1)
+
+#Font
+font1 = pygame.font.SysFont("comicsansms", 64)
+#Text Line 1
+#read file to get current level
+f = open("CurrentLevel.txt", "r")
+text1 = font1.render("Congratulations!", True, [2, 128, 0])
+text1Rect = text1.get_rect()
+text1Rect.center = (600, 75)
+
+#Text Line 2
+text2 = font1.render("You Beat Level " + f.read() + "!", True, [2, 128, 0])
+text2Rect = text2.get_rect()
+text2Rect.center = (600, 150)
+
+#Text for time
+font2 = pygame.font.SysFont("comicsansms", 40)
+
+#Text Line 3
+text3 = font2.render("Your Time Was:", True, [2, 128, 0])
+text3Rect = text3.get_rect()
+text3Rect.center = (600, 225)
+
+#Text Line 4
+f2 = open("LevelTime.txt", "r")
+text4 = font2.render(f2.read(), True, [2, 128, 0])
+text4Rect = text4.get_rect()
+text4Rect.center = (600, 275)
+
 
 #main loop
 betweenlvl = True
@@ -68,9 +99,16 @@ while betweenlvl:
     #set background
     screen.blit(background_img, (0,0))
     
+    #set text
+    screen.blit(text1, text1Rect)
+    screen.blit(text2, text2Rect)
+    screen.blit(text3, text3Rect)
+    screen.blit(text4, text4Rect)
+
     #draw buttons
     if continue_button.draw():
         print("CONTINUE")
+
     if exitToMain_button.draw():
         print("EXIT")
 
