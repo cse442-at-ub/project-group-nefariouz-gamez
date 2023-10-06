@@ -146,6 +146,8 @@ def getInput(player, objects):
             #player.losCTREE.break()#If there is, break it.
         #Handle cutting of shrubs
         x=0#placeholder
+    if keys[pygame.K_q]:
+        x=0#placeholder
     handle_vertical_collision(player,objects,player.y_vel)
 
 
@@ -159,7 +161,7 @@ lOne.append(base)
 lOne.append(plat2)
 lOne.append(plat3)
 
-def main(window):
+def main(window, level):
     clock = pygame.time.Clock()
     background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
     playerOne=Player(950,100,30,64)
@@ -173,10 +175,10 @@ def main(window):
                 run = False
                 break
         playerOne.loop(FPS)
-        getInput(playerOne,lOne)
-        draw(window, background, bg_image,playerOne,lOne)
+        getInput(playerOne,level)
+        draw(window, background, bg_image,playerOne,level)
     pygame.quit()
     quit()
 
 if __name__ == "__main__":
-    main(window)
+    main(window,lOne)
