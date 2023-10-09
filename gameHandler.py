@@ -16,6 +16,7 @@ GRAVITY=1#Rate at which objects and players fall
 WIDTH, HEIGHT = 1200, 800 #Exact size of figma levels, 1-1 for design purposes
 FPS = 60
 PLAYER_VEL=4 #Player Movement speed
+WHITE=(255,255,255)
 
 
 window = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -47,6 +48,15 @@ def load_sprite_sheets(directory1, directory2, width, height, direction=False):
 
     return all_sprites
 
+def get_block(size,ipath):#added path so it's not always terrain.png
+    path = join("assets",  "Terrain", ipath)
+    image = pygame.image.load(path).convert_alpha()
+    surface = pygame.Surface((size, size), pygame.SRCALPHA, 32)
+    rect = pygame.Rect(96, 0, size, size)
+    surface.blit(image, (0, 0), rect)
+
+    return pygame.transform.scale2x(surface)
+
 class Player(pygame.sprite.Sprite):  
 
     # would actually read this value from file/however we end up doing it
@@ -65,6 +75,7 @@ class Player(pygame.sprite.Sprite):
         self.jump_count = 0
         self.hit = False
         self.hit_count = 0
+        self.inair=False
 
     def move(self, dx, dy):
         self.rect.x += dx
@@ -82,8 +93,9 @@ class Player(pygame.sprite.Sprite):
             self.direction = "right"
             self.animation_count = 0
 
-    # does allow double jump
+    # does not allow double jump
     def jump(self):
+        self.inair=True#anti=double jump
         self.y_velocity = -self.GRAVITY * 8
         self.animation_count = 0
         self.jump_count += 1
@@ -91,6 +103,7 @@ class Player(pygame.sprite.Sprite):
             self.fall_count = 0
 
     def landed(self):
+        self.inair=False
         self.fall_count = 0
         self.y_velocity = 0
         self.jump_count = 0
@@ -147,36 +160,46 @@ class Player(pygame.sprite.Sprite):
         window.blit(self.sprite, (self.rect.x - offset_x, self.rect.y))
 
 def get_background(name):
-    image = pygame.image.load(join("Backgrounds",name))
+    image = pygame.image.load(join("assets", "Background", name))
     _, _, width, height = image.get_rect()
     tiles = []
 
-    for i in range(WIDTH // width+1):
-        for j in range(HEIGHT // height+1):
-            pos = (i * width+1, j * height+1)
+    for i in range(WIDTH // width + 1):
+        for j in range(HEIGHT // height + 1):
+            pos = (i * width, j * height)
             tiles.append(pos)
+
     return tiles, image
 
 class Object(pygame.sprite.Sprite):
-    def __init__(self, x,y,w,h,ipath):
-        self.rect=pygame.Rect(x,y,w,h)
-        self.x_pos=x
-        self.y_pos=y
-        self.width=w
-        self.height=h
-        self.x_vel=0
-        self.y_vel=0
-        self.image=pygame.image.load(join("Blocks",ipath))#Get the image file
-        _,_,iwidth,iheight= self.image.get_rect()
-        self.tiles=[]
-        for i in range(self.width // iwidth+1):#Get image to cover entire size
-            for j in range(self.height // iheight+1):
-                pos = (i * iwidth, j * iheight)
-                self.tiles.append(pos)
-    def draw(self, win):
-        for tile in self.tiles:
-            x,y=tile
-            win.blit(self.image,(x+self.x_pos,y+self.y_pos))
+    def __init__(self, x, y, width, height, path=None,name=None):
+        super().__init__()
+        
+        self.ipath=path
+        self.rect = pygame.Rect(x, y, width, height)
+        self.image = pygame.Surface((width, height), pygame.SRCALPHA)
+        self.width, self.height, self.name = width, height, name
+
+    def draw(self, window, offset_x):
+        window.blit(self.image, (self.rect.x - offset_x, self.rect.y))
+
+class Platform(Object):
+    def __init__(self, x, y, width, height,col, path=None, name=None):
+        super().__init__(x, y, width, height, path, name)
+        self.color=col
+        self.surface=pygame.Surface((width,height))
+        self.surface.fill(self.color)
+        self.mask = pygame.mask.from_surface(self.surface)
+    def draw(self, window,offset_x):
+        pygame.draw.rect(window,self.color,self.rect)
+
+class Block(Object):
+    def __init__(self, x, y, size,path):
+        super().__init__(x, y, size, size,path)
+        block = get_block(size,path)
+        self.image.blit(block, (0,0))
+        self.mask = pygame.mask.from_surface(self.image)
+
         
 
 
@@ -184,39 +207,53 @@ def draw(window, background, bg_image,player,objects):
     for tile in background:
         window.blit(bg_image, tile)
     
-    player.draw(window)
+    player.draw(window,0)
 
     for object in objects:
-        object.draw(window)
+        
+        object.draw(window,0)
 
     pygame.display.update()
 
 
-def collide(player, objects, dx):
-    player.move(dx,0)
-    player.update()
-
 def handle_vertical_collision(player, objects, dy):
     collided_objects = []
-    for obj in objects:
-        if pygame.sprite.collide_rect(player,obj):#Collide mask?
+    for object in objects:
+        if pygame.sprite.collide_mask(player, object):
             if dy > 0:
-                player.rect.bottom = obj.rect.top
+                player.rect.bottom = object.rect.top
                 player.landed()
             elif dy < 0:
-                player.rect.top = obj.rect.bottom
+                player.rect.top = object.rect.bottom
                 player.hit_head()
-            collided_objects.append(obj)
+
+            collided_objects.append(object)
+    
     return collided_objects
+
+def collide(player, objects, dx):
+    player.move(dx, 0)
+    player.update()
+    collided_object = None
+    for object in objects:
+        if pygame.sprite.collide_mask(player, object):
+            collided_object = object
+            break
+    
+    player.move(-dx, 0)
+    player.update()
+    return collided_object
 
 
 def getInput(player, objects):
     keys=pygame.key.get_pressed()
-    player.x_vel=0 #Reset
-    if keys[pygame.K_w]:
+    player.x_velocity=0 #Reset
+    collide_left = collide(player, objects, -PLAYER_VEL * 2)
+    collide_right = collide(player, objects, PLAYER_VEL * 2)
+    if keys[pygame.K_w] and not collide_left:
         if player.inair==False:
             player.jump()
-    if keys[pygame.K_a]:
+    if keys[pygame.K_a] and not collide_right:
         player.move_left(PLAYER_VEL)
     if keys[pygame.K_d]:
         player.move_right(PLAYER_VEL)
@@ -227,14 +264,19 @@ def getInput(player, objects):
         x=0#placeholder
     if keys[pygame.K_q]:
         x=0#placeholder
-    handle_vertical_collision(player,objects,player.y_vel)
+    
+    vertical_collide = handle_vertical_collision(player, objects, player.y_velocity)
+    to_check = [collide_left, collide_right, *vertical_collide]
+    for object in to_check:
+        if object and object.name == "fire":
+            player.make_hit()
 
 
 lOne=[]
-start=Object(890,645,152,75,"Ground Block.png")
-base=Object(0,720,1200,80,"Ground Block.png")
-plat2=Object(502,645,264,75,"Ground Block.png")
-plat3=Object(0,624,361,96,"Ground Block.png")
+start=Platform(890,645,152,75,WHITE)
+base=Platform(0,720,1200,80,WHITE)
+plat2=Platform(502,645,264,75,WHITE)
+plat3=Platform(0,624,361,96,WHITE)
 lOne.append(start)
 lOne.append(base)
 lOne.append(plat2)
@@ -244,7 +286,9 @@ def main(window, level):
     clock = pygame.time.Clock()
     background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
     playerOne=Player(950,100,30,64)
-
+    block_size = 96
+    
+    
     run = True
     while run:
         clock.tick(FPS)
