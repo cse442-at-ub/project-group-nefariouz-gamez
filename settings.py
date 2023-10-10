@@ -1,5 +1,5 @@
 import pygame
-from Button import *
+from MenuWidgets import *
 
 pygame.init()
 
