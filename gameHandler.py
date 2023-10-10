@@ -114,7 +114,7 @@ class Player(pygame.sprite.Sprite):
     # does not allow double jump
     def jump(self):
         self.inair=True#anti=double jump
-        self.y_velocity = -self.GRAVITY * 5
+        self.y_velocity = -self.GRAVITY * 4
         self.animation_count = 0
         self.jump_count += 1
         if self.jump_count == 1:
@@ -285,7 +285,7 @@ def handle_vertical_collision(player, objects, dy):
         if pygame.sprite.collide_mask(player, object):
             if(object.name=="spike"):
                 player.reset()
-            if dy > 0 and object.name!="ladder":
+            if dy > 0 and object.name!="ladder" and not player.on_ladder:
                 player.rect.bottom = object.rect.top
                 player.landed()
             elif dy < 0 and object.name!="ladder" and not player.on_ladder:
@@ -425,7 +425,7 @@ BROWN=(100,65,23)
 BLUE=(0,0,255)
 lTwo=[]
 lTwo.append(Platform(1031,344,57,436,BROWN))#May just do this in the future
-post2=Platform(729,364,57,436,BROWN)
+post2=Platform(739,364,57,436,BROWN)
 post3=Platform(550,590,57,176,BROWN)
 post4=Platform(159,590,57,176,BROWN)
 post5=Platform(35,590,57,176,BROWN)
