@@ -3,6 +3,15 @@ from Button import *
 
 pygame.init()
 
+def tutorial():
+    print("TUTORIAL")
+
+def choose_character():
+    print("CHOOSE CHARACTER")
+
+def return_main():
+    print("RETURN TO MAIN")
+
 def display_settings_page(screen):
 
     # find screen dimensions
@@ -13,15 +22,19 @@ def display_settings_page(screen):
     background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
 
     # initializes buttons, button dimensions: 300x54, buttons have a 70 unit gap between them
-    tutorial_btn = Button(screen_width/2, (screen_height/2)+50, "TUTORIAL")
-    character_btn = Button(screen_width/2, (screen_height/2)+120, "CHOOSE CHARACTER")
-    return_btn = Button(screen_width/2, (screen_height/2)+190, "RETURN TO MAIN")
+    tutorial_btn = Button(screen_width/2, (screen_height/2)+50, "TUTORIAL", tutorial)
+    character_btn = Button(screen_width/2, (screen_height/2)+120, "CHOOSE CHARACTER", choose_character)
+    return_btn = Button(screen_width/2, (screen_height/2)+190, "RETURN TO MAIN", return_main)
 
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+            tutorial_btn.handle_event(event)
+            character_btn.handle_event(event)
+            return_btn.handle_event(event)
 
         screen.blit(background_img, (0, 0))
         tutorial_btn.draw(screen)
