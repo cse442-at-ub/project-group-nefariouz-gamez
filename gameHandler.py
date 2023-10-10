@@ -77,9 +77,17 @@ class Player(pygame.sprite.Sprite):
         self.hit_count = 0
         self.inair=False
 
+        self.reachBox=Platform(x-15,y-15,width*3,height*1.5,WHITE)#Invisible bounding box for interacting with objects
+        self.reachBox.surface=pygame.Surface((width*3,height*1.5))
+        self.reachBox.mask = pygame.mask.from_surface(self.reachBox.surface)
+
+
+
     def move(self, dx, dy):
         self.rect.x += dx
         self.rect.y += dy
+        self.reachBox.rect.x=self.rect.x-15
+        self.reachBox.rect.y=self.rect.y-15
 
     def move_left(self, velocity):
         self.x_velocity = -velocity
@@ -157,6 +165,7 @@ class Player(pygame.sprite.Sprite):
         self.update_sprite()
  
     def draw(self, window, offset_x):
+        #self.reachBox.draw(window,0)------------VISUALISE reachBox
         window.blit(self.sprite, (self.rect.x - offset_x, self.rect.y))
 
 def get_background(name):
@@ -174,7 +183,6 @@ def get_background(name):
 class Object(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, path=None,name=None):
         super().__init__()
-        
         self.ipath=path
         self.rect = pygame.Rect(x, y, width, height)
         self.image = pygame.Surface((width, height), pygame.SRCALPHA)
@@ -199,6 +207,20 @@ class Block(Object):
         block = get_block(size,path)
         self.image.blit(block, (0,0))
         self.mask = pygame.mask.from_surface(self.image)
+
+class smallShrub(Object):
+    def __init__(self,x,y):
+        super().__init__(x,y,48,52)
+        self.name="small shrub"
+        s_shrub=pygame.image.load("assets\Traps\SmallShrub\SmallShrub.png")
+        self.mask=pygame.mask.from_surface(s_shrub)
+        self.image=s_shrub
+        
+    def destroy(self):
+        self.image=pygame.image.load("assets\Traps\Empty\empty.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        
+    
 
 def draw(window, background, bg_image,player,objects):
     for tile in background:
@@ -241,6 +263,23 @@ def collide(player, objects, dx):
     player.update()
     return collided_object
 
+def getOverlap(reachBox, objects):
+    for object in objects:
+        if pygame.sprite.collide_mask(reachBox,object):
+            if object.name=="ladder":
+                #Handle Ladder behavio
+                
+                return#only do 1 interact at a time
+            if object.name=="small shrub":
+                #Handle small shrub behavior
+                object.destroy()
+                return
+            if object.name=="tall shrub":
+                #Handle tall shrub behavior
+                
+                return
+            
+
 
 def getInput(player, objects):
     keys=pygame.key.get_pressed()
@@ -255,10 +294,7 @@ def getInput(player, objects):
     if keys[pygame.K_d] and not collide_right:
         player.move_right(PLAYER_VEL)
     if keys[pygame.K_e]:
-        #if(player.losCTREE):#Checks if there is a tree in the players close line of sight
-            #player.losCTREE.break()#If there is, break it.
-        #Handle cutting of shrubs
-        x=0#placeholder
+        getOverlap(player.reachBox,objects)
     if keys[pygame.K_q]:
         x=0#placeholder
     
@@ -271,10 +307,12 @@ start=Platform(890,645,152,75,WHITE)
 base=Platform(0,720,1200,80,WHITE)
 plat2=Platform(502,645,264,75,WHITE)
 plat3=Platform(0,624,361,96,WHITE)
+sShrub1=smallShrub(610,593)
 lOne.append(start)
 lOne.append(base)
 lOne.append(plat2)
 lOne.append(plat3)
+lOne.append(sShrub1)
 
 def main(window, level):
     clock = pygame.time.Clock()
