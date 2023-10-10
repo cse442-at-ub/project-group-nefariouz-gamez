@@ -21,25 +21,34 @@ def display_settings_page(screen):
     background_img = pygame.image.load("images/plain_background.png")
     background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
 
-    # initializes buttons, button dimensions: 300x54, buttons have a 70 unit gap between them
-    tutorial_btn = Button(screen_width/2, (screen_height/2)+50, "TUTORIAL", tutorial)
-    character_btn = Button(screen_width/2, (screen_height/2)+120, "CHOOSE CHARACTER", choose_character)
-    return_btn = Button(screen_width/2, (screen_height/2)+190, "RETURN TO MAIN", return_main)
+    # initializes buttons/sliders, dimensions: 300x54, has a 70 unit gap between them
+    tutorial_btn = Button((screen_width/2, (screen_height/2)+50), (300, 54), "TUTORIAL", tutorial)
+    character_btn = Button((screen_width/2, (screen_height/2)+120), (300, 54), "CHOOSE CHARACTER", choose_character)
+    return_btn = Button((screen_width/2, (screen_height/2)+190), (300, 54), "RETURN TO MAIN", return_main)
+    music_slider = Slider((screen_width/2, (screen_height/2) - 50), (300, 54))
 
     running = True
     while running:
+
+        mouse_pos = pygame.mouse.get_pos()
+        mouse = pygame.mouse.get_pressed()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
+            # check for widget actions
             tutorial_btn.handle_event(event)
             character_btn.handle_event(event)
             return_btn.handle_event(event)
+            music_slider.handle_event(mouse_pos, mouse)
 
+        # render background and widgets
         screen.blit(background_img, (0, 0))
         tutorial_btn.draw(screen)
         character_btn.draw(screen)
         return_btn.draw(screen)
+        music_slider.draw(screen)
 
         pygame.display.flip()
 
