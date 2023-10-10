@@ -2,20 +2,16 @@ import pygame
 
 class Button:
     """
-    Creates a 300w x 54h button
-
     Args:
-        x: x position for button placement, places the center of box at given x position
-        y: y position for button placement, places the center of box at given y position
-        text: text displayed on button
+        pos (tuple): take (x, y) position on screen, centered from middle of box
+        size (tuple): takes (width, height) of rectangle
+        text (str): places text on button
         action: performs function when clicked
     """
-    def __init__(self, x, y, text, action=None):
-        self.x = x
-        self.y = y
-        self.width = 300
-        self.height = 54
-        self.rect = pygame.Rect(x - (self.width / 2), y - (self.height / 2), self.width, self.height)
+    def __init__(self, pos: tuple, size: tuple, text: str, action=None):
+        self.pos = pos
+        self.size = size
+        self.rect = pygame.Rect(self.pos[0] - (self.size[0] / 2), self.pos[1] - (self.size[1] / 2), self.size[0], self.size[1])
         self.text = text
         self.action = action
         self.color = (190, 190, 190)
@@ -24,14 +20,14 @@ class Button:
     def draw(self, screen):
         self.handle_hover()
 
-        button_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-        pygame.draw.rect(button_surface, self.color, (0, 0, self.width, self.height), border_radius=7)
+        button_surface = pygame.Surface((self.size[0], self.size[1]), pygame.SRCALPHA)
+        pygame.draw.rect(button_surface, self.color, (0, 0, self.size[0], self.size[1]), border_radius=7)
 
         font = pygame.font.Font(None, 36)
         text_surface = font.render(self.text, True, (34, 90, 48))
-        text_rect = text_surface.get_rect(center=(self.width / 2, self.height / 2))
+        text_rect = text_surface.get_rect(center=(self.size[0]/2, self.size[1]/2))
         button_surface.blit(text_surface, text_rect)
-        button_rect = button_surface.get_rect(center=(self.x, self.y))
+        button_rect = button_surface.get_rect(center=(self.pos[0], self.pos[1]))
         
         screen.blit(button_surface, button_rect)
 
@@ -52,7 +48,14 @@ class Button:
     #     converts button size to another commonly used size
 
 class Slider:
-    def __init__(self, pos: tuple, size: tuple, initial_val: float, min: int, max: int):
+    """
+    Args:
+        pos (tuple): take (x, y) position on screen, centered from middle of box
+        size (tuple): takes (width, height) of slider
+        text (str): places text on button
+        action: performs function when clicked
+    """
+    def __init__(self, pos: tuple, size: tuple):
         self.pos = pos
         self.size = size
 
@@ -60,9 +63,9 @@ class Slider:
         self.slider_right = self.pos[0] + (size[0]//2)
         self.slider_top = self.pos[1] - (size[1]//2)
 
-        self.min = min
-        self.max = max
-        self.initial_val = (self.slider_right - self.slider_left) * initial_val
+        self.min = 0
+        self.max = 100
+        self.initial_val = (self.slider_right - self.slider_left)
 
         self.container_rect = pygame.Rect(self.slider_left, self.slider_top, self.size[0], self.size[1])
         self.button_rect = pygame.Rect(self.slider_left + self.initial_val - 5, self.slider_top, 10, self.size[1])
