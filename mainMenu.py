@@ -4,16 +4,16 @@ from Button import *
 
 pygame.init()
 
-def start_game_btn():
+def start_game():
     print("BEGIN YOUR QUEST")
 
-def load_level_btn():
+def load_level():
     print("LOAD LEVEL")
 
-def settings_btn():
+def settings():
     print("SETTINGS")
 
-def quit_game_btn():
+def quit_game():
     pygame.quit()
     sys.exit()
 
@@ -27,10 +27,10 @@ def display_main_menu(screen):
     background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
 
     # initializes buttons, button dimensions: 300x54, buttons have a 70 unit gap between them
-    start_btn = Button(screen_width/2, (screen_height/2)-105, "BEGIN YOUR QUEST", start_game_btn)
-    load_btn = Button(screen_width/2, (screen_height/2)-35, "LOAD LEVEL", load_level_btn)
-    setting_btn = Button(screen_width/2, (screen_height/2)+35, "SETTINGS", settings_btn)
-    quit_btn = Button(screen_width/2, (screen_height/2)+105, "QUIT", quit_game_btn)
+    start_btn = Button(screen_width/2, (screen_height/2)-105, "BEGIN YOUR QUEST", start_game)
+    load_btn = Button(screen_width/2, (screen_height/2)-35, "LOAD LEVEL", load_level)
+    settings_btn = Button(screen_width/2, (screen_height/2)+35, "SETTINGS", settings)
+    quit_btn = Button(screen_width/2, (screen_height/2)+105, "QUIT", quit_game)
 
     running = True
     while running:
@@ -41,14 +41,14 @@ def display_main_menu(screen):
             # checks for buttons clicked
             start_btn.handle_event(event)
             load_btn.handle_event(event)
-            setting_btn.handle_event(event)
+            settings_btn.handle_event(event)
             quit_btn.handle_event(event)
         
         # add background image and buttons to window
         screen.blit(background_img, (0, 0))
         start_btn.draw(screen)
         load_btn.draw(screen)
-        setting_btn.draw(screen)
+        settings_btn.draw(screen)
         quit_btn.draw(screen)
 
         pygame.display.flip()
