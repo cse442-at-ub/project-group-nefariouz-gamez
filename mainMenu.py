@@ -1,6 +1,6 @@
 import pygame
 import sys
-from Button import *
+from MenuWidgets import *
 
 pygame.init()
 
