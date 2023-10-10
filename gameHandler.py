@@ -190,6 +190,8 @@ class Object(pygame.sprite.Sprite):
 
     def draw(self, window, offset_x):
         window.blit(self.image, (self.rect.x - offset_x, self.rect.y))
+    
+    
 
 class Platform(Object):
     def __init__(self, x, y, width, height,col, path=None, name=None):
@@ -212,16 +214,28 @@ class smallShrub(Object):
     def __init__(self,x,y):
         super().__init__(x,y,48,52)
         self.name="small shrub"
-        s_shrub=pygame.image.load("assets\Traps\SmallShrub\SmallShrub.png")
-        self.mask=pygame.mask.from_surface(s_shrub)
-        self.image=s_shrub
-        
+        self.image=pygame.image.load("assets\Traps\SmallShrub\SmallShrub.png")
+        self.mask=pygame.mask.from_surface(self.image)
+
     def destroy(self):
         self.image=pygame.image.load("assets\Traps\Empty\empty.png")
         self.mask=pygame.mask.from_surface(self.image)
-        
-    
 
+class tallShrub(Object):
+    def __init__(self,x,y):
+        super().__init__(x,y,48,183)
+        self.name="tall shrub"
+        self.image=pygame.image.load("assets\Traps\TallShrub\TallShrub.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.health=50
+    def destroy(self):
+        if self.health==1:
+            self.image=pygame.image.load("assets\Traps\Empty\empty.png")
+            self.mask=pygame.mask.from_surface(self.image)
+        if self.health!=1:
+            self.health-=1
+        
+        
 def draw(window, background, bg_image,player,objects):
     for tile in background:
         window.blit(bg_image, tile)
@@ -276,7 +290,7 @@ def getOverlap(reachBox, objects):
                 return
             if object.name=="tall shrub":
                 #Handle tall shrub behavior
-                
+                object.destroy()
                 return
             
 
@@ -308,11 +322,13 @@ base=Platform(0,720,1200,80,WHITE)
 plat2=Platform(502,645,264,75,WHITE)
 plat3=Platform(0,624,361,96,WHITE)
 sShrub1=smallShrub(610,593)
+tShrub1=tallShrub(216,441)
 lOne.append(start)
 lOne.append(base)
 lOne.append(plat2)
 lOne.append(plat3)
 lOne.append(sShrub1)
+lOne.append(tShrub1)
 
 def main(window, level):
     clock = pygame.time.Clock()
