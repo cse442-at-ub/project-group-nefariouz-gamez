@@ -1,11 +1,20 @@
 import pygame
 
 class Button:
+    """
+    Creates a 300w x 54h button
+
+    Args:
+        x: x position for button placement, places the center of box at given x position
+        y: y position for button placement, places the center of box at given y position
+        text: text displayed on button
+        action: performs function when clicked
+    """
     def __init__(self, x, y, text, action=None):
         self.x = x
         self.y = y
         self.width = 300
-        self.height = 55
+        self.height = 54
         self.rect = pygame.Rect(x - (self.width / 2), y - (self.height / 2), self.width, self.height)
         self.text = text
         self.action = action
@@ -38,3 +47,6 @@ class Button:
         if event.type == pygame.MOUSEBUTTONDOWN and self.hovered:
             if self.action:
                 self.action()
+
+    # def small_btn(self, x, y):
+    #     converts button size to another commonly used size
