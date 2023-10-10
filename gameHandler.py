@@ -248,6 +248,14 @@ class spike(Object):
         self.image=pygame.image.load("assets\Traps\Spikes\Spike.png")
         self.mask=pygame.mask.from_surface(self.image)
         
+class ladder(Object):
+    def __init__(self,x,y):
+        super().__init__(x,y,33,100)
+        self.name="ladder"
+        self.image=pygame.image.load("assets\Special\Ladder.png")
+        self.mask=pygame.mask.from_surface(self.image)
+
+
 def draw(window, background, bg_image,player,objects):
     for tile in background:
         window.blit(bg_image, tile)
@@ -265,10 +273,10 @@ def handle_vertical_collision(player, objects, dy):
     collided_objects = []
     for object in objects:
         if pygame.sprite.collide_mask(player, object):
-            if dy > 0:
+            if dy > 0 and object.name!="ladder":
                 player.rect.bottom = object.rect.top
                 player.landed()
-            elif dy < 0:
+            elif dy < 0 and object.name!="ladder":
                 player.rect.top = object.rect.bottom
                 player.hit_head()
 
@@ -281,7 +289,7 @@ def collide(player, objects, dx):
     player.update()
     collided_object = None
     for object in objects:
-        if pygame.sprite.collide_mask(player, object):
+        if pygame.sprite.collide_mask(player, object) and object.name!=ladder:
             collided_object = object
             if(collided_object.name=="spike"):
                 player.reset()
@@ -337,7 +345,12 @@ plat2=Platform(502,645,264,75,WHITE)
 plat3=Platform(0,624,361,96,WHITE)
 sShrub1=smallShrub(610,593)
 tShrub1=tallShrub(216,441)
-spike1=spike(837,684)
+spike1=spike(853,687)
+spike2=spike(813,687)
+spike3=spike(773,687)
+spike4=spike(453,687)
+spike5=spike(413,687)
+spike6=spike(373,687)
 lOne.append(start)
 lOne.append(base)
 lOne.append(plat2)
@@ -345,6 +358,11 @@ lOne.append(plat3)
 lOne.append(sShrub1)
 lOne.append(tShrub1)
 lOne.append(spike1)
+lOne.append(spike2)
+lOne.append(spike3)
+lOne.append(spike4)
+lOne.append(spike5)
+lOne.append(spike6)
 
 def main(window, level):
     clock = pygame.time.Clock()
