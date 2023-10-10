@@ -3,6 +3,13 @@ from MenuWidgets import *
 
 pygame.init()
 
+def draw_text(text, font, color, pos):
+    img = font.render(text, True, color)
+    centered_x = pos[0] - img.get_width() // 2
+    centered_y = pos[1] - img.get_height() // 2
+    centered_pos = (centered_x, centered_y)
+    screen.blit(img, centered_pos)
+
 def tutorial():
     print("TUTORIAL")
 
@@ -48,6 +55,8 @@ def display_settings_page(screen):
 
         # render background and widgets
         screen.blit(background_img, (0, 0))
+        draw_text("MUSIC VOLUME", pygame.font.Font(None, 36), (34, 90, 48), ((screen_width/2)-150, (screen_height/2)-160))
+        draw_text("SFX VOLUME", pygame.font.Font(None, 36), (34, 90, 48), ((screen_width/2)-150, (screen_height/2)-90))
         
         for widget in widgets:
             widget.draw(screen)
