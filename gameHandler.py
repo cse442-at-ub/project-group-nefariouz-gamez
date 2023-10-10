@@ -67,6 +67,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
+        self.xO=x#For respawning purposes
+        self.yO=y
         self.x_velocity, self.y_velocity = 0, 0
         self.mask = None
         self.direction = "left"
@@ -81,6 +83,10 @@ class Player(pygame.sprite.Sprite):
         self.reachBox.surface=pygame.Surface((width*3,height*1.5))
         self.reachBox.mask = pygame.mask.from_surface(self.reachBox.surface)
 
+
+    def reset(self):
+        self.rect.x=self.xO
+        self.rect.y=self.yO
 
 
     def move(self, dx, dy):
@@ -234,7 +240,13 @@ class tallShrub(Object):
             self.mask=pygame.mask.from_surface(self.image)
         if self.health!=1:
             self.health-=1
-        
+
+class spike(Object):
+    def __init__(self,x,y):
+        super().__init__(x,y,40,34)
+        self.name="spike"
+        self.image=pygame.image.load("assets\Traps\Spikes\Spike.png")
+        self.mask=pygame.mask.from_surface(self.image)
         
 def draw(window, background, bg_image,player,objects):
     for tile in background:
@@ -271,6 +283,8 @@ def collide(player, objects, dx):
     for object in objects:
         if pygame.sprite.collide_mask(player, object):
             collided_object = object
+            if(collided_object.name=="spike"):
+                player.reset()
             break
     
     player.move(-dx, 0)
@@ -323,17 +337,19 @@ plat2=Platform(502,645,264,75,WHITE)
 plat3=Platform(0,624,361,96,WHITE)
 sShrub1=smallShrub(610,593)
 tShrub1=tallShrub(216,441)
+spike1=spike(837,684)
 lOne.append(start)
 lOne.append(base)
 lOne.append(plat2)
 lOne.append(plat3)
 lOne.append(sShrub1)
 lOne.append(tShrub1)
+lOne.append(spike1)
 
 def main(window, level):
     clock = pygame.time.Clock()
     background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
-    playerOne=Player(950,100,30,64)
+    playerOne=Player(1098,655,30,64)
     block_size = 96
     
     
