@@ -15,7 +15,7 @@ pygame.display.set_caption("Shrubbery Quest")
 GRAVITY=1#Rate at which objects and players fall
 WIDTH, HEIGHT = 1200, 800 #Exact size of figma levels, 1-1 for design purposes
 FPS = 60
-PLAYER_VEL=4 #Player Movement speed
+PLAYER_VEL=5 #Player Movement speed
 WHITE=(255,255,255)
 
 
@@ -200,9 +200,6 @@ class Block(Object):
         self.image.blit(block, (0,0))
         self.mask = pygame.mask.from_surface(self.image)
 
-        
-
-
 def draw(window, background, bg_image,player,objects):
     for tile in background:
         window.blit(bg_image, tile)
@@ -248,14 +245,14 @@ def collide(player, objects, dx):
 def getInput(player, objects):
     keys=pygame.key.get_pressed()
     player.x_velocity=0 #Reset
-    collide_left = collide(player, objects, -PLAYER_VEL * 2)
-    collide_right = collide(player, objects, PLAYER_VEL * 2)
-    if keys[pygame.K_w] and not collide_left:
+    collide_left = collide(player, objects, -PLAYER_VEL*2)
+    collide_right = collide(player, objects, PLAYER_VEL*2)
+    if keys[pygame.K_w]:
         if player.inair==False:
             player.jump()
-    if keys[pygame.K_a] and not collide_right:
+    if keys[pygame.K_a] and not collide_left:
         player.move_left(PLAYER_VEL)
-    if keys[pygame.K_d]:
+    if keys[pygame.K_d] and not collide_right:
         player.move_right(PLAYER_VEL)
     if keys[pygame.K_e]:
         #if(player.losCTREE):#Checks if there is a tree in the players close line of sight
@@ -266,10 +263,7 @@ def getInput(player, objects):
         x=0#placeholder
     
     vertical_collide = handle_vertical_collision(player, objects, player.y_velocity)
-    to_check = [collide_left, collide_right, *vertical_collide]
-    for object in to_check:
-        if object and object.name == "fire":
-            player.make_hit()
+    
 
 
 lOne=[]
