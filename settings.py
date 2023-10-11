@@ -3,6 +3,24 @@ from MenuWidgets import *
 
 pygame.init()
 
+def scale_window(screen):
+    screen_width, screen_height = screen.get_size()   # find screen dimensions
+
+    background_img = pygame.image.load("images/plain_background.png")
+    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))   # scale background to resolution
+
+    # create widgets based on screen size
+    widgets = [
+        Slider(((screen_width/2)+150, (screen_height/2)-190), (300, 54)),
+        Slider(((screen_width/2)+150, (screen_height/2)-110), (300, 54)),
+        Checkbox(((screen_width/2+27), (screen_height/2)-30), 54),
+        Button((screen_width/2, (screen_height/2)+50), (300, 54), "TUTORIAL", tutorial),
+        Button((screen_width/2, (screen_height/2)+130), (300, 54), "CHOOSE CHARACTER", choose_character),
+        Button((screen_width/2, (screen_height/2)+210), (300, 54), "RETURN TO MAIN", return_main)
+    ]
+
+    return widgets, screen_width, screen_height, background_img
+
 def draw_text(text, font, color, pos):
     img = font.render(text, True, color)
     centered_x = pos[0] - img.get_width() // 2
@@ -20,29 +38,15 @@ def return_main():
     print("RETURN TO MAIN")
 
 def display_settings_page(screen):
-
-    # find screen dimensions
-    screen_width = screen.get_size()[0]
-    screen_height = screen.get_size()[1]
-
-    background_img = pygame.image.load("images/plain_background.png")
-    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
-
-    # rectangles are 300w x 54h, boxes are 54w x 54h, gap between widgets is 80
-    widgets = [
-        Slider(((screen_width/2)+150, (screen_height/2)-190), (300, 54)),
-        Slider(((screen_width/2)+150, (screen_height/2)-110), (300, 54)),
-        Checkbox(((screen_width/2+27), (screen_height/2)-30), 54),
-        Button((screen_width/2, (screen_height/2)+50), (300, 54), "TUTORIAL", tutorial),
-        Button((screen_width/2, (screen_height/2)+130), (300, 54), "CHOOSE CHARACTER", choose_character),
-        Button((screen_width/2, (screen_height/2)+210), (300, 54), "RETURN TO MAIN", return_main)
-    ]
+    widgets, screen_width, screen_height, background_img = scale_window(screen)
 
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.VIDEORESIZE:
+                widgets, screen_width, screen_height, background_img = scale_window(screen)   # rescales visuals for new resolution
 
             for widget in widgets:
                 if type(widget) == Button or type(widget) == Checkbox:
@@ -64,6 +68,6 @@ def display_settings_page(screen):
     pygame.quit()
 
 if __name__ == "__main__":
-    screen = pygame.display.set_mode((1248, 702), pygame.RESIZABLE)
+    screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
     pygame.display.set_caption("Shrubbery Quest")
     display_settings_page(screen)
