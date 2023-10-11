@@ -11,7 +11,7 @@ class Button:
     def __init__(self, pos: tuple, size: tuple, text: str, action=None):
         self.pos = pos
         self.size = size
-        self.rect = pygame.Rect(self.pos[0] - (self.size[0] / 2), self.pos[1] - (self.size[1] / 2), self.size[0], self.size[1])
+        self.rect = pygame.Rect(self.pos[0] - (self.size[0]/2), self.pos[1] - (self.size[1]/2), self.size[0], self.size[1])
         self.text = text
         self.action = action
         self.color = (190, 190, 190)
@@ -44,8 +44,38 @@ class Button:
             if self.action:
                 self.action()
 
-    # def small_btn(self, x, y):
-    #     converts button size to another commonly used size
+class Checkbox:
+    """
+    Args:
+        pos (tuple): take (x, y) position on screen, centered from the middle of box
+        size (tuple): takes (width, height) of box
+    """
+    def __init__(self, pos: tuple, size: tuple):
+        self.pos = pos
+        self.size = size
+        self.rect = pygame.Rect(self.pos[0] - (self.size[0]/2), self.pos[1] - (self.size[1]/2), self.size[0], self.size[1])
+        self.checked = False
+
+        # Load images from folder
+        self.unchecked_image = pygame.image.load("images/unchecked_box.png")
+        self.checked_image = pygame.image.load("images/checked_box.png")
+
+        self.unchecked_image = pygame.transform.scale(self.unchecked_image, self.size)
+        self.checked_image = pygame.transform.scale(self.checked_image, self.size)
+
+    def draw(self, screen):
+        if self.checked:
+            screen.blit(self.checked_image, (self.pos[0] - self.size[0]/2, self.pos[1] - self.size[1]/2))
+        else:
+            screen.blit(self.unchecked_image, (self.pos[0] - self.size[0]/2, self.pos[1] - self.size[1]/2))
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pygame.mouse.get_pos()):
+            self.checked = not self.checked
+            if self.checked:
+                print("MUTED")
+            else:
+                print("UNMUTED")
 
 class Slider:
     """
@@ -65,7 +95,7 @@ class Slider:
 
         self.min = 0
         self.max = 100
-        self.initial_val = (self.slider_right - self.slider_left)
+        self.initial_val = (self.slider_right - self.slider_left) * 0.95    # set base volume at 95%
 
         self.container_rect = pygame.Rect(self.slider_left, self.slider_top, self.size[0], self.size[1])
         self.button_rect = pygame.Rect(self.slider_left + self.initial_val - 5, self.slider_top, 10, self.size[1])
@@ -80,7 +110,7 @@ class Slider:
     def handle_event(self, mouse_pos, mouse):
         if self.container_rect.collidepoint(mouse_pos) and mouse[0]:
             self.move_slider(mouse_pos)
-        print(self.get_value())
+        # print(self.get_value())
 
     def get_value(self):
         val_range = self.slider_right - self.slider_left - 1
@@ -92,3 +122,6 @@ class Slider:
             return 0.0
         else:
             return value
+
+# References:
+# https://www.youtube.com/watch?v=n_ijgqYmXS0
