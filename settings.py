@@ -32,7 +32,7 @@ def display_settings_page(screen):
     widgets = [
         Slider(((screen_width/2)+150, (screen_height/2)-190), (300, 54)),
         Slider(((screen_width/2)+150, (screen_height/2)-110), (300, 54)),
-        Checkbox(((screen_width/2+27), (screen_height/2)-30), (54, 54)),
+        Checkbox(((screen_width/2+27), (screen_height/2)-30), 54),
         Button((screen_width/2, (screen_height/2)+50), (300, 54), "TUTORIAL", tutorial),
         Button((screen_width/2, (screen_height/2)+130), (300, 54), "CHOOSE CHARACTER", choose_character),
         Button((screen_width/2, (screen_height/2)+210), (300, 54), "RETURN TO MAIN", return_main)

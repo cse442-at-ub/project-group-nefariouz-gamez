@@ -48,11 +48,11 @@ class Checkbox:
     """
     Args:
         pos (tuple): take (x, y) position on screen, centered from the middle of box
-        size (tuple): takes (width, height) of box
+        dim (int): takes value used for width and height of box
     """
-    def __init__(self, pos: tuple, size: tuple):
+    def __init__(self, pos: tuple, dim: int):
         self.pos = pos
-        self.size = size
+        self.size = (dim, dim)
         self.rect = pygame.Rect(self.pos[0] - (self.size[0]/2), self.pos[1] - (self.size[1]/2), self.size[0], self.size[1])
         self.checked = False
 
