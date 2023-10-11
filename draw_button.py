@@ -3,8 +3,8 @@ import pygame.gfxdraw
 
 
 # Call to draw button
-def draw_button(screen, button_img, scale_factors, location):
-    button_img = pygame.transform.scale(button_img, scale_factors)
+def draw_button(screen, button_img, size, location):
+    button_img = pygame.transform.scale(button_img, size)
 
     shadow_surface = pygame.Surface((button_img.get_width()+2, button_img.get_height()+2), pygame.SRCALPHA)
     shadow_rect = pygame.Rect(0, 0, button_img.get_width()+2, button_img.get_height()+2)
