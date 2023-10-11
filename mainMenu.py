@@ -4,6 +4,22 @@ from MenuWidgets import *
 
 pygame.init()
 
+def scale_window(screen):
+    screen_width, screen_height = screen.get_size()   # find screen dimensions
+
+    background_img = pygame.image.load("images/main_background.png")
+    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))   # scale background to resolution
+
+    # creates widgets based on screen size
+    widgets = [
+        Button(screen_width/2, (screen_height/2)-120, "BEGIN YOUR QUEST", start_game),
+        Button(screen_width/2, (screen_height/2)-40, "LOAD LEVEL", load_level),
+        Button(screen_width/2, (screen_height/2)+40, "SETTINGS", settings),
+        Button(screen_width/2, (screen_height/2)+120, "QUIT", quit_game)
+    ]
+
+    return widgets, background_img
+
 def start_game():
     print("BEGIN YOUR QUEST")
 
@@ -18,27 +34,15 @@ def quit_game():
     sys.exit()
 
 def display_main_menu(screen):
-    
-    # find screen dimensions
-    screen_width = screen.get_size()[0]
-    screen_height = screen.get_size()[1]
-
-    background_img = pygame.image.load("images/main_background.png")
-    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
-
-    # initializes buttons, button dimensions: 300x54, buttons have a 70 unit gap between them
-    widgets = [
-        Button(screen_width/2, (screen_height/2)-120, "BEGIN YOUR QUEST", start_game),
-        Button(screen_width/2, (screen_height/2)-40, "LOAD LEVEL", load_level),
-        Button(screen_width/2, (screen_height/2)+40, "SETTINGS", settings),
-        Button(screen_width/2, (screen_height/2)+120, "QUIT", quit_game)
-    ]
+    widgets, background_img = scale_window(screen)
 
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.VIDEORESIZE:
+                widgets, background_img = scale_window(screen)   # rescales visuals for new resolution
 
             # checks for buttons clicked
             for widget in widgets:
