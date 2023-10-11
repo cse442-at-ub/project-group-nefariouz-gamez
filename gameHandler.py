@@ -80,7 +80,7 @@ class Player(pygame.sprite.Sprite):
         self.inair=False
         self.on_ladder=False
 
-        self.reachBox=Platform(x-15,y-15,width*3,height*1.5,WHITE)#Invisible bounding box for interacting with objects
+        self.reachBox=Platform(x-15,y-15,width*2.5,height*1.2,WHITE)#Invisible bounding box for interacting with objects
         self.reachBox.surface=pygame.Surface((width*3,height*1.5))
         self.reachBox.mask = pygame.mask.from_surface(self.reachBox.surface)
 
@@ -263,6 +263,13 @@ class Ladder(Object):
         self.image=pygame.image.load("assets\Special\Ladder.png")
         self.mask=pygame.mask.from_surface(self.image)
 
+class Level():
+    def __init__(self,objects,startingX,startingY,bgpath):
+        self.background,self.bg_image=get_background(bgpath)
+        self.objectlist=objects
+        self.initx=startingX
+        self.inity=startingY
+        
 
 def draw(window, background, bg_image,player,objects):
     for tile in background:
@@ -396,6 +403,8 @@ def getInput(player, objects):
 
 
 lOne=[]
+#Player starting position (1100, 644)
+#background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
 start=Platform(890,645,152,75,WHITE)
 base=Platform(0,720,1200,80,WHITE)
 plat2=Platform(502,645,264,75,WHITE)
@@ -420,10 +429,13 @@ lOne.append(spike3)
 lOne.append(spike4)
 lOne.append(spike5)
 lOne.append(spike6)
+levelOne=Level(lOne,1100,644,"Level 1 to 3 bkgrnd.png")
 
 BROWN=(100,65,23)
 BLUE=(0,0,255)
 lTwo=[]
+#Player starting position (1135,655)
+#background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
 lTwo.append(Platform(1031,344,57,436,BROWN))#May just do this in the future
 post2=Platform(739,364,57,436,BROWN)
 post3=Platform(550,590,57,176,BROWN)
@@ -455,13 +467,38 @@ lTwo.append(Ladder(1101,424))
 lTwo.append(Ladder(1101,324))
 lTwo.append(Ladder(689,440))
 lTwo.append(Ladder(689,344))
+levelTwo=Level(lTwo,1135,655,"Level 1 to 3 bkgrnd.png")
+
+GRAY=(192,192,192)
+lThree=[]
+#Player Starting position (1100,559)
+lThree.append(Platform(1096,599,57,176,BROWN))#POST 1
+lThree.append(Platform(975,599,57,176,BROWN))#POST 2
+lThree.append(Platform(643,573,57,176,BROWN))#POST 3
+lThree.append(Platform(330,523,57,237,BROWN))#POST 4
+lThree.append(Platform(0,0,131,800,GRAY))#MOUNTAINSIDE
+lThree.append(Water(0,720,1200,80,BLUE))#WATER
+lThree.append(Platform(922,549,278,50,WHITE))#START
+lThree.append(Platform(572,523,215,50,WHITE))#PLAT 1
+lThree.append(Platform(258,473,200,50,WHITE))#PLAT 2
+lThree.append(Platform(131,420,65,15,WHITE))#PLAT 3
+lThree.append(Platform(131,103,200,23,WHITE))#PLAT 4
+lThree.append(TallShrub(587,340))#TALLSHRUB 1
+lThree.append(Ladder(255,229))#LADDER 1
+lThree.append(Ladder(255,103))#LADDER 2
+lThree.append(Ladder(255,201))#LADDER 3
+lThree.append(Ladder(145,0))#LADDER 4
+levelThree=Level(lThree,1100,559,"Level 1 to 3 bkgrnd.png")
+
+lFour=[]
+#background,bg_image = get_background("CaveBackground1.png")
 
 
 def main(window, level):
     clock = pygame.time.Clock()
-    background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
-    playerOne=Player(1135,655,30,64)
-    block_size = 96
+    background=level.background
+    bg_image=level.bg_image
+    playerOne=Player(level.initx,level.inity,30,64)
     
     
     run = True
@@ -473,10 +510,10 @@ def main(window, level):
                 run = False
                 break
         playerOne.loop(FPS)
-        getInput(playerOne,level)
-        draw(window, background, bg_image,playerOne,level)
+        getInput(playerOne,level.objectlist)
+        draw(window, background, bg_image,playerOne,level.objectlist)
     pygame.quit()
     quit()
 
 if __name__ == "__main__":
-    main(window,lTwo)
+    main(window,levelThree)
