@@ -28,35 +28,33 @@ def display_settings_page(screen):
     background_img = pygame.image.load("images/plain_background.png")
     background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
 
+    # rectangles are 300w x 54h, boxes are 54w x 54h, gap between widgets is 80
     widgets = [
-        Slider(((screen_width/2)+150, (screen_height/2)-160), (300, 54)),
-        Slider(((screen_width/2)+150, (screen_height/2)-90), (300, 54)),
-        # checkbox here
+        Slider(((screen_width/2)+150, (screen_height/2)-190), (300, 54)),
+        Slider(((screen_width/2)+150, (screen_height/2)-110), (300, 54)),
+        Checkbox(((screen_width/2+27), (screen_height/2)-30), (54, 54)),
         Button((screen_width/2, (screen_height/2)+50), (300, 54), "TUTORIAL", tutorial),
-        Button((screen_width/2, (screen_height/2)+120), (300, 54), "CHOOSE CHARACTER", choose_character),
-        Button((screen_width/2, (screen_height/2)+190), (300, 54), "RETURN TO MAIN", return_main)
+        Button((screen_width/2, (screen_height/2)+130), (300, 54), "CHOOSE CHARACTER", choose_character),
+        Button((screen_width/2, (screen_height/2)+210), (300, 54), "RETURN TO MAIN", return_main)
     ]
 
     running = True
     while running:
-
-        mouse_pos = pygame.mouse.get_pos()
-        mouse = pygame.mouse.get_pressed()
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
             for widget in widgets:
-                if type(widget) == Button:
+                if type(widget) == Button or type(widget) == Checkbox:
                     widget.handle_event(event)
                 elif type(widget) == Slider:
-                    widget.handle_event(mouse_pos, mouse) 
+                    widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed()) 
 
         # render background and widgets
         screen.blit(background_img, (0, 0))
-        draw_text("MUSIC VOLUME", pygame.font.Font(None, 36), (34, 90, 48), ((screen_width/2)-150, (screen_height/2)-160))
-        draw_text("SFX VOLUME", pygame.font.Font(None, 36), (34, 90, 48), ((screen_width/2)-150, (screen_height/2)-90))
+        draw_text("MUSIC VOLUME", pygame.font.Font(None, 36), (34, 90, 48), ((screen_width/2)-150, (screen_height/2)-190))
+        draw_text("SFX VOLUME", pygame.font.Font(None, 36), (34, 90, 48), ((screen_width/2)-150, (screen_height/2)-110))
+        draw_text("MUTE", pygame.font.Font(None, 36), (34, 90, 48), ((screen_width/2)-150, (screen_height/2)-30))
         
         for widget in widgets:
             widget.draw(screen)
