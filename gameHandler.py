@@ -1,6 +1,5 @@
 # environment setup taken from freeCodeCamp.org on Youtube: https://www.youtube.com/watch?v=6gLeplbqtqg
 # basis for player movement/collision, background setup from same source
-
 import os
 import random
 import math
@@ -79,15 +78,17 @@ class Player(pygame.sprite.Sprite):
         self.hit_count = 0
         self.inair=False
         self.on_ladder=False
+        self.e_timer=0
 
         self.reachBox=Platform(x-15,y-15,width*2.5,height*1.2,WHITE)#Invisible bounding box for interacting with objects
         self.reachBox.surface=pygame.Surface((width*3,height*1.5))
         self.reachBox.mask = pygame.mask.from_surface(self.reachBox.surface)
 
 
-    def reset(self):
+    def reset(self,level):
         self.rect.x=self.xO
         self.rect.y=self.yO
+        level.reset()
 
 
     def move(self, dx, dy):
@@ -114,7 +115,7 @@ class Player(pygame.sprite.Sprite):
     # does not allow double jump
     def jump(self):
         self.inair=True#anti=double jump
-        self.y_velocity = -self.GRAVITY * 4
+        self.y_velocity = -self.GRAVITY * 4.5
         self.animation_count = 0
         self.jump_count += 1
         if self.jump_count == 1:
@@ -162,6 +163,8 @@ class Player(pygame.sprite.Sprite):
     
     def loop(self, fps):
         # gravity
+        if self.e_timer!=0:
+            self.e_timer-=1
         if not self.on_ladder:#only apply gravity when not on ladder
             self.y_velocity += min(1, (self.fall_count / fps) * self.GRAVITY)
         self.move(self.x_velocity, self.y_velocity)
@@ -198,9 +201,14 @@ class Object(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x, y, width, height)
         self.image = pygame.Surface((width, height), pygame.SRCALPHA)
         self.width, self.height, self.name = width, height, name
-
+        self.original_image=pygame.Surface((width, height), pygame.SRCALPHA)
+        
     def draw(self, window, offset_x):
         window.blit(self.image, (self.rect.x - offset_x, self.rect.y))
+    
+    def reset(self):
+        x=0
+
     
 class Platform(Object):
     def __init__(self, x, y, width, height,col, path=None, name=None):
@@ -211,6 +219,8 @@ class Platform(Object):
         self.mask = pygame.mask.from_surface(self.surface)
     def draw(self, window,offset_x):
         pygame.draw.rect(window,self.color,self.rect)
+    def reset(self):
+        x=0
 
 class Block(Object):
     def __init__(self, x, y, size,path):
@@ -218,6 +228,8 @@ class Block(Object):
         block = get_block(size,path)
         self.image.blit(block, (0,0))
         self.mask = pygame.mask.from_surface(self.image)
+    def reset(self):
+        x=0
 
 class smallShrub(Object):
     def __init__(self,x,y):
@@ -225,10 +237,14 @@ class smallShrub(Object):
         self.name="small shrub"
         self.image=pygame.image.load("assets\Traps\SmallShrub\SmallShrub.png")
         self.mask=pygame.mask.from_surface(self.image)
-
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\SmallShrub\SmallShrub.png")
     def destroy(self):
         self.image=pygame.image.load("assets\Traps\Empty\empty.png")
         self.mask=pygame.mask.from_surface(self.image)
+    def reset(self):
+        self.image=self.original_image
+        self.mask=self.original_mask
 
 class TallShrub(Object):
     def __init__(self,x,y):
@@ -236,7 +252,10 @@ class TallShrub(Object):
         self.name="tall shrub"
         self.image=pygame.image.load("assets\Traps\TallShrub\TallShrub.png")
         self.mask=pygame.mask.from_surface(self.image)
-        self.health=50
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\TallShrub\TallShrub.png")
+        self.health=2
+        
     def destroy(self):
         if self.health==1:
             self.image=pygame.image.load("assets\Traps\Empty\empty.png")
@@ -244,16 +263,29 @@ class TallShrub(Object):
         if self.health!=1:
             self.health-=1
 
+    def reset(self):
+        self.image=self.original_image
+        self.mask=self.original_mask
+        self.health=2
+
 class Spike(Object):
     def __init__(self,x,y):
         super().__init__(x,y,40,34)
         self.name="spike"
         self.image=pygame.image.load("assets\Traps\Spikes\Spike.png")
         self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\Spikes\Spike.png")
+
+    def reset(self):
+        self.image=self.original_image
+        self.mask=self.original_mask
 
 class Water(Platform):
     def __init__(self, x, y, width, height, col, path=None, name="spike"):
         super().__init__(x, y, width, height, col, path, name)
+    def reset(self):
+        x=0
 
 PURPLE=(128,0,128)
 
@@ -272,6 +304,8 @@ class FallPlat(Platform):
         if self.falling:
             x=0#PLACEHOLDER
             #START BEING AFFECTED BY GRAVITY AT SAME RATE AS PLAYER
+    def reset(self):
+        x=0
         
 
 
@@ -282,34 +316,38 @@ class Ladder(Object):
         self.xO=x
         self.image=pygame.image.load("assets\Special\Ladder.png")
         self.mask=pygame.mask.from_surface(self.image)
+    def reset(self):
+        x=0
 
 class Level():
-    def __init__(self,objects,startingX,startingY,bgpath):
+    def __init__(self,objects,starting_x,starting_y,bgpath):
         self.background,self.bg_image=get_background(bgpath)
-        self.objectlist=objects
-        self.initx=startingX
-        self.inity=startingY
-        
-def draw(window, background, bg_image,player,objects):
+        self.object_list=objects.copy()
+        self.init_x=starting_x
+        self.init_y=starting_y
+        self.copied=objects.copy()
+    def reset(self):
+        for object in self.object_list:
+            object.reset()
+def draw(window, background, bg_image,player,level):
     for tile in background:
         window.blit(bg_image, tile)
     
     
 
-    for object in objects:
-        
+    for object in level.object_list:
         object.draw(window,0)
 
     player.draw(window,0)
 
     pygame.display.update()
 
-def handle_vertical_collision(player, objects, dy):
+def handle_vertical_collision(player, level, dy):
     collided_objects = []
-    for object in objects:
+    for object in level.object_list:
         if pygame.sprite.collide_mask(player, object):
             if(object.name=="spike"):
-                player.reset()
+                player.reset(level)
             if dy > 0 and object.name!="ladder" and not player.on_ladder:
                 player.rect.bottom = object.rect.top
                 player.landed()
@@ -321,23 +359,23 @@ def handle_vertical_collision(player, objects, dy):
     
     return collided_objects
 
-def collide(player, objects, dx):
+def collide(player, level, dx):
     player.move(dx, 0)
     player.update()
     collided_object = None
-    for object in objects:
+    for object in level.object_list:
         if pygame.sprite.collide_mask(player, object) and object.name!="ladder":
             collided_object = object
             if(collided_object.name=="spike"):
-                player.reset()
+                player.reset(level)
             break
     
     player.move(-dx, 0)
     player.update()
     return collided_object
 
-def getOverlap(player, reachBox, objects):
-    for object in objects:
+def getOverlap(player, reachBox, level):
+    for object in level.object_list:
         if pygame.sprite.collide_mask(reachBox,object):
             if object.name=="ladder":
                 #Handle Ladder behavior
@@ -358,10 +396,10 @@ def getOverlap(player, reachBox, objects):
                 object.destroy()
                 return
             
-def getInput(player, objects):
+def getInput(player, level):
     keys=pygame.key.get_pressed()
-    collide_left = collide(player, objects, -PLAYER_VEL*2)
-    collide_right = collide(player, objects, PLAYER_VEL*2)
+    collide_left = collide(player, level, -PLAYER_VEL*2)
+    collide_right = collide(player, level, PLAYER_VEL*2)
     if player.on_ladder:
         player.y_velocity=0
         if keys[pygame.K_w]:
@@ -369,7 +407,7 @@ def getInput(player, objects):
             #Move up on ladder
             #check if still on ladder
             player.move_up(PLAYER_VEL)
-            for object in objects:
+            for object in level.object_list:
                 if pygame.sprite.collide_mask(player.reachBox,object):
                     if object.name=="ladder":
                         g=1
@@ -380,7 +418,7 @@ def getInput(player, objects):
             #check if still on ladder
             g=0
             player.move_down(PLAYER_VEL)
-            for object in objects:
+            for object in level.object_list:
                 if pygame.sprite.collide_mask(player,object):
                     if object.name=="ladder":
                         g=1
@@ -394,8 +432,9 @@ def getInput(player, objects):
             player.move_right(PLAYER_VEL)
             
         if keys[pygame.K_e]:
-            getOverlap(player,player.reachBox,objects)
-            
+            if player.e_timer==0:
+                player.e_timer=20
+                getOverlap(player,player.reachBox,level)
         if keys[pygame.K_q]:
             x=0#placeholder
             
@@ -410,22 +449,24 @@ def getInput(player, objects):
         if keys[pygame.K_d] and not collide_right:
             player.move_right(PLAYER_VEL)
         if keys[pygame.K_e]:
-            getOverlap(player,player.reachBox,objects)
+            if player.e_timer==0:
+                player.e_timer=20
+                getOverlap(player,player.reachBox,level)
         if keys[pygame.K_q]:
             x=0#placeholder
     
-    vertical_collide = handle_vertical_collision(player, objects, player.y_velocity)
+    vertical_collide = handle_vertical_collision(player, level, player.y_velocity)
     
 
 
 lOne=[]
 #Player starting position (1100, 644)
 #background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
-start=Platform(890,645,152,75,WHITE)
+start=Platform(890,670,152,75,WHITE)
 base=Platform(0,720,1200,80,WHITE)
-plat2=Platform(502,645,264,75,WHITE)
+plat2=Platform(502,650,264,75,WHITE)
 plat3=Platform(0,624,361,96,WHITE)
-sShrub1=smallShrub(610,593)
+sShrub1=smallShrub(610,598)
 tShrub1=TallShrub(216,441)
 spike1=Spike(853,687)
 spike2=Spike(813,687)
@@ -445,7 +486,7 @@ lOne.append(spike3)
 lOne.append(spike4)
 lOne.append(spike5)
 lOne.append(spike6)
-levelOne=Level(lOne,1100,644,"Level 1 to 3 bkgrnd.png")
+levelOne=Level(lOne,1135,644,"Level 1 to 3 bkgrnd.png")
 
 BROWN=(100,65,23)
 BLUE=(0,0,255)
@@ -514,22 +555,21 @@ def main(window, level):
     clock = pygame.time.Clock()
     background=level.background
     bg_image=level.bg_image
-    playerOne=Player(level.initx,level.inity,30,64)
+    playerOne=Player(level.init_x,level.init_y,30,64)
     
     
     run = True
     while run:
         clock.tick(FPS)
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 break
         playerOne.loop(FPS)
-        getInput(playerOne,level.objectlist)
-        draw(window, background, bg_image,playerOne,level.objectlist)
+        getInput(playerOne,level)
+        draw(window, background, bg_image,playerOne,level)
     pygame.quit()
     quit()
 
 if __name__ == "__main__":
-    main(window,levelTwo)
+    main(window,levelThree)
