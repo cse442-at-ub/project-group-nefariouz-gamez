@@ -255,6 +255,26 @@ class Water(Platform):
     def __init__(self, x, y, width, height, col, path=None, name="spike"):
         super().__init__(x, y, width, height, col, path, name)
 
+PURPLE=(128,0,128)
+
+class FallPlat(Platform):
+    def __init__(self, x, y, width, height, col=PURPLE, path=None,name="fall"):
+        super().__init__(x, y, width, height, col, path, name)
+        self.timer=0
+        self.falling=False
+    def checkTime(self):
+        if self.time>300: #5 Seconds time limit, 60 frame x 5 Second limit = 300
+            self.falling=True
+            return True #True means should fall
+        return False
+
+    def startFall(self,player):
+        if self.falling:
+            x=0#PLACEHOLDER
+            #START BEING AFFECTED BY GRAVITY AT SAME RATE AS PLAYER
+        
+
+
 class Ladder(Object):
     def __init__(self,x,y):
         super().__init__(x,y,33,100)
@@ -270,7 +290,6 @@ class Level():
         self.initx=startingX
         self.inity=startingY
         
-
 def draw(window, background, bg_image,player,objects):
     for tile in background:
         window.blit(bg_image, tile)
@@ -284,7 +303,6 @@ def draw(window, background, bg_image,player,objects):
     player.draw(window,0)
 
     pygame.display.update()
-
 
 def handle_vertical_collision(player, objects, dy):
     collided_objects = []
@@ -340,8 +358,6 @@ def getOverlap(player, reachBox, objects):
                 object.destroy()
                 return
             
-
-
 def getInput(player, objects):
     keys=pygame.key.get_pressed()
     collide_left = collide(player, objects, -PLAYER_VEL*2)
@@ -516,4 +532,4 @@ def main(window, level):
     quit()
 
 if __name__ == "__main__":
-    main(window,levelThree)
+    main(window,levelTwo)
