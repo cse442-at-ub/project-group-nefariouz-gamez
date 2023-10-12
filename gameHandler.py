@@ -24,7 +24,12 @@ WHITE=(255,255,255)
 
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
 
-#################PLAYER OBJECT#########################
+##############################################################
+##############################################################
+###################### PLAYER OBJECT #########################
+##############################################################
+##############################################################
+
 def flip_image(sprites):
     return [pygame.transform.flip(sprite, True, False) for sprite in sprites]
 
@@ -181,10 +186,13 @@ class Player(pygame.sprite.Sprite):
         #self.reachBox.draw(window,0)------------VISUALISE reachBox
         window.blit(self.sprite, (self.rect.x - offset_x, self.rect.y))
 
+##############################################################
+##############################################################
+######################## MAIN MENU ###########################
+##############################################################
+##############################################################
 
-######################## MAIN MENU ############################
-
-def scale_window(screen):
+def scale_window_main(screen):
     screen_width, screen_height = screen.get_size()   # find screen dimensions
 
     background_img = pygame.image.load("assets/Background/TitleNoShear.png")
@@ -192,10 +200,10 @@ def scale_window(screen):
 
     # creates widgets based on screen size
     widgets = [
-        Button(screen_width/2, (screen_height/2)-120, "BEGIN YOUR QUEST", start_game),
-        Button(screen_width/2, (screen_height/2)-40, "LOAD LEVEL", load_level),
-        Button(screen_width/2, (screen_height/2)+40, "SETTINGS", settings),
-        Button(screen_width/2, (screen_height/2)+120, "QUIT", quit_game)
+        Button((screen_width/2, (screen_height/2)-120), (300, 54), "BEGIN YOUR QUEST", start_game),
+        Button((screen_width/2, (screen_height/2)-40), (300, 54), "LOAD LEVEL", load_level),
+        Button((screen_width/2, (screen_height/2)+40), (300, 54), "SETTINGS", settings),
+        Button((screen_width/2, (screen_height/2)+120), (300, 54), "QUIT", quit_game)
     ]
 
     return widgets, background_img
@@ -216,6 +224,7 @@ def load_level():
     print("LOAD LEVEL")
 
 def settings():
+    display_settings_page(window)
     print("SETTINGS")
 
 def quit_game():
@@ -223,7 +232,7 @@ def quit_game():
     sys.exit()
 
 def display_main_menu(screen):
-    widgets, background_img = scale_window(screen)
+    widgets, background_img = scale_window_main(screen)
 
     running = True
     while running:
@@ -231,7 +240,7 @@ def display_main_menu(screen):
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.VIDEORESIZE:
-                widgets, background_img = scale_window(screen)   # rescales visuals for new resolution
+                widgets, background_img = scale_window_main(screen)   # rescales visuals for new resolution
 
             # checks for buttons clicked
             for widget in widgets:
@@ -247,7 +256,82 @@ def display_main_menu(screen):
 
     pygame.quit()
 
-######################## GAME RUNNER ############################
+##############################################################
+##############################################################
+######################## SETTINGS ############################
+##############################################################
+##############################################################
+
+def scale_window_settings(screen):
+    screen_width, screen_height = screen.get_size()   # find screen dimensions
+
+    background_img = pygame.image.load("assets\Background\TitleNoShear.png")
+    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))   # scale background to resolution
+
+    # create widgets based on screen size
+    widgets = [
+        Slider(((screen_width/2)+150, (screen_height/2)-190), (300, 54)),
+        Slider(((screen_width/2)+150, (screen_height/2)-110), (300, 54)),
+        Checkbox(((screen_width/2+27), (screen_height/2)-30), 54),
+        Button((screen_width/2, (screen_height/2)+50), (300, 54), "TUTORIAL", tutorial),
+        Button((screen_width/2, (screen_height/2)+130), (300, 54), "CHOOSE CHARACTER", choose_character),
+        Button((screen_width/2, (screen_height/2)+210), (300, 54), "RETURN TO MAIN", return_main)
+    ]
+
+    return widgets, screen_width, screen_height, background_img
+
+def draw_text(text, font, color, pos):
+    img = font.render(text, True, color)
+    centered_x = pos[0] - img.get_width() // 2
+    centered_y = pos[1] - img.get_height() // 2
+    centered_pos = (centered_x, centered_y)
+    window.blit(img, centered_pos)
+
+def tutorial():
+    print("TUTORIAL")
+
+def choose_character():
+    print("CHOOSE CHARACTER")
+
+def return_main():
+    display_main_menu(window)
+    print("RETURN TO MAIN")
+
+def display_settings_page(screen):
+    widgets, screen_width, screen_height, background_img = scale_window_settings(screen)
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.VIDEORESIZE:
+                widgets, screen_width, screen_height, background_img = scale_window_settings(screen)   # rescales visuals for new resolution
+
+            for widget in widgets:
+                if type(widget) == Button or type(widget) == Checkbox:
+                    widget.handle_event(event)
+                elif type(widget) == Slider:
+                    widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed()) 
+
+        # render background and widgets
+        screen.blit(background_img, (0, 0))
+        draw_text("MUSIC VOLUME", pygame.font.Font(None, 36), (34, 90, 48), ((screen_width/2)-150, (screen_height/2)-190))
+        draw_text("SFX VOLUME", pygame.font.Font(None, 36), (34, 90, 48), ((screen_width/2)-150, (screen_height/2)-110))
+        draw_text("MUTE", pygame.font.Font(None, 36), (34, 90, 48), ((screen_width/2)-150, (screen_height/2)-30))
+        
+        for widget in widgets:
+            widget.draw(screen)
+
+        pygame.display.flip()
+
+    pygame.quit()
+
+##############################################################
+##############################################################
+######################## GAME RUNNER #########################
+##############################################################
+##############################################################
 
 def get_background(name):
     image = pygame.image.load(join("assets", "Background", name))
