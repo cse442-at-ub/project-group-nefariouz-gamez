@@ -6,7 +6,7 @@ import math
 import pygame
 import sys
 
-from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder
+from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign
 from MenuWidgets import *
 
 from os import listdir
@@ -21,6 +21,7 @@ WIDTH, HEIGHT = 1200, 800 #Exact size of figma levels, 1-1 for design purposes
 FPS = 60
 PLAYER_VEL=5 #Player Movement speed
 WHITE=(255,255,255)
+ENDLEVEL = False
 
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
 
@@ -211,6 +212,9 @@ def scale_window_main(screen):
 def start_game():
     # Always Loads Level 1
     loadLevel(window, levelOne)
+    lvlf = open("currentLevel.txt", "w")
+    lvlf.write("1")
+    lvlf.close()
     print("BEGIN YOUR QUEST")
 
 def load_level():
@@ -401,6 +405,19 @@ def collide(player, level, dx):
             collided_object = object
             if(collided_object.name=="spike"):
                 player.reset(level)
+            if(collided_object.name == "end sign"):
+                #PLAYER HAS REACHED END OF LEVEL
+                # ADD ONE TO COMPLETED LEVELS
+                #ENDLEVEL = True
+                lvlf = open("currentLevel.txt", "r")
+                levelnum = int(lvlf.read())
+                levelnum += 1
+                lvlf = open("currentLevel.txt", "w")
+                lvlf.write(str(levelnum))
+                lvlf.close()
+                # THEN OPEN BETWEEN LEVEL MENU
+                display_main_menu(window)
+                print("END LEVEL")
             break
     
     player.move(-dx, 0)
@@ -509,6 +526,7 @@ spike3=Spike(773,687)
 spike4=Spike(453,687)
 spike5=Spike(413,687)
 spike6=Spike(373,687)
+endlvl1 = endSign(10, 584)
 lOne.append(start)
 lOne.append(base)
 lOne.append(plat2)
@@ -521,6 +539,7 @@ lOne.append(spike3)
 lOne.append(spike4)
 lOne.append(spike5)
 lOne.append(spike6)
+lOne.append(endlvl1)
 levelOne=Level(lOne,1135,644,"Level 1 to 3 bkgrnd.png")
 
 BROWN=(100,65,23)
@@ -541,6 +560,7 @@ bplat3=Platform(436,540,286,50,WHITE)
 bplat4=Platform(0,549,297,50,WHITE)
 bshrub1=smallShrub(800,292)
 bshrub2=smallShrub(249,497)
+endlvl2 = endSign(25,509)
 #lTwo.append(post1)
 lTwo.append(post2)
 lTwo.append(post3)
@@ -559,6 +579,7 @@ lTwo.append(Ladder(1101,424))
 lTwo.append(Ladder(1101,324))
 lTwo.append(Ladder(689,440))
 lTwo.append(Ladder(689,344))
+lTwo.append(endlvl2)
 levelTwo=Level(lTwo,1135,655,"Level 1 to 3 bkgrnd.png")
 
 GRAY=(192,192,192)
@@ -580,6 +601,7 @@ lThree.append(Ladder(255,229))#LADDER 1
 lThree.append(Ladder(255,103))#LADDER 2
 lThree.append(Ladder(255,201))#LADDER 3
 lThree.append(Ladder(145,0))#LADDER 4
+lThree.append(endSign(180,63)) # END SIGN
 levelThree=Level(lThree,1100,559,"Level 1 to 3 bkgrnd.png")
 
 lFour=[]

@@ -26,7 +26,8 @@ def get_block(size,ipath):#added path so it's not always terrain.png
     surface.blit(image, (0, 0), rect)
 
     return pygame.transform.scale2x(surface)
-    
+
+
 class Platform(Object):
     def __init__(self, x, y, width, height,col, path=None, name=None):
         super().__init__(x, y, width, height, path, name)
@@ -125,7 +126,6 @@ class FallPlat(Platform):
         x=0
         
 
-
 class Ladder(Object):
     def __init__(self,x,y):
         super().__init__(x,y,33,100)
@@ -135,3 +135,13 @@ class Ladder(Object):
         self.mask=pygame.mask.from_surface(self.image)
     def reset(self):
         x=0
+
+
+class endSign(Object):
+    def __init__(self, x, y):
+        super().__init__(x, y, 40, 40)
+        self.name = "end sign"
+        self.image=pygame.image.load("assets/Special/EndSign.png")
+        self.mask= pygame.mask.from_surface(self.image)
+        self.original_mask = pygame.mask.from_surface(self.image)
+        self.original_image = pygame.image.load("assets/Special/EndSign.png")
