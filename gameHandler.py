@@ -18,7 +18,7 @@ PLAYER_VEL=5 #Player Movement speed
 WHITE=(255,255,255)
 
 
-window = pygame.display.set_mode((WIDTH, HEIGHT))
+window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
 def flip_image(sprites):
     return [pygame.transform.flip(sprite, True, False) for sprite in sprites]
 
@@ -130,6 +130,7 @@ class Player(pygame.sprite.Sprite):
     def hit_head(self):
         # fall_count?
         self.count = 0
+        self.rect.y+=1
         self.y_velocity *= -1
 
     def make_hit(self):
@@ -208,6 +209,7 @@ class Object(pygame.sprite.Sprite):
     
     def reset(self):
         x=0
+
 
     
 class Platform(Object):
@@ -329,9 +331,12 @@ class Level():
     def reset(self):
         for object in self.object_list:
             object.reset()
+    def resize(self,factor):#resize everything in object_list, init_y,init_x by factor
+        x=0
 def draw(window, background, bg_image,player,level):
     for tile in background:
         window.blit(bg_image, tile)
+
     
     
 
@@ -352,7 +357,11 @@ def handle_vertical_collision(player, level, dy):
                 player.rect.bottom = object.rect.top
                 player.landed()
             elif dy < 0 and object.name!="ladder" and not player.on_ladder:
-                player.rect.top = object.rect.bottom
+                #player.rect.top = object.rect.bottom
+                player.rect.y+=2
+                player.y_vel=-PLAYER_VEL*2
+                #player.rect.y=player.rect.y+5
+                print("BONK?")
                 player.hit_head()
 
             collided_objects.append(object)
@@ -371,6 +380,8 @@ def collide(player, level, dx):
             break
     
     player.move(-dx, 0)
+    
+    player.x_vel=0
     player.update()
     return collided_object
 
@@ -433,7 +444,7 @@ def getInput(player, level):
             
         if keys[pygame.K_e]:
             if player.e_timer==0:
-                player.e_timer=20
+                player.e_timer=8
                 getOverlap(player,player.reachBox,level)
         if keys[pygame.K_q]:
             x=0#placeholder
@@ -450,7 +461,7 @@ def getInput(player, level):
             player.move_right(PLAYER_VEL)
         if keys[pygame.K_e]:
             if player.e_timer==0:
-                player.e_timer=20
+                player.e_timer=8
                 getOverlap(player,player.reachBox,level)
         if keys[pygame.K_q]:
             x=0#placeholder
@@ -536,8 +547,8 @@ lThree.append(Platform(330,523,57,237,BROWN))#POST 4
 lThree.append(Platform(0,0,131,800,GRAY))#MOUNTAINSIDE
 lThree.append(Water(0,720,1200,80,BLUE))#WATER
 lThree.append(Platform(922,549,278,50,WHITE))#START
-lThree.append(Platform(572,523,215,50,WHITE))#PLAT 1
-lThree.append(Platform(258,473,200,50,WHITE))#PLAT 2
+lThree.append(Platform(564,523,215,50,WHITE))#PLAT 1
+lThree.append(Platform(258,483,200,50,WHITE))#PLAT 2
 lThree.append(Platform(131,420,65,15,WHITE))#PLAT 3
 lThree.append(Platform(131,103,200,23,WHITE))#PLAT 4
 lThree.append(TallShrub(587,340))#TALLSHRUB 1
@@ -572,4 +583,4 @@ def main(window, level):
     quit()
 
 if __name__ == "__main__":
-    main(window,levelThree)
+    main(window,levelTwo)
