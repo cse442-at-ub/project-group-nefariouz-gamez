@@ -4,8 +4,10 @@ import os
 import random
 import math
 import pygame
+import sys
 
 from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder
+from MenuWidgets import *
 
 from os import listdir
 from os.path import isfile, join
@@ -180,7 +182,72 @@ class Player(pygame.sprite.Sprite):
         window.blit(self.sprite, (self.rect.x - offset_x, self.rect.y))
 
 
-########################GAME RUNNER############################
+######################## MAIN MENU ############################
+
+def scale_window(screen):
+    screen_width, screen_height = screen.get_size()   # find screen dimensions
+
+    background_img = pygame.image.load("assets/Background/TitleNoShear.png")
+    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))   # scale background to resolution
+
+    # creates widgets based on screen size
+    widgets = [
+        Button(screen_width/2, (screen_height/2)-120, "BEGIN YOUR QUEST", start_game),
+        Button(screen_width/2, (screen_height/2)-40, "LOAD LEVEL", load_level),
+        Button(screen_width/2, (screen_height/2)+40, "SETTINGS", settings),
+        Button(screen_width/2, (screen_height/2)+120, "QUIT", quit_game)
+    ]
+
+    return widgets, background_img
+
+def start_game():
+    # Always Loads Level 1
+    loadLevel(window, levelOne)
+    print("BEGIN YOUR QUEST")
+
+def load_level():
+    # Loads level based on what current level you're on in
+    lvlfile = open("currentLevel.txt", "r")
+    currlvl = lvlfile.read()
+    if currlvl == "2":
+        loadLevel(window, levelTwo)
+    elif currlvl == "3":
+        loadLevel(window, levelThree)
+    print("LOAD LEVEL")
+
+def settings():
+    print("SETTINGS")
+
+def quit_game():
+    pygame.quit()
+    sys.exit()
+
+def display_main_menu(screen):
+    widgets, background_img = scale_window(screen)
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.VIDEORESIZE:
+                widgets, background_img = scale_window(screen)   # rescales visuals for new resolution
+
+            # checks for buttons clicked
+            for widget in widgets:
+                widget.handle_event(event)
+        
+        # add background image and buttons to window
+        screen.blit(background_img, (0, 0))
+
+        for widget in widgets:
+            widget.draw(screen)
+
+        pygame.display.flip()
+
+    pygame.quit()
+
+######################## GAME RUNNER ############################
 
 def get_background(name):
     image = pygame.image.load(join("assets", "Background", name))
@@ -435,7 +502,7 @@ lFour=[]
 #background,bg_image = get_background("CaveBackground1.png")
 
 
-def main(window, level):
+def loadLevel(window, level):
     clock = pygame.time.Clock()
     background=level.background
     bg_image=level.bg_image
@@ -456,4 +523,4 @@ def main(window, level):
     quit()
 
 if __name__ == "__main__":
-    main(window,levelOne)
+    display_main_menu(window)
