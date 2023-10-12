@@ -211,10 +211,10 @@ def scale_window_main(screen):
 
 def start_game():
     # Always Loads Level 1
-    loadLevel(window, levelOne)
     lvlf = open("currentLevel.txt", "w")
     lvlf.write("1")
     lvlf.close()
+    loadLevel(window, levelOne)
     print("BEGIN YOUR QUEST")
 
 def load_level():
@@ -225,7 +225,7 @@ def load_level():
         loadLevel(window, levelTwo)
     elif currlvl == "3":
         loadLevel(window, levelThree)
-    print("LOAD LEVEL")
+    print("LOAD LEVEL " + currlvl)
 
 def settings():
     display_settings_page(window)
@@ -269,7 +269,7 @@ def display_main_menu(screen):
 def scale_window_settings(screen):
     screen_width, screen_height = screen.get_size()   # find screen dimensions
 
-    background_img = pygame.image.load("assets\Background\TitleNoShear.png")
+    background_img = pygame.image.load("assets\Background\BetLvlBackground.png")
     background_img = pygame.transform.scale(background_img, (screen_width, screen_height))   # scale background to resolution
 
     # create widgets based on screen size
@@ -333,6 +333,76 @@ def display_settings_page(screen):
 
 ##############################################################
 ##############################################################
+################### BETWEEN LEVEL SCREEN #####################
+##############################################################
+##############################################################
+
+def scale_window_between(screen):
+    screen_width, screen_height = screen.get_size()   # find screen dimensions
+
+    background_img = pygame.image.load("assets\Background\BetlvlBackground.png")
+    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))   # scale background to resolution
+
+    # create widgets based on screen size
+    widgets = [
+        Button((screen_width/2, (screen_height/2)+20), (300, 54), "CONTINUE", continuelvl),
+        Button((screen_width/2, (screen_height/2)+100), (300, 54), "RETURN TO MAIN", return_main)
+    ]
+
+    return widgets, screen_width, screen_height, background_img
+
+
+def continuelvl():
+    lvlf = open("currentLevel.txt", "r")
+    currlvl = lvlf.read()
+    if currlvl == "2":
+        loadLevel(window, levelTwo)
+    elif currlvl == "3":
+        loadLevel(window, levelThree)
+    print("CONTINUE")
+
+
+def display_between_level_page(screen):
+    widgets, screen_width, screen_height, background_img = scale_window_between(screen)
+
+    #get level num
+    lvlf = open("currentLevel.txt", "r")
+    currlvl = lvlf.read()
+    printlvl = str(int(currlvl) - 1)
+    lvlf.close()
+
+    timef = open("levelTime.txt", "r")
+    currtime = timef.read()
+    timef.close()
+
+    betweenlvl = True
+    while betweenlvl:
+        for event in pygame.event.get():
+            #event handler
+            if event.type == pygame.QUIT:
+                betweenlvl=False
+
+            for widget in widgets:
+                if type(widget) == Button or type(widget) == Checkbox:
+                    widget.handle_event(event)
+                elif type(widget) == Slider:
+                    widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed())
+
+        #draw text
+        screen.blit(background_img, (0,0))
+        draw_text("Congratulations!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-190))
+        draw_text("You Beat Level " + printlvl + "!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-130))
+        draw_text("Your Time Was: " + currtime, pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-70))
+        
+        #input buttons
+        for widget in widgets:
+            widget.draw(screen)
+        
+        pygame.display.flip()
+    pygame.quit()
+
+##############################################################
+##############################################################
 ######################## GAME RUNNER #########################
 ##############################################################
 ##############################################################
@@ -364,9 +434,6 @@ class Level():
 def draw(window, background, bg_image,player,level):
     for tile in background:
         window.blit(bg_image, tile)
-
-    
-    
 
     for object in level.object_list:
         object.draw(window,0)
@@ -416,7 +483,7 @@ def collide(player, level, dx):
                 lvlf.write(str(levelnum))
                 lvlf.close()
                 # THEN OPEN BETWEEN LEVEL MENU
-                display_main_menu(window)
+                display_between_level_page(window)
                 print("END LEVEL")
             break
     
