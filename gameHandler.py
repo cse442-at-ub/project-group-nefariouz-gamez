@@ -795,6 +795,7 @@ lFive.append(endSign(1140,74)) # END SIGN
 levelFive=Level(lFive,50,750,"CaveBackground1.png")
 
 def loadLevel(window, level):
+    level.reset()
     clock = pygame.time.Clock()
     background=level.background
     bg_image=level.bg_image
