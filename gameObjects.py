@@ -2,6 +2,8 @@ import pygame
 from os import listdir
 from os.path import isfile, join
 
+FPS=60
+GRAVITY=1
 
 class Object(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, path=None,name=None):
@@ -99,6 +101,19 @@ class Spike(Object):
         self.image=self.original_image
         self.mask=self.original_mask
 
+class SideSpike(Object):
+    def __init__(self, x, y, width, height, path=None, name=None):
+        super().__init__(x, y, 34,40)
+        self.image=pygame.image.load("assets\Traps\Spikes\Lvl3SidewaysSpike.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\Spikes\Lvl3SidewaysSpike.png")
+
+    def reset(self):
+        self.image=self.original_image
+        self.mask=self.original_mask
+
+
 class Water(Platform):
     def __init__(self, x, y, width, height, col, path=None, name="spike"):
         super().__init__(x, y, width, height, col, path, name)
@@ -110,21 +125,30 @@ PURPLE=(128,0,128)
 class FallPlat(Platform):
     def __init__(self, x, y, width, height, col=PURPLE, path=None,name="fall"):
         super().__init__(x, y, width, height, col, path, name)
+        self.original_x=x
+        self.original_y=y
         self.timer=0
         self.falling=False
+
     def checkTime(self):
         if self.time>300: #5 Seconds time limit, 60 frame x 5 Second limit = 300
             self.falling=True
             return True #True means should fall
         return False
 
-    def startFall(self,player):
+    def loop(self):
         if self.falling:
-            x=0#PLACEHOLDER
+            self.y_velocity += 1
+            
             #START BEING AFFECTED BY GRAVITY AT SAME RATE AS PLAYER
+
     def reset(self):
-        x=0
-        
+        self.timer=0
+        self.falling=False
+        self.rect.x=self.original_x
+        self.rect.y=self.original_y
+    
+    
 
 class Ladder(Object):
     def __init__(self,x,y):

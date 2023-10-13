@@ -450,6 +450,9 @@ def handle_vertical_collision(player, level, dy):
                 player.reset(level)
             if dy > 0 and object.name!="ladder" and not player.on_ladder:
                 player.rect.bottom = object.rect.top
+                if(object.name=="fall"):
+                    object.timer+=1
+                    object.checkTime()
                 player.landed()
             elif dy < 0 and object.name!="ladder" and not player.on_ladder:
                 #player.rect.top = object.rect.bottom
@@ -573,6 +576,8 @@ def getInput(player, level):
                 getOverlap(player,player.reachBox,level)
         if keys[pygame.K_q]:
             x=0#placeholder
+        if keys[pygame.K_ESCAPE]:
+            x=0#Placeholder for pause
     
     vertical_collide = handle_vertical_collision(player, level, player.y_velocity)
     
@@ -673,6 +678,9 @@ levelThree=Level(lThree,1100,559,"Level 1 to 3 bkgrnd.png")
 
 lFour=[]
 #background,bg_image = get_background("CaveBackground1.png")
+lFour.append(Platform())
+lFour.append(Platform())
+lFour.append(Platform())
 
 
 def loadLevel(window, level):
