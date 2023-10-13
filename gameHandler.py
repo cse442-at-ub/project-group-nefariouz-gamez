@@ -6,7 +6,7 @@ import math
 import pygame
 import sys
 
-from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign
+from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike
 from MenuWidgets import *
 
 from os import listdir
@@ -21,6 +21,7 @@ WIDTH, HEIGHT = 1200, 800 #Exact size of figma levels, 1-1 for design purposes
 FPS = 60
 PLAYER_VEL=5 #Player Movement speed
 WHITE=(255,255,255)
+PURPLE=(128,0,128)
 ENDLEVEL = False
 
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
@@ -225,6 +226,8 @@ def load_level():
         loadLevel(window, levelTwo)
     elif currlvl == "3":
         loadLevel(window, levelThree)
+    elif currlvl == "4":
+        loadLevel(window, levelFour)
     print("LOAD LEVEL " + currlvl)
 
 def settings():
@@ -359,6 +362,8 @@ def continuelvl():
         loadLevel(window, levelTwo)
     elif currlvl == "3":
         loadLevel(window, levelThree)
+    elif currlvl == "4":
+        loadLevel(window, levelFour)
     print("CONTINUE")
 
 
@@ -431,6 +436,10 @@ class Level():
             object.reset()
     def resize(self,factor):#resize everything in object_list, init_y,init_x by factor
         x=0
+    def loop(self):
+        for object in self.object_list:
+            if object.name=="fall":
+                object.check_time()
 def draw(window, background, bg_image,player,level):
     for tile in background:
         window.blit(bg_image, tile)
@@ -441,25 +450,27 @@ def draw(window, background, bg_image,player,level):
     player.draw(window,0)
 
     pygame.display.update()
+    
 
 def handle_vertical_collision(player, level, dy):
     collided_objects = []
     for object in level.object_list:
         if pygame.sprite.collide_mask(player, object):
+            if(object.name=="fall"):
+                object.timer+=1
             if(object.name=="spike"):
                 player.reset(level)
             if dy > 0 and object.name!="ladder" and not player.on_ladder:
                 player.rect.bottom = object.rect.top
                 if(object.name=="fall"):
                     object.timer+=1
-                    object.checkTime()
+                    object.check_time()
                 player.landed()
             elif dy < 0 and object.name!="ladder" and not player.on_ladder:
                 #player.rect.top = object.rect.bottom
                 player.rect.y+=2
                 player.y_vel=-PLAYER_VEL*2
                 #player.rect.y=player.rect.y+5
-                print("BONK?")
                 player.hit_head()
 
             collided_objects.append(object)
@@ -677,12 +688,55 @@ lThree.append(endSign(180,63)) # END SIGN
 levelThree=Level(lThree,1100,559,"Level 1 to 3 bkgrnd.png")
 
 lFour=[]
+#Player starting position (1100, 644)
 #background,bg_image = get_background("CaveBackground1.png")
-lFour.append(Platform())
-lFour.append(Platform())
-lFour.append(Platform())
-
-
+lFour.append(BlackSpike(0,767))
+lFour.append(BlackSpike(40,767))
+lFour.append(BlackSpike(80,767))
+lFour.append(BlackSpike(120,767))
+lFour.append(BlackSpike(160,767))
+lFour.append(BlackSpike(200,767))
+lFour.append(BlackSpike(240,767))
+lFour.append(BlackSpike(280,767))
+lFour.append(BlackSpike(320,767))
+lFour.append(BlackSpike(360,767))
+lFour.append(BlackSpike(400,767))
+lFour.append(BlackSpike(440,767))
+lFour.append(BlackSpike(480,767))
+lFour.append(BlackSpike(520,767))
+lFour.append(BlackSpike(560,767))
+lFour.append(BlackSpike(600,767))
+lFour.append(BlackSpike(640,767))
+lFour.append(BlackSpike(680,767))
+lFour.append(BlackSpike(720,767))
+lFour.append(BlackSpike(760,767))
+lFour.append(BlackSpike(800,767))
+lFour.append(BlackSpike(840,767))
+lFour.append(BlackSpike(880,767))
+lFour.append(BlackSpike(920,767))
+lFour.append(Platform(960,720,244,80,WHITE))
+#ladder x 1105
+lFour.append(Ladder(1105,720))
+lFour.append(FallPlat(670,695,165,32))#First Platform
+fShrub1=smallShrub(382,500)
+fLadder2=Ladder(445,621)
+fLadder3=Ladder(445,552)
+fallGroup1=[fShrub1,fLadder2,fLadder3]
+fallPlat2=FallPlat(221,552,257,48,PURPLE,fallGroup1)#platform with shrub and ladder
+lFour.append(fallPlat2)
+lFour.append(fLadder2)
+lFour.append(fLadder3)
+lFour.append(fShrub1)
+lFour.append(FallPlat(620,495,257,30))#Third platform
+lFour.append(FallPlat(223,435,257,15))#Fourth platform
+lFour.append(Platform(0,116,200,80,WHITE))
+lFour.append(Ladder(108,286))
+lFour.append(Ladder(108,216))
+lFour.append(Platform(0,118,200,80,WHITE))
+lFour.append(Ladder(108,116))
+lFour.append(Ladder(23,0))
+lFour.append(endSign(23,76)) # END SIGN
+levelFour=Level(lFour,1100,700,"CaveBackground1.png")
 def loadLevel(window, level):
     clock = pygame.time.Clock()
     background=level.background
@@ -698,6 +752,7 @@ def loadLevel(window, level):
                 run = False
                 break
         playerOne.loop(FPS)
+        level.loop()
         getInput(playerOne,level)
         draw(window, background, bg_image,playerOne,level)
     pygame.quit()

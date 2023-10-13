@@ -13,7 +13,8 @@ class Object(pygame.sprite.Sprite):
         self.image = pygame.Surface((width, height), pygame.SRCALPHA)
         self.width, self.height, self.name = width, height, name
         self.original_image=pygame.Surface((width, height), pygame.SRCALPHA)
-        
+        self.original_x=0
+        self.original_y=0#possible use in resizing
     def draw(self, window, offset_x):
         window.blit(self.image, (self.rect.x - offset_x, self.rect.y))
     
@@ -55,6 +56,8 @@ class smallShrub(Object):
     def __init__(self,x,y):
         super().__init__(x,y,48,52)
         self.name="small shrub"
+        self.original_x=x
+        self.original_y=y
         self.image=pygame.image.load("assets\Traps\SmallShrub\SmallShrub.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
@@ -63,6 +66,8 @@ class smallShrub(Object):
         self.image=pygame.image.load("assets\Traps\Empty\empty.png")
         self.mask=pygame.mask.from_surface(self.image)
     def reset(self):
+        self.rect.x=self.original_x
+        self.rect.y=self.original_y
         self.image=self.original_image
         self.mask=self.original_mask
 
@@ -101,6 +106,20 @@ class Spike(Object):
         self.image=self.original_image
         self.mask=self.original_mask
 
+class BlackSpike(Object):
+    def __init__(self,x,y):
+        super().__init__(x,y,40,34)
+        self.name="spike"
+        self.image=pygame.image.load("assets\Traps\Spikes\BlackSpike.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\Spikes\BlackSpike.png")
+
+    def reset(self):
+        self.image=self.original_image
+        self.mask=self.original_mask
+
+
 class SideSpike(Object):
     def __init__(self, x, y, width, height, path=None, name=None):
         super().__init__(x, y, 34,40)
@@ -118,35 +137,36 @@ class Water(Platform):
     def __init__(self, x, y, width, height, col, path=None, name="spike"):
         super().__init__(x, y, width, height, col, path, name)
     def reset(self):
-        x=0
+        x=0#water has nothing that would really need to be reset
 
 PURPLE=(128,0,128)
 
 class FallPlat(Platform):
-    def __init__(self, x, y, width, height, col=PURPLE, path=None,name="fall"):
+    def __init__(self, x, y, width, height, col=PURPLE,oList=[], path=None,name="fall"):
         super().__init__(x, y, width, height, col, path, name)
         self.original_x=x
         self.original_y=y
         self.timer=0
         self.falling=False
+        self.object_list=oList
+        self.copy_list=oList.copy()
+        
 
-    def checkTime(self):
-        if self.time>300: #5 Seconds time limit, 60 frame x 5 Second limit = 300
+    def check_time(self):
+        if self.timer>40: #5 Seconds time limit, 60 frame x 5 Second limit = 300
             self.falling=True
+            self.rect.y+=2
+            for object in self.object_list:
+                object.rect.y+=2
             return True #True means should fall
         return False
-
-    def loop(self):
-        if self.falling:
-            self.y_velocity += 1
-            
-            #START BEING AFFECTED BY GRAVITY AT SAME RATE AS PLAYER
 
     def reset(self):
         self.timer=0
         self.falling=False
         self.rect.x=self.original_x
         self.rect.y=self.original_y
+        self.object_list=self.copy_list.copy()
     
     
 
@@ -155,10 +175,12 @@ class Ladder(Object):
         super().__init__(x,y,33,100)
         self.name="ladder"
         self.xO=x
+        self.yO=y
         self.image=pygame.image.load("assets\Special\Ladder.png")
         self.mask=pygame.mask.from_surface(self.image)
     def reset(self):
-        x=0
+        self.rect.x=self.xO
+        self.rect.y=self.yO
 
 
 class endSign(Object):
