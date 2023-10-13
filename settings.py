@@ -3,6 +3,10 @@ from MenuWidgets import *
 
 pygame.init()
 
+pygame.mixer.music.load("audio/background_music.mp3")
+pygame.mixer.music.play(loops=-1)   # play and loop music indefinitely
+pygame.mixer.music.set_volume(.5)   # initialize max volume of music
+
 def scale_window(screen):
     screen_width, screen_height = screen.get_size()   # find screen dimensions
 
@@ -11,8 +15,8 @@ def scale_window(screen):
 
     # create widgets based on screen size
     widgets = [
-        Slider(((screen_width/2)+150, (screen_height/2)-190), (300, 54)),
-        Slider(((screen_width/2)+150, (screen_height/2)-110), (300, 54)),
+        Slider(((screen_width/2)+150, (screen_height/2)-190), (300, 54), 'music'),
+        Slider(((screen_width/2)+150, (screen_height/2)-110), (300, 54), 'sfx'),
         Checkbox(((screen_width/2+27), (screen_height/2)-30), 54),
         Button((screen_width/2, (screen_height/2)+50), (300, 54), "TUTORIAL", tutorial),
         Button((screen_width/2, (screen_height/2)+130), (300, 54), "CHOOSE CHARACTER", choose_character),
@@ -71,3 +75,6 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
     pygame.display.set_caption("Shrubbery Quest")
     display_settings_page(screen)
+
+# References:
+# https://www.pygame.org/docs/ref/music.html
