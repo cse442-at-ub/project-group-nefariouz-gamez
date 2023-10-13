@@ -73,8 +73,12 @@ class Checkbox:
         if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pygame.mouse.get_pos()):
             self.checked = not self.checked
             if self.checked:
+                pygame.mixer.music.pause()
+                # mute sfx here
                 print("MUTED")
             else:
+                pygame.mixer.music.unpause()
+                # unmute sfx here
                 print("UNMUTED")
 
 class Slider:
@@ -82,10 +86,12 @@ class Slider:
     Args:
         pos (tuple): take (x, y) position on screen, centered from middle of box
         size (tuple): takes (width, height) of slider
-        text (str): places text on button
-        action: performs function when clicked
+        audio (str): determines what audio to adjust
     """
-    def __init__(self, pos: tuple, size: tuple):
+    def __init__(self, pos: tuple, size: tuple, audio: str):
+        if audio not in ["music", "sfx"]:
+            raise ValueError("Audio must be 'music' or 'sfx' for Slider() class initialization")
+        self.audio = audio
         self.pos = pos
         self.size = size
 
@@ -94,8 +100,8 @@ class Slider:
         self.slider_top = self.pos[1] - (size[1]//2)
 
         self.min = 0
-        self.max = 100
-        self.initial_val = (self.slider_right - self.slider_left) * 0.95    # set base volume at 95%
+        self.max = 50
+        self.initial_val = (self.slider_right - self.slider_left)   # set base volume at 100%
 
         self.container_rect = pygame.Rect(self.slider_left, self.slider_top, self.size[0], self.size[1])
         self.button_rect = pygame.Rect(self.slider_left + self.initial_val - 5, self.slider_top, 10, self.size[1])
@@ -110,6 +116,10 @@ class Slider:
     def handle_event(self, mouse_pos, mouse):
         if self.container_rect.collidepoint(mouse_pos) and mouse[0]:
             self.move_slider(mouse_pos)
+            if self.audio == 'music':
+                pygame.mixer.music.set_volume(self.get_value()/100)
+            elif self.audio == 'sfx':
+                pass
         # print(self.get_value())
 
     def get_value(self):
