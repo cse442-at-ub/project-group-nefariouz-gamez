@@ -540,7 +540,7 @@ def getInput(player, level):
     collide_right = collide(player, level, PLAYER_VEL*2)
     if player.on_ladder:
         player.y_velocity=0
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w]or keys[pygame.K_SPACE]:
             g=0
             #Move up on ladder
             #check if still on ladder
@@ -579,7 +579,7 @@ def getInput(player, level):
     if not player.on_ladder:
         player.x_velocity=0 #Reset
         
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w]or keys[pygame.K_SPACE]:
             if player.inair==False:
                 player.jump()
         if keys[pygame.K_a] and not collide_left:
