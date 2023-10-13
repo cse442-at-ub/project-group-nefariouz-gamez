@@ -6,7 +6,7 @@ import math
 import pygame
 import sys
 
-from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike, ReverseSmallShrub, Void
+from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike, SideSpike, ReverseSmallShrub, Void
 from MenuWidgets import *
 
 from os import listdir
@@ -678,6 +678,11 @@ lThree.append(Platform(975,599,57,176,BROWN))#POST 2
 lThree.append(Platform(643,573,57,176,BROWN))#POST 3
 lThree.append(Platform(330,523,57,237,BROWN))#POST 4
 lThree.append(Platform(0,0,131,800,GRAY))#MOUNTAINSIDE
+lThree.append(SideSpike(131,388))
+lThree.append(SideSpike(131,348))
+lThree.append(SideSpike(131,308))
+lThree.append(SideSpike(131,268))
+lThree.append(SideSpike(131,228))
 lThree.append(Water(0,720,1200,80,BLUE))#WATER
 lThree.append(Platform(922,549,278,50,WHITE))#START
 lThree.append(Platform(564,523,215,50,WHITE))#PLAT 1

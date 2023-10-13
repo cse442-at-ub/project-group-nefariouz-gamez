@@ -74,7 +74,7 @@ class smallShrub(Object):
 
 class ReverseSmallShrub(Object):
     def __init__(self,x,y):
-        super().__init__(y,x,48,52)
+        super().__init__(x,y,48,52)
         self.name="small shrub"
         self.original_x=x
         self.original_y=y
@@ -142,7 +142,7 @@ class BlackSpike(Object):
 
 
 class SideSpike(Object):
-    def __init__(self, x, y, width, height, path=None, name=None):
+    def __init__(self, x, y, path=None, name=None):
         super().__init__(x, y, 34,40)
         self.image=pygame.image.load("assets\Traps\Spikes\Lvl3SidewaysSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
