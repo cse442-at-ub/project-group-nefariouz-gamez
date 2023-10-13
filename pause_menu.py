@@ -1,17 +1,12 @@
 import pygame
 import sys
-from draw_background import draw_background
 from draw_button import draw_button
 
 
 # Call show_tutorial with screen (pygame.display.set_mode(screen_size))
 def show_pause_menu(screen):
-    # Load in images
-    background_img = pygame.image.load("assets/pause_screen_background.png").convert_alpha()
-    resume_button_img = pygame.image.load("assets/resume_button.png").convert_alpha()
-    settings_button_img = pygame.image.load("assets/settings_button.png").convert_alpha()
-    return_button_img = pygame.image.load("assets/return_to_main_button.png").convert_alpha()
-    exit_button_img = pygame.image.load("assets/exit_button.png").convert_alpha()
+    # Load in background image
+    background_img = pygame.image.load("assets/Backgrounds/pause_screen_background.png").convert_alpha()
 
     # Run game loop for this page
     while True:
@@ -19,13 +14,14 @@ def show_pause_menu(screen):
         button_size = (screen_size[0]/4.286, screen_size[1]/16)
 
         # Draw background
-        draw_background(screen, background_img, screen_size)
+        screen.blit(pygame.transform.scale(background_img, screen_size), (0, 0))
 
         # Draw buttons
-        resume_button_rect = draw_button(screen, resume_button_img, button_size, (screen_size[0]/2.632, screen_size[1]/3.279))
-        settings_button_rect = draw_button(screen, settings_button_img, button_size, (screen_size[0]/2.632, screen_size[1]/2.432))
-        return_button_rect = draw_button(screen, return_button_img, button_size, (screen_size[0] / 2.632, screen_size[1] / 1.900))
-        exit_button_rect = draw_button(screen, exit_button_img, button_size, (screen_size[0] / 2.632, screen_size[1] / 1.600))
+        center = screen_size[0]/2
+        resume_button_rect = draw_button(screen, button_size, (center, screen_size[1]/3.300), "Resume")
+        settings_button_rect = draw_button(screen, button_size, (center, screen_size[1]/2.425), "Settings")
+        return_button_rect = draw_button(screen, button_size, (center, screen_size[1] / 1.900), "Main Menu")
+        exit_button_rect = draw_button(screen, button_size, (center, screen_size[1] / 1.575), "Exit")
 
         # Check inputs
         for event in pygame.event.get():
