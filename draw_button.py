@@ -1,19 +1,17 @@
 import pygame
-import pygame.gfxdraw
+import math
 
 
 # Call to draw button
-def draw_button(screen, button_img, size, location):
-    button_img = pygame.transform.scale(button_img, size)
+def draw_button(screen, size, location, text):
+    button_surface = pygame.Surface((size[0], size[1]), pygame.SRCALPHA)
+    pygame.draw.rect(button_surface, (190, 190, 190), (0, 0, size[0], size[1]), border_radius=7)
 
-    shadow_surface = pygame.Surface((button_img.get_width()+2, button_img.get_height()+2), pygame.SRCALPHA)
-    shadow_rect = pygame.Rect(0, 0, button_img.get_width()+2, button_img.get_height()+2)
-    shadow_color = (0, 0, 0, 128)
-    pygame.gfxdraw.box(shadow_surface, shadow_rect, shadow_color)
-    pygame.gfxdraw.filled_ellipse(shadow_surface, shadow_rect.centerx, shadow_rect.centery + 10, shadow_rect.width // 2, shadow_rect.height // 4, shadow_color)
-    screen.blit(shadow_surface, (location[0]-2, location[1]+2))
+    font = pygame.font.Font(None, math.floor(36*(screen.get_size()[0]/1200)))
+    text_surface = font.render(text, True, (34, 90, 48))
+    text_rect = text_surface.get_rect(center=(size[0] / 2, size[1] / 2))
+    button_surface.blit(text_surface, text_rect)
+    button_rect = button_surface.get_rect(center=location)
 
-    button_rect = button_img.get_rect()
-    button_rect.topleft = location
-    screen.blit(button_img, button_rect.topleft)
+    screen.blit(button_surface, button_rect)
     return button_rect
