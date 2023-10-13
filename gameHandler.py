@@ -6,7 +6,7 @@ import math
 import pygame
 import sys
 
-from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike
+from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike, ReverseSmallShrub, Void
 from MenuWidgets import *
 
 from os import listdir
@@ -228,6 +228,8 @@ def load_level():
         loadLevel(window, levelThree)
     elif currlvl == "4":
         loadLevel(window, levelFour)
+    elif currlvl == "5":
+        loadLevel(window, levelFive)
     print("LOAD LEVEL " + currlvl)
 
 def settings():
@@ -364,6 +366,8 @@ def continuelvl():
         loadLevel(window, levelThree)
     elif currlvl == "4":
         loadLevel(window, levelFour)
+    elif currlvl == "5":
+        loadLevel(window, levelFive)
     print("CONTINUE")
 
 
@@ -440,6 +444,7 @@ class Level():
         for object in self.object_list:
             if object.name=="fall":
                 object.check_time()
+
 def draw(window, background, bg_image,player,level):
     for tile in background:
         window.blit(bg_image, tile)
@@ -737,6 +742,53 @@ lFour.append(Ladder(108,116))
 lFour.append(Ladder(23,0))
 lFour.append(endSign(23,76)) # END SIGN
 levelFour=Level(lFour,1100,700,"CaveBackground1.png")
+
+lFive=[]
+lFive.append(Void(85,785,1115,15))
+lFive.append(Platform(0,700,200,80,WHITE))
+lFive.append(Ladder(21,700))
+lFive.append(FallPlat(298,649,200,51))
+lFive.append(Platform(600, 598, 200, 51,WHITE))
+lFive.append(Platform(889,573,200,51,WHITE))
+lFive.append(Platform(889,373,200,51,WHITE))
+lFive.append(Ladder(1011,373))
+lFive.append(Ladder(1011, 473))
+lFive.append(Platform(600,432,200,51,WHITE))
+lFive.append(ReverseSmallShrub(750,483))
+lFive.append(TallShrub(752,249))
+lFive.append(FallPlat(298,384,200,51))
+lFive.append(Platform(56,190,200,51,WHITE))
+lFive.append(Ladder(215,190))
+lFive.append(Ladder(215,204))
+fpShrub1=smallShrub(345,91)
+fpShrub2=smallShrub(404,91)
+fallGroupFive1=[fpShrub1,fpShrub2]
+fiveFPlat1=FallPlat(298,143,200,51,PURPLE,fallGroupFive1)
+lFive.append(fpShrub1)
+lFive.append(fpShrub2)
+lFive.append(fiveFPlat1)
+
+fpShrub3=smallShrub(652,91)
+fpShrub4=smallShrub(704,91)
+fallGroupFive2=[fpShrub3,fpShrub4]
+fiveFPlat2=FallPlat(597,143,200,51,PURPLE,fallGroupFive2)
+lFive.append(fpShrub3)
+lFive.append(fpShrub4)
+lFive.append(fiveFPlat2)
+
+fpShrub5=smallShrub(948,91)
+fpShrub6=smallShrub(1003,91)
+fallGroupFive3=[fpShrub5,fpShrub6]
+fiveFPlat3=FallPlat(889,143,200,51,PURPLE,fallGroupFive3)
+lFive.append(fpShrub5)
+lFive.append(fpShrub6)
+lFive.append(fiveFPlat3)
+
+lFive.append(Platform(1097,114,103,58,WHITE))
+lFive.append(endSign(1140,74)) # END SIGN
+
+levelFive=Level(lFive,50,750,"CaveBackground1.png")
+
 def loadLevel(window, level):
     clock = pygame.time.Clock()
     background=level.background

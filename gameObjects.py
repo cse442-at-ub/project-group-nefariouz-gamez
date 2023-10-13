@@ -4,6 +4,7 @@ from os.path import isfile, join
 
 FPS=60
 GRAVITY=1
+BLACK=(0,0,0)
 
 class Object(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, path=None,name=None):
@@ -62,6 +63,26 @@ class smallShrub(Object):
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\SmallShrub\SmallShrub.png")
+    def destroy(self):
+        self.image=pygame.image.load("assets\Traps\Empty\empty.png")
+        self.mask=pygame.mask.from_surface(self.image)
+    def reset(self):
+        self.rect.x=self.original_x
+        self.rect.y=self.original_y
+        self.image=self.original_image
+        self.mask=self.original_mask
+
+class ReverseSmallShrub(Object):
+    def __init__(self,x,y):
+        super().__init__(y,x,48,52)
+        self.name="small shrub"
+        self.original_x=x
+        self.original_y=y
+        self.image=pygame.image.load("assets\Traps\SmallShrub\iSmallShrub.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\SmallShrub\iSmallShrub.png")
+
     def destroy(self):
         self.image=pygame.image.load("assets\Traps\Empty\empty.png")
         self.mask=pygame.mask.from_surface(self.image)
@@ -135,6 +156,12 @@ class SideSpike(Object):
 
 class Water(Platform):
     def __init__(self, x, y, width, height, col, path=None, name="spike"):
+        super().__init__(x, y, width, height, col, path, name)
+    def reset(self):
+        x=0#water has nothing that would really need to be reset
+
+class Void(Platform):
+    def __init__(self, x, y, width, height, col=BLACK, path=None, name="spike"):
         super().__init__(x, y, width, height, col, path, name)
     def reset(self):
         x=0#water has nothing that would really need to be reset
