@@ -593,7 +593,7 @@ def getInput(player, level):
         if keys[pygame.K_q]:
             x=0#placeholder
         if keys[pygame.K_ESCAPE]:
-            x=0#Placeholder for pause
+            x=0#Placeholder for pause FOR BLAKE
     
     vertical_collide = handle_vertical_collision(player, level, player.y_velocity)
     
