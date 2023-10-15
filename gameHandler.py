@@ -758,11 +758,11 @@ def getInput(player, level):
                         g=1
             if g==0:
                 player.on_ladder=False
-        if keys[pygame.K_a] and not collide_left:
-            player.on_ladder=False
+        if keys[pygame.K_a] and not collide_left and not player.on_ladder:
+            # player.on_ladder=False
             player.move_left(PLAYER_VEL)
 
-        if keys[pygame.K_d] and not collide_right:
+        if keys[pygame.K_d] and not collide_right and not player.on_ladder:
             player.move_right(PLAYER_VEL)
             
         if keys[pygame.K_e]:
@@ -778,9 +778,9 @@ def getInput(player, level):
         if keys[pygame.K_w]or keys[pygame.K_SPACE]:
             if player.inair==False:
                 player.jump()
-        if keys[pygame.K_a] and not collide_left:
+        if keys[pygame.K_a] and not collide_left and not player.on_ladder:
             player.move_left(PLAYER_VEL)
-        if keys[pygame.K_d] and not collide_right:
+        if keys[pygame.K_d] and not collide_right and not player.on_ladder:
             player.move_right(PLAYER_VEL)
         if keys[pygame.K_e]:
             if player.e_timer==0:
