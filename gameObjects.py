@@ -142,7 +142,7 @@ class BlackSpike(Object):
 
 
 class SideSpike(Object):
-    def __init__(self, x, y, path=None, name=None):
+    def __init__(self, x, y, path=None, name="spike"):
         super().__init__(x, y, 34,40)
         self.image=pygame.image.load("assets\Traps\Spikes\Lvl3SidewaysSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
