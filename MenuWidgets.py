@@ -84,47 +84,56 @@ class Checkbox:
 class Slider:
     """
     Args:
-        pos (tuple): take (x, y) position on screen, centered from middle of box
-        size (tuple): takes (width, height) of slider
+        pos (tuple): take (x, y) position on screen, centered from middle of line
+        size (int): takes width of slider
         audio (str): determines what audio to adjust
     """
-    def __init__(self, pos: tuple, size: tuple, audio: str):
+    def __init__(self, pos: tuple, size: int, audio: str):
         if audio not in ["music", "sfx"]:
             raise ValueError("Audio must be 'music' or 'sfx' for Slider() class initialization")
+        
         self.audio = audio
         self.pos = pos
         self.size = size
 
-        self.slider_left = self.pos[0] - (size[0]//2)
-        self.slider_right = self.pos[0] + (size[0]//2)
-        self.slider_top = self.pos[1] - (size[1]//2)
-
         self.min = 0
-        self.max = 50
-        self.initial_val = (self.slider_right - self.slider_left)   # set base volume at 100%
+        self.max = 75
+        self.dragging = False
 
-        self.container_rect = pygame.Rect(self.slider_left, self.slider_top, self.size[0], self.size[1])
-        self.button_rect = pygame.Rect(self.slider_left + self.initial_val - 5, self.slider_top, 10, self.size[1])
+        self.slider_left = self.pos[0] - (size//2)
+        self.slider_right = self.pos[0] + (size//2)
+        self.initial_val = self.slider_right   # set base volume at 100%
+
+        self.circle_radius = 10
+        self.button_pos = (int(self.initial_val), int(self.pos[1]))
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (190, 190, 190), self.container_rect)
-        pygame.draw.rect(screen, (34, 90, 48), self.button_rect)
+        pygame.draw.line(screen, (190, 190, 190), (self.slider_left, self.pos[1]), (self.slider_right, self.pos[1]), 5)
+        pygame.draw.circle(screen, (34, 90, 48), self.button_pos, self.circle_radius)
 
     def move_slider(self, mouse_pos):
-        self.button_rect.centerx = mouse_pos[0]
+        x_val = min(max(mouse_pos[0], self.slider_left), self.slider_right)
+        self.button_pos = (int(x_val), int(self.pos[1]))
 
     def handle_event(self, mouse_pos, mouse):
-        if self.container_rect.collidepoint(mouse_pos) and mouse[0]:
+        distance = (mouse_pos[0] - self.button_pos[0])**2 + (mouse_pos[1] - self.button_pos[1])**2
+        if distance <= self.circle_radius**2 and mouse[0] and not self.dragging:
+            self.dragging = True
+
+        if mouse[0] and self.dragging:
             self.move_slider(mouse_pos)
             if self.audio == 'music':
                 pygame.mixer.music.set_volume(self.get_value()/100)
             elif self.audio == 'sfx':
+                # update sfx sounds here
                 pass
-        # print(self.get_value())
+
+        if not mouse[0]:
+            self.dragging = False
 
     def get_value(self):
         val_range = self.slider_right - self.slider_left - 1
-        button_val = self.button_rect.centerx - self.slider_left
+        button_val = self.button_pos[0] - self.slider_left
         value = (button_val/val_range) * (self.max-self.min) + self.min
         if value > 98.5:
             return 100.0
@@ -132,6 +141,3 @@ class Slider:
             return 0.0
         else:
             return value
-
-# References:
-# https://www.youtube.com/watch?v=n_ijgqYmXS0
