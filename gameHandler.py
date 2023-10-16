@@ -18,6 +18,10 @@ from os.path import isfile, join
 
 pygame.init()
 
+pygame.mixer.music.load("assets/audio/background_music.mp3")   # https://www.youtube.com/watch?v=cTDSFCC9rQ4
+pygame.mixer.music.play(loops=-1)   # play and loop music indefinitely
+pygame.mixer.music.set_volume(.75)   # initialize max volume of music
+
 pygame.display.set_caption("Shrubbery Quest")
 GRAVITY=1#Rate at which objects and players fall
 WIDTH, HEIGHT = 1200, 800 #Exact size of figma levels, 1-1 for design purposes
@@ -170,7 +174,7 @@ class Player(pygame.sprite.Sprite):
             f = open("CurrentCharacter.txt", "w")
             f.write("Celia")
 
-        print("Spritesheet to be opened:", current_character)
+        #print("Spritesheet to be opened:", current_character)
 
         character_sprites = load_sprite_sheets("Characters", current_character, 32, 32, True)
 
@@ -263,8 +267,8 @@ def start_game():
     lvlf = open("currentLevel.txt", "w")
     lvlf.write("1")
     lvlf.close()
-    loadLevel(window, levelOne)
-    print("BEGIN YOUR QUEST")
+
+    display_tut(window)
 
 def load_level():
     # Loads level based on what current level you're on in
@@ -313,6 +317,55 @@ def display_main_menu(screen):
 
     pygame.quit()
 
+
+##############################################################
+##############################################################
+######################## TUTORIAL ############################
+##############################################################
+##############################################################
+
+def scale_window_tut(screen):
+    screen_width, screen_height = screen.get_size()   # find screen dimensions
+
+    background_img = pygame.image.load("assets/Background/pretutbackground.png")
+    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))   # scale background to resolution
+
+    # creates widgets based on screen size
+    widgets = [
+        Button((screen_width/2, (screen_height-75)), (300, 54), "CONTINUE TO GAME", cont_game),
+    ]
+
+    return widgets, background_img
+
+def cont_game():
+    # Always Loads Level 1
+    loadLevel(window, levelOne)
+
+def display_tut(screen):
+    widgets, background_img = scale_window_tut(screen)
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.VIDEORESIZE:
+                widgets, background_img = scale_window_tut(screen)   # rescales visuals for new resolution
+
+            # checks for buttons clicked
+            for widget in widgets:
+                widget.handle_event(event)
+
+        # add background image and buttons to window
+        screen.blit(background_img, (0, 0))
+
+        for widget in widgets:
+            widget.draw(screen)
+
+        pygame.display.flip()
+
+    pygame.quit()
+
 ##############################################################
 ##############################################################
 ######################## SETTINGS ############################
@@ -327,8 +380,8 @@ def scale_window_settings(screen):
 
     # create widgets based on screen size
     widgets = [
-        Slider(((screen_width/2)+150, (screen_height/2)-190), (300, 54)),
-        Slider(((screen_width/2)+150, (screen_height/2)-110), (300, 54)),
+        Slider(((screen_width/2)+150, (screen_height/2)-190), 300, 'music'),
+        Slider(((screen_width/2)+150, (screen_height/2)-110), 300, 'sfx'),
         Checkbox(((screen_width/2+27), (screen_height/2)-30), 54),
         Button((screen_width/2, (screen_height/2)+50), (300, 54), "TUTORIAL", tutorial),
         Button((screen_width/2, (screen_height/2)+130), (300, 54), "CHOOSE CHARACTER", choose_character),

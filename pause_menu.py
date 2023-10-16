@@ -23,8 +23,8 @@ def pause_menu_settings(screen):
 
     # Create widgets
     widgets = [
-        Slider(((screen_size[0]/2)+150, (screen_size[1]/2)-190), button_size),
-        Slider(((screen_size[0]/2)+150, (screen_size[1]/2)-110), button_size),
+        Slider(((screen_size[0]/2)+150, (screen_size[1]/2)-190), 300, 'music'),
+        Slider(((screen_size[0]/2)+150, (screen_size[1]/2)-110), 300, 'sfx'),
         Checkbox(((screen_size[0]/2+27), (screen_size[1]/2)-30), 54),
         Button((screen_size[0]/2, (screen_size[1]/2)+50), button_size, "TUTORIAL", None),
         Button((screen_size[0]/2, (screen_size[1]/2)+130), button_size, "RETURN TO MAIN", None),
