@@ -54,96 +54,10 @@ class Checkbox:
         pos (tuple): take (x, y) position on screen, centered from the middle of box
         dim (int): takes value used for width and height of box
     """
-
     def __init__(self, pos: tuple, dim: int):
         self.pos = pos
         self.size = (dim, dim)
-        self.rect = pygame.Rect(self.pos[0] - (self.size[0] / 2), self.pos[1] - (self.size[1] / 2), self.size[0],
-                                self.size[1])
-        self.checked = False
-
-        # Load images from folder
-        self.unchecked_image = pygame.image.load("images/unchecked_box.png")
-        self.checked_image = pygame.image.load("images/checked_box.png")
-
-        self.unchecked_image = pygame.transform.scale(self.unchecked_image, self.size)
-        self.checked_image = pygame.transform.scale(self.checked_image, self.size)
-
-    def draw(self, screen):
-        if self.checked:
-            screen.blit(self.checked_image, (self.pos[0] - self.size[0] / 2, self.pos[1] - self.size[1] / 2))
-        else:
-            screen.blit(self.unchecked_image, (self.pos[0] - self.size[0] / 2, self.pos[1] - self.size[1] / 2))
-
-    def handle_event(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pygame.mouse.get_pos()):
-            self.checked = not self.checked
-            if self.checked:
-                print("MUTED")
-            else:
-                print("UNMUTED")
-
-
-class Slider:
-    """
-    Args:
-        pos (tuple): take (x, y) position on screen, centered from middle of box
-        size (tuple): takes (width, height) of slider
-        text (str): places text on button
-        action: performs function when clicked
-    """
-
-    def __init__(self, pos: tuple, size: tuple):
-        self.pos = pos
-        self.size = size
-
-        self.slider_left = self.pos[0] - (size[0] // 2)
-        self.slider_right = self.pos[0] + (size[0] // 2)
-        self.slider_top = self.pos[1] - (size[1] // 2)
-
-        self.min = 0
-        self.max = 100
-        self.initial_val = (self.slider_right - self.slider_left) * 0.95  # set base volume at 95%
-
-        self.container_rect = pygame.Rect(self.slider_left, self.slider_top, self.size[0], self.size[1])
-        self.button_rect = pygame.Rect(self.slider_left + self.initial_val - 5, self.slider_top, 10, self.size[1])
-
-    def draw(self, screen):
-        pygame.draw.rect(screen, (190, 190, 190), self.container_rect)
-        pygame.draw.rect(screen, (34, 90, 48), self.button_rect)
-
-    def move_slider(self, mouse_pos):
-        self.button_rect.centerx = mouse_pos[0]
-
-    def handle_event(self, mouse_pos, mouse):
-        if self.container_rect.collidepoint(mouse_pos) and mouse[0]:
-            self.move_slider(mouse_pos)
-        # print(self.get_value())
-
-    def get_value(self):
-        val_range = self.slider_right - self.slider_left - 1
-        button_val = self.button_rect.centerx - self.slider_left
-        value = (button_val / val_range) * (self.max - self.min) + self.min
-        if value > 98.5:
-            return 100.0
-        elif value < 1.5:
-            return 0.0
-        else:
-            return value
-
-
-class Checkbox:
-    """
-    Args:
-        pos (tuple): take (x, y) position on screen, centered from the middle of box
-        dim (int): takes value used for width and height of box
-    """
-
-    def __init__(self, pos: tuple, dim: int):
-        self.pos = pos
-        self.size = (dim, dim)
-        self.rect = pygame.Rect(self.pos[0] - (self.size[0] / 2), self.pos[1] - (self.size[1] / 2), self.size[0],
-                                self.size[1])
+        self.rect = pygame.Rect(self.pos[0] - (self.size[0]/2), self.pos[1] - (self.size[1]/2), self.size[0], self.size[1])
         self.checked = False
 
         # Load images from folder
@@ -155,59 +69,76 @@ class Checkbox:
 
     def draw(self, screen):
         if self.checked:
-            screen.blit(self.checked_image, (self.pos[0] - self.size[0] / 2, self.pos[1] - self.size[1] / 2))
+            screen.blit(self.checked_image, (self.pos[0] - self.size[0]/2, self.pos[1] - self.size[1]/2))
         else:
-            screen.blit(self.unchecked_image, (self.pos[0] - self.size[0] / 2, self.pos[1] - self.size[1] / 2))
+            screen.blit(self.unchecked_image, (self.pos[0] - self.size[0]/2, self.pos[1] - self.size[1]/2))
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pygame.mouse.get_pos()):
             self.checked = not self.checked
             if self.checked:
+                pygame.mixer.music.pause()
+                # mute sfx here
                 print("MUTED")
             else:
+                pygame.mixer.music.unpause()
+                # unmute sfx here
                 print("UNMUTED")
-
 
 class Slider:
     """
     Args:
-        pos (tuple): take (x, y) position on screen, centered from middle of box
-        size (tuple): takes (width, height) of slider
-        text (str): places text on button
-        action: performs function when clicked
+        pos (tuple): take (x, y) position on screen, centered from middle of line
+        size (int): takes width of slider
+        audio (str): determines what audio to adjust
     """
-
-    def __init__(self, pos: tuple, size: tuple):
+    def __init__(self, pos: tuple, size: int, audio: str):
+        if audio not in ["music", "sfx"]:
+            raise ValueError("Audio must be 'music' or 'sfx' for Slider() class initialization")
+        
+        self.audio = audio
         self.pos = pos
         self.size = size
 
-        self.slider_left = self.pos[0] - (size[0] // 2)
-        self.slider_right = self.pos[0] + (size[0] // 2)
-        self.slider_top = self.pos[1] - (size[1] // 2)
-
         self.min = 0
-        self.max = 100
-        self.initial_val = (self.slider_right - self.slider_left) * 0.95  # set base volume at 95%
+        self.max = 75
+        self.dragging = False
 
-        self.container_rect = pygame.Rect(self.slider_left, self.slider_top, self.size[0], self.size[1])
-        self.button_rect = pygame.Rect(self.slider_left + self.initial_val - 5, self.slider_top, 10, self.size[1])
+        self.slider_left = self.pos[0] - (size//2)
+        self.slider_right = self.pos[0] + (size//2)
+        self.initial_val = self.slider_right   # set base volume at 100%
+
+        self.circle_radius = 10
+        self.button_pos = (int(self.initial_val), int(self.pos[1]))
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (190, 190, 190), self.container_rect)
-        pygame.draw.rect(screen, (34, 90, 48), self.button_rect)
+        pygame.draw.line(screen, (190, 190, 190), (self.slider_left, self.pos[1]), (self.slider_right, self.pos[1]), 5)
+        pygame.draw.circle(screen, (34, 90, 48), self.button_pos, self.circle_radius)
 
     def move_slider(self, mouse_pos):
-        self.button_rect.centerx = mouse_pos[0]
+        x_val = min(max(mouse_pos[0], self.slider_left), self.slider_right)
+        self.button_pos = (int(x_val), int(self.pos[1]))
 
     def handle_event(self, mouse_pos, mouse):
-        if self.container_rect.collidepoint(mouse_pos) and mouse[0]:
+        distance = (mouse_pos[0] - self.button_pos[0])**2 + (mouse_pos[1] - self.button_pos[1])**2
+        if distance <= self.circle_radius**2 and mouse[0] and not self.dragging:
+            self.dragging = True
+
+        if mouse[0] and self.dragging:
             self.move_slider(mouse_pos)
-        # print(self.get_value())
+            if self.audio == 'music':
+                pygame.mixer.music.set_volume(self.get_value()/100)
+            elif self.audio == 'sfx':
+                # update sfx sounds here
+                pass
+
+        if not mouse[0]:
+            self.dragging = False
 
     def get_value(self):
         val_range = self.slider_right - self.slider_left - 1
-        button_val = self.button_rect.centerx - self.slider_left
-        value = (button_val / val_range) * (self.max - self.min) + self.min
+        button_val = self.button_pos[0] - self.slider_left
+        value = (button_val/val_range) * (self.max-self.min) + self.min
         if value > 98.5:
             return 100.0
         elif value < 1.5:
