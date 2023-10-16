@@ -18,6 +18,10 @@ from os.path import isfile, join
 
 pygame.init()
 
+pygame.mixer.music.load("assets/audio/background_music.mp3")   # https://www.youtube.com/watch?v=cTDSFCC9rQ4
+pygame.mixer.music.play(loops=-1)   # play and loop music indefinitely
+pygame.mixer.music.set_volume(.75)   # initialize max volume of music
+
 pygame.display.set_caption("Shrubbery Quest")
 GRAVITY=1#Rate at which objects and players fall
 WIDTH, HEIGHT = 1200, 800 #Exact size of figma levels, 1-1 for design purposes
