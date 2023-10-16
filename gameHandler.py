@@ -201,7 +201,7 @@ class Player(pygame.sprite.Sprite):
 
             # elif self.jump_count == 2:
             #     sprite_sheet = "double_jump"
-        elif self.y_velocity > self.GRAVITY*2:#BOOKMARK
+        elif self.y_velocity > self.GRAVITY*2:
             sprite_sheet = "fall"
         elif self.x_velocity != 0:
             sprite_sheet = "run"
@@ -1067,7 +1067,7 @@ lThree.append(Ladder(145,0))#LADDER 4
 lThree.append(lBorderLeft)
 lThree.append(lBorderRight)
 lThree.append(endSign(180,63)) # END SIGN
-levelThree=Level(lThree,1100,490,"Level 1 to 3 bkgrnd.png")
+levelThree=Level(lThree,1100,478,"Level 1 to 3 bkgrnd.png")
 
 lFour=[]
 #Player starting position (1100, 644)
