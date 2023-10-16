@@ -10,6 +10,7 @@ from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, W
 from MenuWidgets import *
 from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
+from level_timer import *
 
 from os import listdir
 from os.path import isfile, join
@@ -27,6 +28,7 @@ PURPLE=(128,0,128)
 ENDLEVEL = False
 
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
+timer = Timer()
 
 ##############################################################
 ##############################################################
@@ -626,9 +628,7 @@ def display_between_level_page(screen):
     printlvl = str(int(currlvl) - 1)
     lvlf.close()
 
-    timef = open("levelTime.txt", "r")
-    currtime = timef.read()
-    timef.close()
+    currtime = str(round(timer.return_time(), 2))
 
     betweenlvl = True
     while betweenlvl:
@@ -646,7 +646,7 @@ def display_between_level_page(screen):
         screen.blit(background_img, (0,0))
         draw_text("Congratulations!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-190))
         draw_text("You Beat Level " + printlvl + "!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-130))
-        draw_text("Your Time Was: " + currtime, pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-70))
+        draw_text("Your Time Was: " + currtime + "s", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-70))
 
         for widget in widgets:
             widget.draw(screen)
@@ -739,6 +739,7 @@ def collide(player, level, dx):
                 #PLAYER HAS REACHED END OF LEVEL
                 # ADD ONE TO COMPLETED LEVELS
                 #ENDLEVEL = True
+                timer.stop_timer()
                 lvlf = open("currentLevel.txt", "r")
                 levelnum = int(lvlf.read())
                 levelnum += 1
@@ -854,8 +855,10 @@ def getInput(player, level):
         if keys[pygame.K_q]:
             x=0#placeholder
         if keys[pygame.K_ESCAPE]:
+            timer.stop_timer()
             if show_pause_menu(window):
                 display_main_menu(window)
+            timer.start_timer()
 
     vertical_collide = handle_vertical_collision(player, level, player.y_velocity)
 
@@ -1063,7 +1066,8 @@ def loadLevel(window, level):
     bg_image=level.bg_image
     playerOne=Player(level.init_x,level.init_y,30,64)
 
-
+    timer.reset_timer()
+    timer.start_timer()
     run = True
     while run:
         clock.tick(FPS)
