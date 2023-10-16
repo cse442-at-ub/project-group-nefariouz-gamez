@@ -3,6 +3,7 @@ import sys
 from MenuWidgets import Button
 
 
+# Temp functions
 def resume():
     print("RESUME")
 
@@ -25,19 +26,21 @@ def show_pause_menu(screen):
 
     # Run game loop for this page
     while True:
+        # Resize images
         screen_size = screen.get_size()
         button_size = (screen_size[0]/4.286, screen_size[1]/16)
         center = screen_size[0] / 2
 
+        # Draw background
+        screen.blit(pygame.transform.scale(background_img, screen_size), (0, 0))
+
+        # Create and draw widgets
         widgets = [
             Button((center, screen_size[1] / 3.300), button_size, "Resume", resume),
             Button((center, screen_size[1] / 2.425), button_size, "Settings", settings),
             Button((center, screen_size[1] / 1.900), button_size, "Main Menu", main_menu),
             Button((center, screen_size[1] / 1.575), button_size, "Exit", exit)
         ]
-
-        # Draw background
-        screen.blit(pygame.transform.scale(background_img, screen_size), (0, 0))
 
         for widget in widgets:
             widget.draw(screen)
@@ -47,10 +50,12 @@ def show_pause_menu(screen):
             if event.type == pygame.QUIT:
                 sys.exit()
 
+            # Return if escape is pressed
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     resume()
 
+            # Check button presses
             for widget in widgets:
                 widget.handle_event(event)
 
