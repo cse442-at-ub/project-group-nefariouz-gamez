@@ -18,6 +18,7 @@ from os.path import isfile, join
 
 pygame.init()
 
+VOLUME_STATES = [1, 1, False]   # music slider pos (start at 100%), sfx slider pos (start at 100%), checkbox status (starts unchecked)
 pygame.mixer.music.load("assets/audio/background_music.mp3")   # https://www.youtube.com/watch?v=cTDSFCC9rQ4
 pygame.mixer.music.play(loops=-1)   # play and loop music indefinitely
 pygame.mixer.music.set_volume(.75)   # initialize max volume of music
@@ -380,9 +381,9 @@ def scale_window_settings(screen):
 
     # create widgets based on screen size
     widgets = [
-        Slider(((screen_width/2)+150, (screen_height/2)-190), 300, 'music'),
-        Slider(((screen_width/2)+150, (screen_height/2)-110), 300, 'sfx'),
-        Checkbox(((screen_width/2+27), (screen_height/2)-30), 54),
+        Slider(((screen_width/2)+150, (screen_height/2)-190), 300, 'music', VOLUME_STATES),
+        Slider(((screen_width/2)+150, (screen_height/2)-110), 300, 'sfx',VOLUME_STATES),
+        Checkbox(((screen_width/2+27), (screen_height/2)-30), 54, VOLUME_STATES),
         Button((screen_width/2, (screen_height/2)+50), (300, 54), "TUTORIAL", tutorial),
         Button((screen_width/2, (screen_height/2)+130), (300, 54), "CHOOSE CHARACTER", choose_character),
         Button((screen_width/2, (screen_height/2)+210), (300, 54), "RETURN TO MAIN", return_main)
@@ -420,10 +421,12 @@ def display_settings_page(screen):
                 widgets, screen_width, screen_height, background_img = scale_window_settings(screen)   # rescales visuals for new resolution
 
             for widget in widgets:
-                if type(widget) == Button or type(widget) == Checkbox:
+                if type(widget) == Button:
                     widget.handle_event(event)
+                elif type(widget) == Checkbox:
+                    widget.handle_event(event, VOLUME_STATES)
                 elif type(widget) == Slider:
-                    widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed())
+                    widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed(), VOLUME_STATES)
 
         # render background and widgets
         screen.blit(background_img, (0, 0))
