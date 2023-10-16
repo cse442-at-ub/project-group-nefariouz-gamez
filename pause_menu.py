@@ -1,43 +1,58 @@
 import pygame
 import sys
-from draw_button import draw_button
+from MenuWidgets import Button
 
+
+def resume():
+    print("RESUME")
+
+
+def settings():
+    print("SETTINGS")
+
+
+def main_menu():
+    print("MAIN MENU")
+
+
+def exit():
+    print("EXIT")
 
 # Call show_tutorial with screen (pygame.display.set_mode(screen_size))
 def show_pause_menu(screen):
     # Load in background image
-    background_img = pygame.image.load("assets/Backgrounds/pause_screen_background.png").convert_alpha()
+    background_img = pygame.image.load("assets/Background/pause_screen_background.png").convert_alpha()
 
     # Run game loop for this page
     while True:
         screen_size = screen.get_size()
         button_size = (screen_size[0]/4.286, screen_size[1]/16)
+        center = screen_size[0] / 2
+
+        widgets = [
+            Button((center, screen_size[1] / 3.300), button_size, "Resume", resume),
+            Button((center, screen_size[1] / 2.425), button_size, "Settings", settings),
+            Button((center, screen_size[1] / 1.900), button_size, "Main Menu", main_menu),
+            Button((center, screen_size[1] / 1.575), button_size, "Exit", exit)
+        ]
 
         # Draw background
         screen.blit(pygame.transform.scale(background_img, screen_size), (0, 0))
 
-        # Draw buttons
-        center = screen_size[0]/2
-        resume_button_rect = draw_button(screen, button_size, (center, screen_size[1]/3.300), "Resume")
-        settings_button_rect = draw_button(screen, button_size, (center, screen_size[1]/2.425), "Settings")
-        return_button_rect = draw_button(screen, button_size, (center, screen_size[1] / 1.900), "Main Menu")
-        exit_button_rect = draw_button(screen, button_size, (center, screen_size[1] / 1.575), "Exit")
+        for widget in widgets:
+            widget.draw(screen)
 
         # Check inputs
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
 
-            if pygame.mouse.get_pressed()[0] == 1:
-                pos = pygame.mouse.get_pos()
-                if resume_button_rect.collidepoint(pos):
-                    return
-                if settings_button_rect.collidepoint(pos):
-                    print("SETTINGS")
-                if return_button_rect.collidepoint(pos):
-                    print("RETURN TO MAIN")
-                if exit_button_rect.collidepoint(pos):
-                    sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    resume()
+
+            for widget in widgets:
+                widget.handle_event(event)
 
         # Update display
         pygame.display.update()
