@@ -141,9 +141,9 @@ class BlackSpike(Object):
         self.mask=self.original_mask
 
 
-class SideSpike(Object):
-    def __init__(self, x, y, path=None, name="spike"):
-        super().__init__(x, y, 34,40)
+class SideSpike(Spike):
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.image=pygame.image.load("assets\Traps\Spikes\Lvl3SidewaysSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
@@ -184,7 +184,8 @@ class FallPlat(Platform):
             self.falling=True
             self.rect.y+=2
             for object in self.object_list:
-                object.rect.y+=2
+                #object.rect.y+=2
+                object.destroy()
             return True #True means should fall
         return False
 

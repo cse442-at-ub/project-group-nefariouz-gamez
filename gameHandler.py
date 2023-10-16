@@ -122,12 +122,16 @@ class Player(pygame.sprite.Sprite):
         self.y_velocity=velocity
     # does not allow double jump
     def jump(self):
-        self.inair=True#anti=double jump
-        self.y_velocity = -self.GRAVITY * 4.5
-        self.animation_count = 0
-        self.jump_count += 1
-        if self.jump_count == 1:
-            self.fall_count = 0
+        if self.y_velocity > self.GRAVITY * 2:
+            placeholder=0
+        else:
+            self.rect.y-=1
+            self.inair=True#anti=double jump
+            self.y_velocity = -self.GRAVITY * 4.5
+            self.animation_count = 0
+            self.jump_count += 1
+            if self.jump_count == 1:
+                self.fall_count = 0
 
     def landed(self):
         self.inair=False
@@ -710,14 +714,16 @@ def handle_vertical_collision(player, level, dy):
             if(object.name=="spike"):
                 player.reset(level)
             if dy > 0 and object.name!="ladder" and not player.on_ladder:
+                #Accidental elevator bug- If a player hits their head at either the peak of their jump or they jump on a shurb that
+                #has them hit their head, they get teleported up.
                 player.rect.bottom = object.rect.top
                 if(object.name=="fall"):
                     object.timer+=1
                     object.check_time()
                 player.landed()
             elif dy < 0 and object.name!="ladder" and not player.on_ladder:
-                #player.rect.top = object.rect.bottom
-                player.rect.y+=2
+                player.rect.top = object.rect.bottom
+                #player.rect.y+=2
                 player.y_vel=-PLAYER_VEL*2
                 #player.rect.y=player.rect.y+5
                 player.hit_head()
@@ -731,7 +737,7 @@ def collide(player, level, dx):
     player.update()
     collided_object = None
     for object in level.object_list:
-        if pygame.sprite.collide_mask(player, object) and object.name!="ladder":
+        if pygame.sprite.collide_mask(player, object) and object.name!="ladder" and object.name!="spike":
             collided_object = object
             if(collided_object.name=="spike"):
                 player.reset(level)
@@ -893,7 +899,7 @@ lOne.append(spike4)
 lOne.append(spike5)
 lOne.append(spike6)
 lOne.append(endlvl1)
-levelOne=Level(lOne,1135,644,"Level 1 to 3 bkgrnd.png")
+levelOne=Level(lOne,1135,669,"Level 1 to 3 bkgrnd.png")
 
 BROWN=(100,65,23)
 BLUE=(0,0,255)
@@ -952,7 +958,7 @@ lThree.append(Water(0,720,1200,80,BLUE))#WATER
 lThree.append(Platform(922,549,278,50,WHITE))#START
 lThree.append(Platform(564,523,215,50,WHITE))#PLAT 1
 lThree.append(Platform(258,483,200,50,WHITE))#PLAT 2
-lThree.append(Platform(131,420,65,15,WHITE))#PLAT 3
+lThree.append(Platform(131,425,65,15,WHITE))#PLAT 3
 lThree.append(Platform(131,103,200,23,WHITE))#PLAT 4
 lThree.append(TallShrub(587,340))#TALLSHRUB 1
 lThree.append(Ladder(255,229))#LADDER 1
@@ -960,7 +966,7 @@ lThree.append(Ladder(255,103))#LADDER 2
 lThree.append(Ladder(255,201))#LADDER 3
 lThree.append(Ladder(145,0))#LADDER 4
 lThree.append(endSign(180,63)) # END SIGN
-levelThree=Level(lThree,1100,559,"Level 1 to 3 bkgrnd.png")
+levelThree=Level(lThree,1100,498,"Level 1 to 3 bkgrnd.png")
 
 lFour=[]
 #Player starting position (1100, 644)
