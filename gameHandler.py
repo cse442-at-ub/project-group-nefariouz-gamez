@@ -72,7 +72,7 @@ def load_sprite_sheets(directory1, directory2, width, height, direction=False):
     return all_sprites
 
 class Player(pygame.sprite.Sprite):
-    ANIMATION_DELAY = 5
+    ANIMATION_DELAY = 4
     GRAVITY = 1
 
     def __init__(self, x, y, width, height):
@@ -169,7 +169,8 @@ class Player(pygame.sprite.Sprite):
         global current_object
         self.chop_count = 0
         self.chop = False
-        destroy_it(current_object)
+        current_object.destroy()
+        current_object = None
 
     def update_sprite(self):
         f = open("CurrentCharacter.txt", "r")
@@ -192,7 +193,7 @@ class Player(pygame.sprite.Sprite):
         if self.chop:
             sprite_sheet = "chop"
             self.chop_count += 1
-        if self.y_velocity < 0:
+        elif self.y_velocity < 0:
             if self.jump_count == 1:
                 if not self.chop:
                     sprite_sheet = "jump"
@@ -237,7 +238,7 @@ class Player(pygame.sprite.Sprite):
             self.hit_count = 0
         # FIXED NO LOOP YAY!!!!! :D
         # change to FPS
-        if self.chop_count > fps/2:
+        if self.chop_count > fps/6:
             self.end_chop()
 
         self.fall_count += 1
@@ -899,11 +900,11 @@ def getInput(player, level):
             else:
                 player.on_ladder=True
                 player.in_air=False
-        if keys[pygame.K_a] and not collide_left:
+        if keys[pygame.K_a] and not collide_left and not player.chop:
             player.on_ladder=False
             player.move_left(PLAYER_VEL)
 
-        if keys[pygame.K_d] and not collide_right:
+        if keys[pygame.K_d] and not collide_right and not player.chop:
             player.on_ladder=False
             player.move_right(PLAYER_VEL)
 
@@ -932,7 +933,7 @@ def getInput(player, level):
         if keys[pygame.K_SPACE]:
             if player.in_air==False:
                 player.jump()
-        if keys[pygame.K_a] and not collide_left and not player.on_ladder:
+        if keys[pygame.K_a] and not collide_left and not player.on_ladder and not player.chop:
             player.move_left(PLAYER_VEL)
         if keys[pygame.K_s]:
             player.rect.y+=3#BOOKMARK
@@ -945,7 +946,7 @@ def getInput(player, level):
                             player.rect.x=object.xO-15
                 
             player.rect.y-=3
-        if keys[pygame.K_d] and not collide_right and not player.on_ladder:
+        if keys[pygame.K_d] and not collide_right and not player.on_ladder and not player.chop:
             player.move_right(PLAYER_VEL)
         if keys[pygame.K_e]:
             if player.e_timer==0:
