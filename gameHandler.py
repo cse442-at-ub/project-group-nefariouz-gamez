@@ -9,6 +9,7 @@ import sys
 from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike, SideSpike, ReverseSmallShrub, Void
 from MenuWidgets import *
 from tutorial_page import show_tutorial
+from pause_menu import show_pause_menu
 
 from os import listdir
 from os.path import isfile, join
@@ -853,7 +854,8 @@ def getInput(player, level):
         if keys[pygame.K_q]:
             x=0#placeholder
         if keys[pygame.K_ESCAPE]:
-            x=0#Placeholder for pause FOR BLAKE
+            if show_pause_menu(window):
+                display_main_menu(window)
 
     vertical_collide = handle_vertical_collision(player, level, player.y_velocity)
 
