@@ -5,7 +5,7 @@ from MenuWidgets import Button
 
 # Temp function
 def go_back():
-    print("RETURN")
+    return True
 
 
 # Call show_tutorial with screen (pygame.display.set_mode(screen_size))
@@ -32,7 +32,8 @@ def show_tutorial(screen):
                 sys.exit()
 
             # Handle button press
-            return_button.handle_event(event)
+            if event.type == pygame.MOUSEBUTTONDOWN and return_button.hovered:
+                return
 
         # Update display
         pygame.display.update()
