@@ -31,6 +31,7 @@ window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
 ###################### PLAYER OBJECT #########################
 ##############################################################
 ##############################################################
+current_object = None
 
 def flip_image(sprites):
     return [pygame.transform.flip(sprite, True, False) for sprite in sprites]
@@ -62,10 +63,7 @@ def load_sprite_sheets(directory1, directory2, width, height, direction=False):
     return all_sprites
 
 class Player(pygame.sprite.Sprite):  
-
-    # would actually read this value from file/however we end up doing it
-    SPRITES = load_sprite_sheets("Characters", "Celia", 32, 32, True)
-    ANIMATION_DELAY = 3
+    ANIMATION_DELAY = 5
     GRAVITY = 1
 
     def __init__(self, x, y, width, height):
@@ -84,11 +82,12 @@ class Player(pygame.sprite.Sprite):
         self.inair=False
         self.on_ladder=False
         self.e_timer=0
+        self.chop = False
+        self.chop_count = 0
 
         self.reachBox=Platform(x-15,y-15,width*2.5,height*1.2,WHITE)#Invisible bounding box for interacting with objects
         self.reachBox.surface=pygame.Surface((width*3,height*1.5))
         self.reachBox.mask = pygame.mask.from_surface(self.reachBox.surface)
-
 
     def reset(self,level):
         self.rect.x=self.xO
@@ -142,22 +141,59 @@ class Player(pygame.sprite.Sprite):
         self.hit = True
         self.hit_count = 0
 
+    def do_chop(self):
+        self.animation_count = 0
+        self.chop = True
+
+
+    def end_chop(self):
+        global current_object
+        self.chop_count = 0
+        self.chop = False
+        destroy_it(current_object)
+
     def update_sprite(self):
+        f = open("CurrentCharacter.txt", "r")
+        current_character = f.read()
+
+        if current_character == "":
+            current_character = "Celia"
+            f.close()
+            f = open("CurrentCharacter.txt", "w")
+            f.write("Celia")
+
+        print("Spritesheet to be opened:", current_character)
+
+        character_sprites = load_sprite_sheets("Characters", current_character, 32, 32, True)
+        
+        keys = pygame.key.get_pressed()
         sprite_sheet = "idle"
         if self.hit:
             sprite_sheet = "hit"
+        if self.chop:
+            sprite_sheet = "chop"
+            self.chop_count += 1
         if self.y_velocity < 0:
             if self.jump_count == 1:
-                sprite_sheet = "jump"
-            elif self.jump_count == 2:
-                sprite_sheet = "double_jump"
+                if not self.chop:
+                    sprite_sheet = "jump"
+                else:
+                    sprite_sheet = "chop"
+
+            # elif self.jump_count == 2:
+            #     sprite_sheet = "double_jump"
         elif self.y_velocity > self.GRAVITY * 2:
             sprite_sheet = "fall"
         elif self.x_velocity != 0:
             sprite_sheet = "run"
+        if self.on_ladder:
+            if keys[pygame.K_w] or keys[pygame.K_s]:
+                sprite_sheet = "climb"
+            else:
+               sprite_sheet = "climb_idle" 
         
         sprite_sheet_name = sprite_sheet + "_" + self.direction
-        sprites = self.SPRITES[sprite_sheet_name]
+        sprites = character_sprites[sprite_sheet_name]
         sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
@@ -180,6 +216,10 @@ class Player(pygame.sprite.Sprite):
         if self.hit_count > fps * 2:
             self.hit = False
             self.hit_count = 0
+        # FIXED NO LOOP YAY!!!!! :D
+        # change to FPS
+        if self.chop_count > fps/2:
+            self.end_chop()
 
         self.fall_count += 1
         self.update_sprite()
@@ -274,7 +314,7 @@ def display_main_menu(screen):
 def scale_window_settings(screen):
     screen_width, screen_height = screen.get_size()   # find screen dimensions
 
-    background_img = pygame.image.load("assets\Background\BetLvlBackground.png")
+    background_img = pygame.image.load("assets/Background/BetLvlBackground.png")
     background_img = pygame.transform.scale(background_img, (screen_width, screen_height))   # scale background to resolution
 
     # create widgets based on screen size
@@ -350,6 +390,7 @@ character_text = character_font.render("You are currently playing as " + f.read(
 current_character = f.read()
 print(current_character)
 
+# onClick events for each character and the OK button
 def click_Celia():
     global current_character
     global character_text
@@ -365,6 +406,7 @@ def click_Celia():
     PlatformMalcolm.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDMalcolm.png'))
     PlatformMaia.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDMaia.png'))
     PlatformOscar.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDOscar.png'))
+
 
 def click_Malcolm():
     global current_character
@@ -382,6 +424,7 @@ def click_Malcolm():
     PlatformMaia.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDMaia.png'))
     PlatformOscar.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDOscar.png'))
 
+
 def click_Maia():
     global current_character
     global character_text
@@ -397,6 +440,7 @@ def click_Maia():
     PlatformCelia.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDCelia.png'))
     PlatformMalcolm.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDMalcolm.png'))
     PlatformOscar.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDOscar.png'))
+
 
 def click_Oscar():
     global current_character
@@ -414,6 +458,8 @@ def click_Oscar():
     PlatformMalcolm.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDMalcolm.png'))
     PlatformMaia.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDMaia.png'))
 
+
+# confirms player's selected choice, writes character's name to "CurrentCharacter.txt"
 def click_OK():
     global current_character
     global character_text
@@ -423,6 +469,7 @@ def click_OK():
     f = open("CurrentCharacter.txt", "r")
     print("Final selection =", f.read())
     display_settings_page(window)
+
 
 class ClickableSprite(pygame.sprite.Sprite):
     def __init__(self, image, x, y, callback):
@@ -439,6 +486,7 @@ class ClickableSprite(pygame.sprite.Sprite):
                 if self.rect.collidepoint(event.pos):
                     self.callback()
 
+# initializing characters, their platforms, and OK button as clickable objects
 Celia = ClickableSprite(pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia1.png')), 50, 330, click_Celia)
 Malcolm = ClickableSprite(pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Malcolm1.png')), 250, 350, click_Malcolm)
 Maia = ClickableSprite(pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Maia1.png')), 450, 350, click_Maia)
@@ -530,7 +578,7 @@ def display_choose_character(window):
         pygame.display.update()
     
     pygame.quit()
-    
+
 
 ##############################################################
 ##############################################################
@@ -593,13 +641,11 @@ def display_between_level_page(screen):
                 elif type(widget) == Slider:
                     widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed())
 
-        #draw text
         screen.blit(background_img, (0,0))
         draw_text("Congratulations!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-190))
         draw_text("You Beat Level " + printlvl + "!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-130))
         draw_text("Your Time Was: " + currtime, pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-70))
         
-        #input buttons
         for widget in widgets:
             widget.draw(screen)
         
@@ -708,10 +754,24 @@ def collide(player, level, dx):
     player.update()
     return collided_object
 
+
 def getOverlap(player, reachBox, level):
+    global current_object
     for object in level.object_list:
         if pygame.sprite.collide_mask(reachBox,object):
-            if object.name=="ladder":
+            if object.name=="small shrub":
+                #Handle small shrub behavior
+                current_object = object
+                player.do_chop()
+                # object.destroy()
+                return
+            elif object.name=="tall shrub":
+                #Handle tall shrub behavior
+                current_object = object
+                player.do_chop()
+                # object.destroy()
+                return
+            elif object.name=="ladder":
                 #Handle Ladder behavior
                 if player.on_ladder:
                     player.on_ladder=False
@@ -721,22 +781,19 @@ def getOverlap(player, reachBox, level):
                 player.rect.x=object.xO-15#set x value to Ladder x Valued
                 player.rect.y=player.rect.y+1#Make the masks overlap. If you grab the bottom 1 pixel of a ladder irl, you're falling
                 return#only do 1 interact at a time
-            if object.name=="small shrub":
-                #Handle small shrub behavior
-                object.destroy()
-                return
-            if object.name=="tall shrub":
-                #Handle tall shrub behavior
-                object.destroy()
-                return
             
+def destroy_it(object):
+    global current_object
+    object.destroy()
+    current_object = None
+
 def getInput(player, level):
     keys=pygame.key.get_pressed()
     collide_left = collide(player, level, -PLAYER_VEL*2)
     collide_right = collide(player, level, PLAYER_VEL*2)
     if player.on_ladder:
         player.y_velocity=0
-        if keys[pygame.K_w]or keys[pygame.K_SPACE]:
+        if keys[pygame.K_w] or keys[pygame.K_SPACE]:
             g=0
             #Move up on ladder
             #check if still on ladder
@@ -769,6 +826,12 @@ def getInput(player, level):
             if player.e_timer==0:
                 player.e_timer=8
                 getOverlap(player,player.reachBox,level)
+        
+        if keys[pygame.K_e] and player.on_ladder:
+            if player.e_timer==0:
+                player.e_timer=8
+                getOverlap(player,player.reachBox,level)
+                
         if keys[pygame.K_q]:
             x=0#placeholder
             
