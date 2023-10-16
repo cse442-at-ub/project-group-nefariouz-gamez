@@ -1,5 +1,9 @@
 import pygame
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Sprint2-Pause-Screen
 class Button:
     """
     Args:
@@ -8,10 +12,19 @@ class Button:
         text (str): places text on button
         action: performs function when clicked
     """
+<<<<<<< HEAD
     def __init__(self, pos: tuple, size: tuple, text: str, action=None):
         self.pos = pos
         self.size = size
         self.rect = pygame.Rect(self.pos[0] - (self.size[0]/2), self.pos[1] - (self.size[1]/2), self.size[0], self.size[1])
+=======
+
+    def __init__(self, pos: tuple, size: tuple, text: str, action=None):
+        self.pos = pos
+        self.size = size
+        self.rect = pygame.Rect(self.pos[0] - (self.size[0] / 2), self.pos[1] - (self.size[1] / 2), self.size[0],
+                                self.size[1])
+>>>>>>> Sprint2-Pause-Screen
         self.text = text
         self.action = action
         self.color = (190, 190, 190)
@@ -25,7 +38,11 @@ class Button:
 
         font = pygame.font.Font(None, 36)
         text_surface = font.render(self.text, True, (34, 90, 48))
+<<<<<<< HEAD
         text_rect = text_surface.get_rect(center=(self.size[0]/2, self.size[1]/2))
+=======
+        text_rect = text_surface.get_rect(center=(self.size[0] / 2, self.size[1] / 2))
+>>>>>>> Sprint2-Pause-Screen
         button_surface.blit(text_surface, text_rect)
         button_rect = button_surface.get_rect(center=(self.pos[0], self.pos[1]))
 
@@ -44,16 +61,29 @@ class Button:
             if self.action:
                 self.action()
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Sprint2-Pause-Screen
 class Checkbox:
     """
     Args:
         pos (tuple): take (x, y) position on screen, centered from the middle of box
         dim (int): takes value used for width and height of box
     """
+<<<<<<< HEAD
     def __init__(self, pos: tuple, dim: int):
         self.pos = pos
         self.size = (dim, dim)
         self.rect = pygame.Rect(self.pos[0] - (self.size[0]/2), self.pos[1] - (self.size[1]/2), self.size[0], self.size[1])
+=======
+
+    def __init__(self, pos: tuple, dim: int):
+        self.pos = pos
+        self.size = (dim, dim)
+        self.rect = pygame.Rect(self.pos[0] - (self.size[0] / 2), self.pos[1] - (self.size[1] / 2), self.size[0],
+                                self.size[1])
+>>>>>>> Sprint2-Pause-Screen
         self.checked = False
 
         # Load images from folder
@@ -65,9 +95,15 @@ class Checkbox:
 
     def draw(self, screen):
         if self.checked:
+<<<<<<< HEAD
             screen.blit(self.checked_image, (self.pos[0] - self.size[0]/2, self.pos[1] - self.size[1]/2))
         else:
             screen.blit(self.unchecked_image, (self.pos[0] - self.size[0]/2, self.pos[1] - self.size[1]/2))
+=======
+            screen.blit(self.checked_image, (self.pos[0] - self.size[0] / 2, self.pos[1] - self.size[1] / 2))
+        else:
+            screen.blit(self.unchecked_image, (self.pos[0] - self.size[0] / 2, self.pos[1] - self.size[1] / 2))
+>>>>>>> Sprint2-Pause-Screen
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pygame.mouse.get_pos()):
@@ -77,6 +113,10 @@ class Checkbox:
             else:
                 print("UNMUTED")
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Sprint2-Pause-Screen
 class Slider:
     """
     Args:
@@ -85,10 +125,15 @@ class Slider:
         text (str): places text on button
         action: performs function when clicked
     """
+<<<<<<< HEAD
+=======
+
+>>>>>>> Sprint2-Pause-Screen
     def __init__(self, pos: tuple, size: tuple):
         self.pos = pos
         self.size = size
 
+<<<<<<< HEAD
         self.slider_left = self.pos[0] - (size[0]//2)
         self.slider_right = self.pos[0] + (size[0]//2)
         self.slider_top = self.pos[1] - (size[1]//2)
@@ -96,6 +141,15 @@ class Slider:
         self.min = 0
         self.max = 100
         self.initial_val = (self.slider_right - self.slider_left) * 0.95    # set base volume at 95%
+=======
+        self.slider_left = self.pos[0] - (size[0] // 2)
+        self.slider_right = self.pos[0] + (size[0] // 2)
+        self.slider_top = self.pos[1] - (size[1] // 2)
+
+        self.min = 0
+        self.max = 100
+        self.initial_val = (self.slider_right - self.slider_left) * 0.95  # set base volume at 95%
+>>>>>>> Sprint2-Pause-Screen
 
         self.container_rect = pygame.Rect(self.slider_left, self.slider_top, self.size[0], self.size[1])
         self.button_rect = pygame.Rect(self.slider_left + self.initial_val - 5, self.slider_top, 10, self.size[1])
@@ -115,7 +169,11 @@ class Slider:
     def get_value(self):
         val_range = self.slider_right - self.slider_left - 1
         button_val = self.button_rect.centerx - self.slider_left
+<<<<<<< HEAD
         value = (button_val/val_range) * (self.max-self.min) + self.min
+=======
+        value = (button_val / val_range) * (self.max - self.min) + self.min
+>>>>>>> Sprint2-Pause-Screen
         if value > 98.5:
             return 100.0
         elif value < 1.5:
@@ -123,16 +181,29 @@ class Slider:
         else:
             return value
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Sprint2-Pause-Screen
 class Checkbox:
     """
     Args:
         pos (tuple): take (x, y) position on screen, centered from the middle of box
         dim (int): takes value used for width and height of box
     """
+<<<<<<< HEAD
     def __init__(self, pos: tuple, dim: int):
         self.pos = pos
         self.size = (dim, dim)
         self.rect = pygame.Rect(self.pos[0] - (self.size[0]/2), self.pos[1] - (self.size[1]/2), self.size[0], self.size[1])
+=======
+
+    def __init__(self, pos: tuple, dim: int):
+        self.pos = pos
+        self.size = (dim, dim)
+        self.rect = pygame.Rect(self.pos[0] - (self.size[0] / 2), self.pos[1] - (self.size[1] / 2), self.size[0],
+                                self.size[1])
+>>>>>>> Sprint2-Pause-Screen
         self.checked = False
 
         # Load images from folder
@@ -144,9 +215,15 @@ class Checkbox:
 
     def draw(self, screen):
         if self.checked:
+<<<<<<< HEAD
             screen.blit(self.checked_image, (self.pos[0] - self.size[0]/2, self.pos[1] - self.size[1]/2))
         else:
             screen.blit(self.unchecked_image, (self.pos[0] - self.size[0]/2, self.pos[1] - self.size[1]/2))
+=======
+            screen.blit(self.checked_image, (self.pos[0] - self.size[0] / 2, self.pos[1] - self.size[1] / 2))
+        else:
+            screen.blit(self.unchecked_image, (self.pos[0] - self.size[0] / 2, self.pos[1] - self.size[1] / 2))
+>>>>>>> Sprint2-Pause-Screen
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pygame.mouse.get_pos()):
@@ -156,6 +233,10 @@ class Checkbox:
             else:
                 print("UNMUTED")
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> Sprint2-Pause-Screen
 class Slider:
     """
     Args:
@@ -164,10 +245,15 @@ class Slider:
         text (str): places text on button
         action: performs function when clicked
     """
+<<<<<<< HEAD
+=======
+
+>>>>>>> Sprint2-Pause-Screen
     def __init__(self, pos: tuple, size: tuple):
         self.pos = pos
         self.size = size
 
+<<<<<<< HEAD
         self.slider_left = self.pos[0] - (size[0]//2)
         self.slider_right = self.pos[0] + (size[0]//2)
         self.slider_top = self.pos[1] - (size[1]//2)
@@ -175,6 +261,15 @@ class Slider:
         self.min = 0
         self.max = 100
         self.initial_val = (self.slider_right - self.slider_left) * 0.95    # set base volume at 95%
+=======
+        self.slider_left = self.pos[0] - (size[0] // 2)
+        self.slider_right = self.pos[0] + (size[0] // 2)
+        self.slider_top = self.pos[1] - (size[1] // 2)
+
+        self.min = 0
+        self.max = 100
+        self.initial_val = (self.slider_right - self.slider_left) * 0.95  # set base volume at 95%
+>>>>>>> Sprint2-Pause-Screen
 
         self.container_rect = pygame.Rect(self.slider_left, self.slider_top, self.size[0], self.size[1])
         self.button_rect = pygame.Rect(self.slider_left + self.initial_val - 5, self.slider_top, 10, self.size[1])
@@ -194,7 +289,11 @@ class Slider:
     def get_value(self):
         val_range = self.slider_right - self.slider_left - 1
         button_val = self.button_rect.centerx - self.slider_left
+<<<<<<< HEAD
         value = (button_val/val_range) * (self.max-self.min) + self.min
+=======
+        value = (button_val / val_range) * (self.max - self.min) + self.min
+>>>>>>> Sprint2-Pause-Screen
         if value > 98.5:
             return 100.0
         elif value < 1.5:
