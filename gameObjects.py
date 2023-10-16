@@ -171,18 +171,27 @@ PURPLE=(128,0,128)
 class FallPlat(Platform):
     def __init__(self, x, y, width, height, col=PURPLE,oList=[], path=None,name="fall"):
         super().__init__(x, y, width, height, col, path, name)
+        self.surface=pygame.Surface((width,height))
         self.original_x=x
         self.original_y=y
+        self.original_width=width
+        self.original_height=height
         self.timer=0
         self.falling=False
         self.object_list=oList
         self.copy_list=oList.copy()
         
+    def destroy(self):
+        self.rect.width=0
+        self.rect.height=0
+        self.surface=pygame.Surface((self.rect.width,self.rect.height))
+        self.mask = pygame.mask.from_surface(self.surface)
 
     def check_time(self):
         if self.timer>40: #5 Seconds time limit, 60 frame x 5 Second limit = 300
             self.falling=True
-            self.rect.y+=2
+            #self.rect.y+=2
+            self.destroy()
             for object in self.object_list:
                 #object.rect.y+=2
                 object.destroy()
@@ -194,7 +203,11 @@ class FallPlat(Platform):
         self.falling=False
         self.rect.x=self.original_x
         self.rect.y=self.original_y
+        self.rect.width=self.original_width
+        self.rect.height=self.original_height
         self.object_list=self.copy_list.copy()
+        self.surface=pygame.Surface((self.rect.width,self.rect.height))
+        self.mask = pygame.mask.from_surface(self.surface)
     
     
 
@@ -209,7 +222,12 @@ class Ladder(Object):
     def reset(self):
         self.rect.x=self.xO
         self.rect.y=self.yO
-
+        self.image=pygame.image.load("assets\Special\Ladder.png")
+        self.mask=pygame.mask.from_surface(self.image)
+    def destroy(self):
+        self.image=pygame.image.load("assets\Traps\Empty\empty.png")
+        self.mask=pygame.mask.from_surface(self.image)
+    
 
 class endSign(Object):
     def __init__(self, x, y):
