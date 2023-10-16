@@ -102,7 +102,9 @@ class Player(pygame.sprite.Sprite):
     def reset(self,level):
         self.rect=pygame.Rect(level.init_x, level.init_y,self.wO,self.hO)
         self.reachBox.x=self.rect.x-15
-        self.reachBox.y=self.rect.y+15
+        self.reachBox.y=self.rect.y-15
+        self.x_vel=0
+        self.y_vel=0
         self.update()
         level.reset()
 
@@ -111,7 +113,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += dx
         self.rect.y += dy
         self.reachBox.rect.x=self.rect.x-15
-        self.reachBox.rect.y=self.rect.y+15
+        self.reachBox.rect.y=self.rect.y-15
 
     def move_left(self, velocity):
         self.x_velocity = -velocity
@@ -130,7 +132,7 @@ class Player(pygame.sprite.Sprite):
         self.y_velocity=velocity
     # does not allow double jump
     def jump(self):
-        if self.y_velocity > self.GRAVITY * 2:
+        if self.y_velocity > .5:# Can only jump if not going down
             placeholder=0
         else:# if not falling
             self.rect.y-=1#avoid falling through the floor glitch
@@ -198,7 +200,7 @@ class Player(pygame.sprite.Sprite):
 
             # elif self.jump_count == 2:
             #     sprite_sheet = "double_jump"
-        elif self.y_velocity > self.GRAVITY * 2:
+        elif self.y_velocity > self.GRAVITY*2:#BOOKMARK
             sprite_sheet = "fall"
         elif self.x_velocity != 0:
             sprite_sheet = "run"
@@ -775,7 +777,7 @@ def handle_vertical_collision(player, level, dy):
             if dy > 0 and object.name!="ladder" and not player.on_ladder:
                 #Accidental elevator bug- If a player hits their head at either the peak of their jump or they jump on a shurb that
                 #has them hit their head, they get teleported up.
-                if not player.rect.top>object.rect.top:#if the players bottom is at most 5 pixels below the objects top
+                if not player.rect.top>object.rect.top:#if the players top is not below the object's top
                     player.rect.bottom = object.rect.top#put the player on top of the object
                 if(object.name=="fall"):
                     object.timer+=1
@@ -840,25 +842,7 @@ def getOverlap(player, reachBox, level):
                 player.do_chop()
                 # object.destroy()
                 return
-#def getOverlapLadder(player,reachBox,level):
-#       for object in level.object_list:
-#            if pygame.sprite.collide_mask(player,object):
-#                if object.name=="ladder":#Handle Ladder behavior
-#                    if player.on_ladder:
-#                        player.on_ladder=False
-#                        player.y_velocity=0#stop all y movement
-#                        player.x_velocity=0#stop all x movement
-#                        return True
-#                    else:
-#                        player.on_ladder=True
-#                        player.rect.x=object.xO-15#set x value to Ladder x Valued
-#                        player.rect.y=player.rect.y+1#Make the masks overlap. If you grab the bottom 1 pixel of a ladder irl, you're falling
-#                        return True#only do 1 interact at a time
-#        return False
                 
-    
-            
-
 def destroy_it(object):
     global current_object
     object.destroy()
@@ -879,6 +863,7 @@ def getInput(player, level):
                 if pygame.sprite.collide_mask(player,object):
                     if object.name=="ladder":
                         player.on_ladder=True
+                        player.in_air=False
                         player.rect.x=object.xO-15#set x value to Ladder x Valued
                         #player.rect.y=player.rect.y+1
                         g=1
@@ -896,11 +881,12 @@ def getInput(player, level):
             for object in level.object_list:
                 if pygame.sprite.collide_mask(player,object):#if the player is colliding with it
                     if object.name=="ladder":#if the player is colliding with a ladder
-                        if player.rect.bottom<object.rect.bottom+3:#if the players feet are above the bottom of the object
+                        if player.rect.bottom<object.rect.bottom+7:#if the players feet are above the bottom of the object
                             if g==0:#if the player has not yet been st
                                 g=1
                                 player.rect.x=object.xO-15#set x value to Ladder x Valued
                                 player.on_ladder=True
+                                player.in_air=False
                             #player.rect.y=player.rect.y+1
                             #player.move_down(PLAYER_VEL)
             if g==0:
@@ -909,6 +895,7 @@ def getInput(player, level):
                 #player.move_down(PLAYER_VEL)#push into ground a tiny bit to reset
             else:
                 player.on_ladder=True
+                player.in_air=False
         if keys[pygame.K_a] and not collide_left:
             player.on_ladder=False
             player.move_left(PLAYER_VEL)
@@ -935,6 +922,7 @@ def getInput(player, level):
                     if object.name=="ladder":
                         if player.rect.bottom-1>object.rect.top:#prevent getting on ladder with W at top of ladder
                             player.on_ladder=True
+                            player.in_air=False
                             player.rect.x=object.xO-15
                             player.move_up(PLAYER_VEL)
             
@@ -950,6 +938,7 @@ def getInput(player, level):
                     if object.name=="ladder":
                         if player.rect.bottom<object.rect.bottom:
                             player.on_ladder=True
+                            player.in_air=False
                             player.rect.x=object.xO-15
                 
             player.rect.y-=3
@@ -972,6 +961,8 @@ def getInput(player, level):
 
 
 lOne=[]
+lBorderLeft=Platform(-1,0,1,800,WHITE)
+lBorderRight=Platform(1201,0,1,800,WHITE)
 #Player starting position (1100, 644)
 #background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
 start=Platform(890,670,152,75,WHITE)
@@ -1000,6 +991,8 @@ lOne.append(spike4)
 lOne.append(spike5)
 lOne.append(spike6)
 lOne.append(endlvl1)
+lOne.append(lBorderLeft)
+lOne.append(lBorderRight)
 levelOne=Level(lOne,1135,639,"Level 1 to 3 bkgrnd.png")
 
 BROWN=(100,65,23)
@@ -1039,8 +1032,10 @@ lTwo.append(Ladder(1101,424))
 lTwo.append(Ladder(1101,324))
 lTwo.append(Ladder(689,440))
 lTwo.append(Ladder(689,344))
+lTwo.append(lBorderLeft)
+lTwo.append(lBorderRight)
 lTwo.append(endlvl2)
-levelTwo=Level(lTwo,1135,623,"Level 1 to 3 bkgrnd.png")
+levelTwo=Level(lTwo,1135,556,"Level 1 to 3 bkgrnd.png")
 
 GRAY=(192,192,192)
 lThree=[]
@@ -1066,6 +1061,8 @@ lThree.append(Ladder(255,229))#LADDER 1
 lThree.append(Ladder(255,103))#LADDER 2
 lThree.append(Ladder(255,201))#LADDER 3
 lThree.append(Ladder(145,0))#LADDER 4
+lThree.append(lBorderLeft)
+lThree.append(lBorderRight)
 lThree.append(endSign(180,63)) # END SIGN
 levelThree=Level(lThree,1100,490,"Level 1 to 3 bkgrnd.png")
 
@@ -1109,28 +1106,30 @@ lFour.append(fallPlat2)
 lFour.append(fLadder2)
 lFour.append(fLadder3)
 lFour.append(fShrub1)
-lFour.append(FallPlat(620,495,257,30))#Third platform
-lFour.append(FallPlat(223,435,257,15))#Fourth platform
+lFour.append(FallPlat(600,485,257,20))#Third platform
+lFour.append(FallPlat(223,420,257,15))#Fourth platform
 lFour.append(Platform(0,116,200,80,WHITE))
 lFour.append(Ladder(108,286))
 lFour.append(Ladder(108,216))
 lFour.append(Platform(0,118,200,80,WHITE))
 lFour.append(Ladder(108,116))
 lFour.append(Ladder(23,0))
+lFour.append(lBorderLeft)
+lFour.append(lBorderRight)
 lFour.append(endSign(23,76)) # END SIGN
 levelFour=Level(lFour,1100,700,"CaveBackground1.png")
 
 lFive=[]
 lFive.append(Void(85,785,1115,15))
-lFive.append(Platform(0,700,200,80,WHITE))
+lFive.append(Platform(0,700,200,80,WHITE))#Start
 lFive.append(Ladder(21,700))
-lFive.append(FallPlat(298,649,200,51))
-lFive.append(Platform(600, 598, 200, 51,WHITE))
-lFive.append(Platform(889,573,200,51,WHITE))
-lFive.append(Platform(889,373,200,51,WHITE))
+lFive.append(FallPlat(298,649,200,51))#Fall plat 1
+lFive.append(Platform(600, 598, 200, 51,WHITE))#plat 1
+lFive.append(Platform(889,573,200,51,WHITE))#plat 2
+lFive.append(Platform(889,373,200,51,WHITE))#plat 3
 lFive.append(Ladder(1011,373))
 lFive.append(Ladder(1011, 473))
-lFive.append(Platform(600,432,200,51,WHITE))
+lFive.append(Platform(600,432,200,51,WHITE))#plat 4
 lFive.append(ReverseSmallShrub(750,483))
 lFive.append(TallShrub(752,249))
 lFive.append(FallPlat(298,384,200,51))
@@ -1162,6 +1161,8 @@ lFive.append(fpShrub6)
 lFive.append(fiveFPlat3)
 
 lFive.append(Platform(1097,114,103,58,WHITE))
+lFive.append(lBorderLeft)
+lFive.append(lBorderRight)
 lFive.append(endSign(1140,74)) # END SIGN
 
 levelFive=Level(lFive,50,625,"CaveBackground1.png")
