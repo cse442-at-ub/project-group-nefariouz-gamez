@@ -8,6 +8,7 @@ import sys
 
 from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike, SideSpike, ReverseSmallShrub, Void
 from MenuWidgets import *
+from tutorial_page import show_tutorial
 
 from os import listdir
 from os.path import isfile, join
@@ -45,7 +46,7 @@ def load_sprite_sheets(directory1, directory2, width, height, direction=False):
     for image in images:
         pygame.display.get_surface()
         sprite_sheet = pygame.image.load(join(path, image)).convert_alpha()
-        
+
         sprites = []
         for i in range(sprite_sheet.get_width() // width):
             surface = pygame.Surface((width, height), pygame.SRCALPHA, 32)
@@ -62,7 +63,7 @@ def load_sprite_sheets(directory1, directory2, width, height, direction=False):
 
     return all_sprites
 
-class Player(pygame.sprite.Sprite):  
+class Player(pygame.sprite.Sprite):
     ANIMATION_DELAY = 5
     GRAVITY = 1
 
@@ -165,7 +166,7 @@ class Player(pygame.sprite.Sprite):
         print("Spritesheet to be opened:", current_character)
 
         character_sprites = load_sprite_sheets("Characters", current_character, 32, 32, True)
-        
+
         keys = pygame.key.get_pressed()
         sprite_sheet = "idle"
         if self.hit:
@@ -190,8 +191,8 @@ class Player(pygame.sprite.Sprite):
             if keys[pygame.K_w] or keys[pygame.K_s]:
                 sprite_sheet = "climb"
             else:
-               sprite_sheet = "climb_idle" 
-        
+               sprite_sheet = "climb_idle"
+
         sprite_sheet_name = sprite_sheet + "_" + self.direction
         sprites = character_sprites[sprite_sheet_name]
         sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
@@ -202,7 +203,7 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
         self.mask = pygame.mask.from_surface(self.sprite)
-    
+
     def loop(self, fps):
         # gravity
         if self.e_timer!=0:
@@ -223,7 +224,7 @@ class Player(pygame.sprite.Sprite):
 
         self.fall_count += 1
         self.update_sprite()
- 
+
     def draw(self, window, offset_x):
         #self.reachBox.draw(window,0)------------VISUALISE reachBox
         window.blit(self.sprite, (self.rect.x - offset_x, self.rect.y))
@@ -294,7 +295,7 @@ def display_main_menu(screen):
             # checks for buttons clicked
             for widget in widgets:
                 widget.handle_event(event)
-        
+
         # add background image and buttons to window
         screen.blit(background_img, (0, 0))
 
@@ -337,7 +338,7 @@ def draw_text(text, font, color, pos):
     window.blit(img, centered_pos)
 
 def tutorial():
-    print("TUTORIAL")
+    show_tutorial(window)
 
 def choose_character():
     display_choose_character(window)
@@ -362,14 +363,14 @@ def display_settings_page(screen):
                 if type(widget) == Button or type(widget) == Checkbox:
                     widget.handle_event(event)
                 elif type(widget) == Slider:
-                    widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed()) 
+                    widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed())
 
         # render background and widgets
         screen.blit(background_img, (0, 0))
         draw_text("MUSIC VOLUME", pygame.font.Font(None, 36), (34, 90, 48), ((screen_width/2)-150, (screen_height/2)-190))
         draw_text("SFX VOLUME", pygame.font.Font(None, 36), (34, 90, 48), ((screen_width/2)-150, (screen_height/2)-110))
         draw_text("MUTE", pygame.font.Font(None, 36), (34, 90, 48), ((screen_width/2)-150, (screen_height/2)-30))
-        
+
         for widget in widgets:
             widget.draw(screen)
 
@@ -432,7 +433,7 @@ def click_Maia():
     character_text = character_font.render("You have selected Maia", False, "Black")
     Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Maia1.png'))
     PlatformMaia.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformMaia.png'))
-    
+
     Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveCelia.png'))
     Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveOscar.png'))
     Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMalcolm.png'))
@@ -445,7 +446,7 @@ def click_Maia():
 def click_Oscar():
     global current_character
     global character_text
-    current_character = "Oscar" 
+    current_character = "Oscar"
     character_text = character_font.render("You have selected Oscar", False, "Black")
     Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Oscar1.png'))
     PlatformOscar.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformOscar.png'))
@@ -540,7 +541,7 @@ def display_choose_character(window):
             for widget in widgets:
                 if type(widget) == Button:
                     widget.handle_event(event)
-            
+
         background = pygame.image.load("assets/Background/BetLvlBackground.png")
         size = pygame.display.get_window_size()
         background = pygame.transform.scale(background, size)
@@ -556,7 +557,7 @@ def display_choose_character(window):
         PlatformMalcolm.rect.x, PlatformMalcolm.rect.y = x * 2, y - 240
         PlatformMaia.rect.x, PlatformMaia.rect.y = x * 3, y - 240
         PlatformOscar.rect.x, PlatformOscar.rect.y = x * 4, y - 240
-        
+
         window.blit(background, (0, 0))
 
         spriteGroup = pygame.sprite.Group(Celia, Malcolm, Maia, Oscar)
@@ -571,12 +572,12 @@ def display_choose_character(window):
         characterTextRect = character_text.get_rect()
         characterTextRect.center = (screen_width // 2, 50)
         window.blit(character_text, characterTextRect)
-        
+
         for widget in widgets:
             widget.draw(window)
 
         pygame.display.update()
-    
+
     pygame.quit()
 
 
@@ -645,10 +646,10 @@ def display_between_level_page(screen):
         draw_text("Congratulations!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-190))
         draw_text("You Beat Level " + printlvl + "!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-130))
         draw_text("Your Time Was: " + currtime, pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-70))
-        
+
         for widget in widgets:
             widget.draw(screen)
-        
+
         pygame.display.flip()
     pygame.quit()
 
@@ -697,7 +698,7 @@ def draw(window, background, bg_image,player,level):
     player.draw(window,0)
 
     pygame.display.update()
-    
+
 
 def handle_vertical_collision(player, level, dy):
     collided_objects = []
@@ -721,7 +722,7 @@ def handle_vertical_collision(player, level, dy):
                 player.hit_head()
 
             collided_objects.append(object)
-    
+
     return collided_objects
 
 def collide(player, level, dx):
@@ -747,9 +748,9 @@ def collide(player, level, dx):
                 display_between_level_page(window)
                 print("END LEVEL")
             break
-    
+
     player.move(-dx, 0)
-    
+
     player.x_vel=0
     player.update()
     return collided_object
@@ -781,7 +782,7 @@ def getOverlap(player, reachBox, level):
                 player.rect.x=object.xO-15#set x value to Ladder x Valued
                 player.rect.y=player.rect.y+1#Make the masks overlap. If you grab the bottom 1 pixel of a ladder irl, you're falling
                 return#only do 1 interact at a time
-            
+
 def destroy_it(object):
     global current_object
     object.destroy()
@@ -821,23 +822,23 @@ def getInput(player, level):
 
         if keys[pygame.K_d] and not collide_right and not player.on_ladder:
             player.move_right(PLAYER_VEL)
-            
+
         if keys[pygame.K_e]:
             if player.e_timer==0:
                 player.e_timer=8
                 getOverlap(player,player.reachBox,level)
-        
+
         if keys[pygame.K_e] and player.on_ladder:
             if player.e_timer==0:
                 player.e_timer=8
                 getOverlap(player,player.reachBox,level)
-                
+
         if keys[pygame.K_q]:
             x=0#placeholder
-            
+
     if not player.on_ladder:
         player.x_velocity=0 #Reset
-        
+
         if keys[pygame.K_w]or keys[pygame.K_SPACE]:
             if player.inair==False:
                 player.jump()
@@ -853,9 +854,9 @@ def getInput(player, level):
             x=0#placeholder
         if keys[pygame.K_ESCAPE]:
             x=0#Placeholder for pause FOR BLAKE
-    
+
     vertical_collide = handle_vertical_collision(player, level, player.y_velocity)
-    
+
 
 
 lOne=[]
@@ -1059,8 +1060,8 @@ def loadLevel(window, level):
     background=level.background
     bg_image=level.bg_image
     playerOne=Player(level.init_x,level.init_y,30,64)
-    
-    
+
+
     run = True
     while run:
         clock.tick(FPS)
