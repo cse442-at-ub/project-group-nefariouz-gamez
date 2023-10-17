@@ -458,8 +458,16 @@ def display_settings_page(screen):
 
 character_font = pygame.font.Font(None, 32)
 f = open("CurrentCharacter.txt", "r")
-character_text = character_font.render("You are currently playing as " + f.read() + "!", False, "Black")
 current_character = f.read()
+if current_character == "":
+    print("Text Empty, make default Celia")
+    current_character = "Celia"
+    f.close()
+    f = open("CurrentCharacter.txt", "w")
+    f.write("Celia")
+    f.close()
+    f = open("CurrentCharacter.txt", "r")
+character_text = character_font.render("You are currently playing as " + current_character + "!", False, "Black")
 print(current_character)
 
 # onClick events for each character and the OK button
