@@ -600,7 +600,7 @@ def display_choose_character(window):
     size = pygame.display.get_window_size()
     screen_width, screen_height = size[0], size[1]
     background = pygame.transform.scale(background, size)
-    widgets = [Button((screen_width/2, (screen_height/2) + 350), (300, 54), "OK", click_OK)]
+    widgets = [Button((screen_width/2, (screen_height/2) + 160), (300, 54), "OK", click_OK)]
     check_update()
 
     running = True
@@ -616,7 +616,7 @@ def display_choose_character(window):
         background = pygame.image.load("assets/Background/BetLvlBackground.png")
         size = pygame.display.get_window_size()
         background = pygame.transform.scale(background, size)
-        widgets = [Button((screen_width/2, (screen_height/2) + 350), (300, 54), "OK", click_OK)]
+        widgets = [Button((screen_width/2, (screen_height/2) + 160), (300, 54), "OK", click_OK)]
 
         x, y = size[0]/6, size[1]/2
 
