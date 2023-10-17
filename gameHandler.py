@@ -18,6 +18,7 @@ from os.path import isfile, join
 
 pygame.init()
 
+VOLUME_STATES = [1, 1, False]   # music slider pos (start at 100%), sfx slider pos (start at 100%), checkbox status (starts unchecked)
 pygame.mixer.music.load("assets/audio/background_music.mp3")   # https://www.youtube.com/watch?v=cTDSFCC9rQ4
 pygame.mixer.music.play(loops=-1)   # play and loop music indefinitely
 pygame.mixer.music.set_volume(.75)   # initialize max volume of music
@@ -72,7 +73,7 @@ def load_sprite_sheets(directory1, directory2, width, height, direction=False):
     return all_sprites
 
 class Player(pygame.sprite.Sprite):
-    ANIMATION_DELAY = 5
+    ANIMATION_DELAY = 4
     GRAVITY = 1
 
     def __init__(self, x, y, width, height):
@@ -80,6 +81,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x, y, width, height)
         self.xO=x#For respawning purposes
         self.yO=y
+        self.wO=width
+        self.hO=height
         self.x_velocity, self.y_velocity = 0, 0
         self.mask = None
         self.direction = "left"
@@ -88,7 +91,7 @@ class Player(pygame.sprite.Sprite):
         self.jump_count = 0
         self.hit = False
         self.hit_count = 0
-        self.inair=False
+        self.in_air=False
         self.on_ladder=False
         self.e_timer=0
         self.chop = False
@@ -99,8 +102,12 @@ class Player(pygame.sprite.Sprite):
         self.reachBox.mask = pygame.mask.from_surface(self.reachBox.surface)
 
     def reset(self,level):
-        self.rect.x=self.xO
-        self.rect.y=self.yO
+        self.rect=pygame.Rect(level.init_x, level.init_y,self.wO,self.hO)
+        self.reachBox.x=self.rect.x-15
+        self.reachBox.y=self.rect.y-15
+        self.x_vel=0
+        self.y_vel=0
+        self.update()
         level.reset()
 
 
@@ -127,11 +134,11 @@ class Player(pygame.sprite.Sprite):
         self.y_velocity=velocity
     # does not allow double jump
     def jump(self):
-        if self.y_velocity > self.GRAVITY * 2:
+        if self.y_velocity > .5:# Can only jump if not going down
             placeholder=0
-        else:
-            self.rect.y-=1
-            self.inair=True#anti=double jump
+        else:# if not falling
+            self.rect.y-=1#avoid falling through the floor glitch
+            self.in_air=True#anti=double jump
             self.y_velocity = -self.GRAVITY * 4.5
             self.animation_count = 0
             self.jump_count += 1
@@ -139,7 +146,7 @@ class Player(pygame.sprite.Sprite):
                 self.fall_count = 0
 
     def landed(self):
-        self.inair=False
+        self.in_air=False
         self.fall_count = 0
         self.y_velocity = 0
         self.jump_count = 0
@@ -163,7 +170,8 @@ class Player(pygame.sprite.Sprite):
         global current_object
         self.chop_count = 0
         self.chop = False
-        destroy_it(current_object)
+        current_object.destroy()
+        current_object = None
 
     def update_sprite(self):
         f = open("CurrentCharacter.txt", "r")
@@ -186,7 +194,7 @@ class Player(pygame.sprite.Sprite):
         if self.chop:
             sprite_sheet = "chop"
             self.chop_count += 1
-        if self.y_velocity < 0:
+        elif self.y_velocity < 0:
             if self.jump_count == 1:
                 if not self.chop:
                     sprite_sheet = "jump"
@@ -195,7 +203,7 @@ class Player(pygame.sprite.Sprite):
 
             # elif self.jump_count == 2:
             #     sprite_sheet = "double_jump"
-        elif self.y_velocity > self.GRAVITY * 2:
+        elif self.y_velocity > self.GRAVITY*2:
             sprite_sheet = "fall"
         elif self.x_velocity != 0:
             sprite_sheet = "run"
@@ -231,7 +239,7 @@ class Player(pygame.sprite.Sprite):
             self.hit_count = 0
         # FIXED NO LOOP YAY!!!!! :D
         # change to FPS
-        if self.chop_count > fps/2:
+        if self.chop_count > fps/6:
             self.end_chop()
 
         self.fall_count += 1
@@ -381,9 +389,9 @@ def scale_window_settings(screen):
 
     # create widgets based on screen size
     widgets = [
-        Slider(((screen_width/2)+150, (screen_height/2)-190), 300, 'music'),
-        Slider(((screen_width/2)+150, (screen_height/2)-110), 300, 'sfx'),
-        Checkbox(((screen_width/2+27), (screen_height/2)-30), 54),
+        Slider(((screen_width/2)+150, (screen_height/2)-190), 300, 'music', VOLUME_STATES),
+        Slider(((screen_width/2)+150, (screen_height/2)-110), 300, 'sfx',VOLUME_STATES),
+        Checkbox(((screen_width/2+27), (screen_height/2)-30), 54, VOLUME_STATES),
         Button((screen_width/2, (screen_height/2)+50), (300, 54), "TUTORIAL", tutorial),
         Button((screen_width/2, (screen_height/2)+130), (300, 54), "CHOOSE CHARACTER", choose_character),
         Button((screen_width/2, (screen_height/2)+210), (300, 54), "RETURN TO MAIN", return_main)
@@ -421,10 +429,12 @@ def display_settings_page(screen):
                 widgets, screen_width, screen_height, background_img = scale_window_settings(screen)   # rescales visuals for new resolution
 
             for widget in widgets:
-                if type(widget) == Button or type(widget) == Checkbox:
+                if type(widget) == Button:
                     widget.handle_event(event)
+                elif type(widget) == Checkbox:
+                    widget.handle_event(event, VOLUME_STATES)
                 elif type(widget) == Slider:
-                    widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed())
+                    widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed(), VOLUME_STATES)
 
         # render background and widgets
         screen.blit(background_img, (0, 0))
@@ -767,10 +777,13 @@ def handle_vertical_collision(player, level, dy):
                 object.timer+=1
             if(object.name=="spike"):
                 player.reset(level)
+                continue
+                #keep from reseting Y
             if dy > 0 and object.name!="ladder" and not player.on_ladder:
                 #Accidental elevator bug- If a player hits their head at either the peak of their jump or they jump on a shurb that
                 #has them hit their head, they get teleported up.
-                player.rect.bottom = object.rect.top
+                if not player.rect.top>object.rect.top:#if the players top is not below the object's top
+                    player.rect.bottom = object.rect.top#put the player on top of the object
                 if(object.name=="fall"):
                     object.timer+=1
                     object.check_time()
@@ -834,16 +847,6 @@ def getOverlap(player, reachBox, level):
                 player.do_chop()
                 # object.destroy()
                 return
-            elif object.name=="ladder":
-                #Handle Ladder behavior
-                if player.on_ladder:
-                    player.on_ladder=False
-                player.y_velocity=0#stop all y movement
-                player.x_velocity=0#stop all x movement
-                player.on_ladder=True
-                player.rect.x=object.xO-15#set x value to Ladder x Valued
-                player.rect.y=player.rect.y+1#Make the masks overlap. If you grab the bottom 1 pixel of a ladder irl, you're falling
-                return#only do 1 interact at a time
 
 def destroy_it(object):
     global current_object
@@ -856,57 +859,95 @@ def getInput(player, level):
     collide_right = collide(player, level, PLAYER_VEL*2)
     if player.on_ladder:
         player.y_velocity=0
-        if keys[pygame.K_w] or keys[pygame.K_SPACE]:
+        if keys[pygame.K_w]:
             g=0
             #Move up on ladder
             #check if still on ladder
             player.move_up(PLAYER_VEL)
             for object in level.object_list:
-                if pygame.sprite.collide_mask(player.reachBox,object):
+                if pygame.sprite.collide_mask(player,object):
                     if object.name=="ladder":
+                        player.on_ladder=True
+                        player.in_air=False
+                        player.rect.x=object.xO-15#set x value to Ladder x Valued
+                        #player.rect.y=player.rect.y+1
                         g=1
             if g==0:
                 player.on_ladder=False
+                player.rect.y-=8
+        if keys[pygame.K_SPACE]:
+            player.on_ladder=False
+            player.jump()
         if keys[pygame.K_s]:
             #Move down on ladder
             #check if still on ladder
             g=0
             player.move_down(PLAYER_VEL)
             for object in level.object_list:
-                if pygame.sprite.collide_mask(player,object):
-                    if object.name=="ladder":
-                        g=1
+                if pygame.sprite.collide_mask(player,object):#if the player is colliding with it
+                    if object.name=="ladder":#if the player is colliding with a ladder
+                        if player.rect.bottom<object.rect.bottom+7:#if the players feet are above the bottom of the object
+                            if g==0:#if the player has not yet been st
+                                g=1
+                                player.rect.x=object.xO-15#set x value to Ladder x Valued
+                                player.on_ladder=True
+                                player.in_air=False
+                            #player.rect.y=player.rect.y+1
+                            #player.move_down(PLAYER_VEL)
             if g==0:
                 player.on_ladder=False
-        if keys[pygame.K_a] and not collide_left and not player.on_ladder:
-            # player.on_ladder=False
+                #player.move_up(PLAYER_VEL)
+                #player.move_down(PLAYER_VEL)#push into ground a tiny bit to reset
+            else:
+                player.on_ladder=True
+                player.in_air=False
+        if keys[pygame.K_a] and not collide_left and not player.chop:
+            player.on_ladder=False
             player.move_left(PLAYER_VEL)
 
-        if keys[pygame.K_d] and not collide_right and not player.on_ladder:
+        if keys[pygame.K_d] and not collide_right and not player.chop:
+            player.on_ladder=False
             player.move_right(PLAYER_VEL)
 
         if keys[pygame.K_e]:
             if player.e_timer==0:
                 player.e_timer=8
-                getOverlap(player,player.reachBox,level)
-
-        if keys[pygame.K_e] and player.on_ladder:
-            if player.e_timer==0:
-                player.e_timer=8
-                getOverlap(player,player.reachBox,level)
-
+                #getOverlap(player,player.reachBox,level)
+                #No breaking things while on ladder, no sprites for that
         if keys[pygame.K_q]:
             x=0#placeholder
 
     if not player.on_ladder:
         player.x_velocity=0 #Reset
 
-        if keys[pygame.K_w]or keys[pygame.K_SPACE]:
-            if player.inair==False:
+        if keys[pygame.K_w]:
+            #player.rect.y-=1#move up 1 pixel, avoid getting on ladder with W at top of ladder
+            for object in level.object_list:
+                if pygame.sprite.collide_mask(player,object):
+                    if object.name=="ladder":
+                        if player.rect.bottom-1>object.rect.top:#prevent getting on ladder with W at top of ladder
+                            player.on_ladder=True
+                            player.in_air=False
+                            player.rect.x=object.xO-15
+                            player.move_up(PLAYER_VEL)
+
+        if keys[pygame.K_SPACE]:
+            if player.in_air==False:
                 player.jump()
-        if keys[pygame.K_a] and not collide_left and not player.on_ladder:
+        if keys[pygame.K_a] and not collide_left and not player.on_ladder and not player.chop:
             player.move_left(PLAYER_VEL)
-        if keys[pygame.K_d] and not collide_right and not player.on_ladder:
+        if keys[pygame.K_s]:
+            player.rect.y+=3#BOOKMARK
+            for object in level.object_list:
+                if pygame.sprite.collide_mask(player,object):
+                    if object.name=="ladder":
+                        if player.rect.bottom<object.rect.bottom:
+                            player.on_ladder=True
+                            player.in_air=False
+                            player.rect.x=object.xO-15
+
+            player.rect.y-=3
+        if keys[pygame.K_d] and not collide_right and not player.on_ladder and not player.chop:
             player.move_right(PLAYER_VEL)
         if keys[pygame.K_e]:
             if player.e_timer==0:
@@ -916,12 +957,14 @@ def getInput(player, level):
             x=0#placeholder
         if keys[pygame.K_ESCAPE]:
             timer.stop_timer()
+
             global last_pause_time
             time_since_last = timer.return_time() - last_pause_time
             if time_since_last > 0.40:
                 if show_pause_menu(window):
                     display_main_menu(window)
                 last_pause_time = timer.return_time()
+
             timer.start_timer()
 
     vertical_collide = handle_vertical_collision(player, level, player.y_velocity)
@@ -929,6 +972,8 @@ def getInput(player, level):
 
 
 lOne=[]
+lBorderLeft=Platform(-1,0,1,800,WHITE)
+lBorderRight=Platform(1201,0,1,800,WHITE)
 #Player starting position (1100, 644)
 #background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
 start=Platform(890,670,152,75,WHITE)
@@ -957,7 +1002,9 @@ lOne.append(spike4)
 lOne.append(spike5)
 lOne.append(spike6)
 lOne.append(endlvl1)
-levelOne=Level(lOne,1135,669,"Level 1 to 3 bkgrnd.png")
+lOne.append(lBorderLeft)
+lOne.append(lBorderRight)
+levelOne=Level(lOne,1135,639,"Level 1 to 3 bkgrnd.png")
 
 BROWN=(100,65,23)
 BLUE=(0,0,255)
@@ -996,8 +1043,10 @@ lTwo.append(Ladder(1101,424))
 lTwo.append(Ladder(1101,324))
 lTwo.append(Ladder(689,440))
 lTwo.append(Ladder(689,344))
+lTwo.append(lBorderLeft)
+lTwo.append(lBorderRight)
 lTwo.append(endlvl2)
-levelTwo=Level(lTwo,1135,655,"Level 1 to 3 bkgrnd.png")
+levelTwo=Level(lTwo,1135,556,"Level 1 to 3 bkgrnd.png")
 
 GRAY=(192,192,192)
 lThree=[]
@@ -1023,8 +1072,10 @@ lThree.append(Ladder(255,229))#LADDER 1
 lThree.append(Ladder(255,103))#LADDER 2
 lThree.append(Ladder(255,201))#LADDER 3
 lThree.append(Ladder(145,0))#LADDER 4
+lThree.append(lBorderLeft)
+lThree.append(lBorderRight)
 lThree.append(endSign(180,63)) # END SIGN
-levelThree=Level(lThree,1100,498,"Level 1 to 3 bkgrnd.png")
+levelThree=Level(lThree,1100,478,"Level 1 to 3 bkgrnd.png")
 
 lFour=[]
 #Player starting position (1100, 644)
@@ -1066,28 +1117,30 @@ lFour.append(fallPlat2)
 lFour.append(fLadder2)
 lFour.append(fLadder3)
 lFour.append(fShrub1)
-lFour.append(FallPlat(620,495,257,30))#Third platform
-lFour.append(FallPlat(223,435,257,15))#Fourth platform
+lFour.append(FallPlat(600,485,257,20))#Third platform
+lFour.append(FallPlat(223,420,257,15))#Fourth platform
 lFour.append(Platform(0,116,200,80,WHITE))
 lFour.append(Ladder(108,286))
 lFour.append(Ladder(108,216))
 lFour.append(Platform(0,118,200,80,WHITE))
 lFour.append(Ladder(108,116))
 lFour.append(Ladder(23,0))
+lFour.append(lBorderLeft)
+lFour.append(lBorderRight)
 lFour.append(endSign(23,76)) # END SIGN
 levelFour=Level(lFour,1100,700,"CaveBackground1.png")
 
 lFive=[]
 lFive.append(Void(85,785,1115,15))
-lFive.append(Platform(0,700,200,80,WHITE))
+lFive.append(Platform(0,700,200,80,WHITE))#Start
 lFive.append(Ladder(21,700))
-lFive.append(FallPlat(298,649,200,51))
-lFive.append(Platform(600, 598, 200, 51,WHITE))
-lFive.append(Platform(889,573,200,51,WHITE))
-lFive.append(Platform(889,373,200,51,WHITE))
+lFive.append(FallPlat(298,649,200,51))#Fall plat 1
+lFive.append(Platform(600, 598, 200, 51,WHITE))#plat 1
+lFive.append(Platform(889,573,200,51,WHITE))#plat 2
+lFive.append(Platform(889,373,200,51,WHITE))#plat 3
 lFive.append(Ladder(1011,373))
 lFive.append(Ladder(1011, 473))
-lFive.append(Platform(600,432,200,51,WHITE))
+lFive.append(Platform(600,432,200,51,WHITE))#plat 4
 lFive.append(ReverseSmallShrub(750,483))
 lFive.append(TallShrub(752,249))
 lFive.append(FallPlat(298,384,200,51))
@@ -1119,9 +1172,11 @@ lFive.append(fpShrub6)
 lFive.append(fiveFPlat3)
 
 lFive.append(Platform(1097,114,103,58,WHITE))
+lFive.append(lBorderLeft)
+lFive.append(lBorderRight)
 lFive.append(endSign(1140,74)) # END SIGN
 
-levelFive=Level(lFive,50,750,"CaveBackground1.png")
+levelFive=Level(lFive,50,625,"CaveBackground1.png")
 
 def loadLevel(window, level):
     level.reset()

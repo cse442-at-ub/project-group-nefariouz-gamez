@@ -53,12 +53,13 @@ class Checkbox:
     Args:
         pos (tuple): take (x, y) position on screen, centered from the middle of box
         dim (int): takes value used for width and height of box
+        states (list): takes stored volume levels
     """
-    def __init__(self, pos: tuple, dim: int):
+    def __init__(self, pos: tuple, dim: int, states: list):
         self.pos = pos
         self.size = (dim, dim)
         self.rect = pygame.Rect(self.pos[0] - (self.size[0]/2), self.pos[1] - (self.size[1]/2), self.size[0], self.size[1])
-        self.checked = False
+        self.checked = states[2]  # True/False
 
         # Load images from folder
         self.unchecked_image = pygame.image.load("assets/menuAssets/unchecked_box.png")
@@ -73,9 +74,10 @@ class Checkbox:
         else:
             screen.blit(self.unchecked_image, (self.pos[0] - self.size[0]/2, self.pos[1] - self.size[1]/2))
 
-    def handle_event(self, event):
+    def handle_event(self, event, states):
         if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pygame.mouse.get_pos()):
             self.checked = not self.checked
+            states[2] = self.checked
             if self.checked:
                 pygame.mixer.music.pause()
                 # mute sfx here
@@ -91,8 +93,9 @@ class Slider:
         pos (tuple): take (x, y) position on screen, centered from middle of line
         size (int): takes width of slider
         audio (str): determines what audio to adjust
+        states (list): takes stored volume levels
     """
-    def __init__(self, pos: tuple, size: int, audio: str):
+    def __init__(self, pos: tuple, size: int, audio: str, states: list):
         if audio not in ["music", "sfx"]:
             raise ValueError("Audio must be 'music' or 'sfx' for Slider() class initialization")
         
@@ -109,23 +112,30 @@ class Slider:
         self.initial_val = self.slider_right   # set base volume at 100%
 
         self.circle_radius = 10
-        self.button_pos = (int(self.initial_val), int(self.pos[1]))
+        if audio == "music":
+            self.button_pos = (int(self.slider_left+((self.slider_right - self.slider_left)*states[0])), int(self.pos[1]))
+        elif audio == "sfx":
+            self.button_pos = (int(self.slider_left+((self.slider_right - self.slider_left)*states[1])), int(self.pos[1]))
 
     def draw(self, screen):
         pygame.draw.line(screen, (190, 190, 190), (self.slider_left, self.pos[1]), (self.slider_right, self.pos[1]), 5)
         pygame.draw.circle(screen, (34, 90, 48), self.button_pos, self.circle_radius)
 
-    def move_slider(self, mouse_pos):
+    def move_slider(self, mouse_pos, states):
         x_val = min(max(mouse_pos[0], self.slider_left), self.slider_right)
         self.button_pos = (int(x_val), int(self.pos[1]))
+        if self.audio == 'music':
+            states[0] = 1-((self.slider_right-x_val)/300)
+        elif self.audio == 'sfx':
+            states[1] = 1-((self.slider_right-x_val)/300)
 
-    def handle_event(self, mouse_pos, mouse):
+    def handle_event(self, mouse_pos, mouse, states):
         distance = (mouse_pos[0] - self.button_pos[0])**2 + (mouse_pos[1] - self.button_pos[1])**2
         if distance <= self.circle_radius**2 and mouse[0] and not self.dragging:
             self.dragging = True
 
         if mouse[0] and self.dragging:
-            self.move_slider(mouse_pos)
+            self.move_slider(mouse_pos, states)
             if self.audio == 'music':
                 pygame.mixer.music.set_volume(self.get_value()/100)
             elif self.audio == 'sfx':

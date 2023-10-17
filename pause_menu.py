@@ -13,7 +13,7 @@ def draw_text(screen, text, font, color, pos):
 
 
 # Call show_tutorial with screen (pygame.display.set_mode(screen_size))
-def pause_menu_settings(screen):
+def pause_menu_settings(screen, VOLUME_STATES):
     # Load in background image
     background_img = pygame.image.load("assets/Background/BetLvlBackground.png").convert_alpha()
 
@@ -23,9 +23,9 @@ def pause_menu_settings(screen):
 
     # Create widgets
     widgets = [
-        Slider(((screen_size[0]/2)+150, (screen_size[1]/2)-190), 300, 'music'),
-        Slider(((screen_size[0]/2)+150, (screen_size[1]/2)-110), 300, 'sfx'),
-        Checkbox(((screen_size[0]/2+27), (screen_size[1]/2)-30), 54),
+        Slider(((screen_size[0]/2)+150, (screen_size[1]/2)-190), 300, 'music', VOLUME_STATES),
+        Slider(((screen_size[0]/2)+150, (screen_size[1]/2)-110), 300, 'sfx', VOLUME_STATES),
+        Checkbox(((screen_size[0]/2+27), (screen_size[1]/2)-30), 54, VOLUME_STATES),
         Button((screen_size[0]/2, (screen_size[1]/2)+50), button_size, "TUTORIAL", None),
         Button((screen_size[0] / 6.557, screen_size[1] / 17.000), button_size, "RETURN", None)
     ]
@@ -49,6 +49,16 @@ def pause_menu_settings(screen):
             if event.type == pygame.QUIT:
                 sys.exit()
 
+            if event.type == pygame.VIDEORESIZE:
+                widgets = [
+                    Slider(((screen_size[0]/2)+150, (screen_size[1]/2)-190), 300, 'music', VOLUME_STATES),
+                    Slider(((screen_size[0]/2)+150, (screen_size[1]/2)-110), 300, 'sfx', VOLUME_STATES),
+                    Checkbox(((screen_size[0]/2+27), (screen_size[1]/2)-30), 54, VOLUME_STATES),
+                    Button((screen_size[0]/2, (screen_size[1]/2)+50), button_size, "TUTORIAL", None),
+                    Button((screen_size[0]/2, (screen_size[1]/2)+130), button_size, "RETURN TO MAIN", None),
+                    Button((screen_size[0] / 6.557, screen_size[1] / 17.000), button_size, "RETURN", None)
+                ]
+
             # Return if escape is pressed
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -56,7 +66,7 @@ def pause_menu_settings(screen):
 
             # Check button presses
             if event.type == pygame.MOUSEBUTTONDOWN:
-                widgets[2].handle_event(event)
+                widgets[2].handle_event(event, VOLUME_STATES)
 
                 if widgets[3].hovered:
                     show_tutorial(screen)
@@ -64,14 +74,14 @@ def pause_menu_settings(screen):
                     return False
 
             for widget in widgets[0:2]:
-                widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed())
+                widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed(), VOLUME_STATES)
 
         # Update display
         pygame.display.update()
 
 
 # Call show_tutorial with screen (pygame.display.set_mode(screen_size))
-def show_pause_menu(screen):
+def show_pause_menu(screen, VOLUME_STATES):
     # Load in background image
     background_img = pygame.image.load("assets/Background/pause_screen_background.png").convert_alpha()
 
@@ -111,7 +121,7 @@ def show_pause_menu(screen):
                 if widgets[0].hovered:
                     return False
                 elif widgets[1].hovered:
-                    if pause_menu_settings(screen):
+                    if pause_menu_settings(screen, VOLUME_STATES):
                         return True
                 elif widgets[2].hovered:
                     return True
