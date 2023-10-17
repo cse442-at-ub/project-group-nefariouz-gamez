@@ -619,7 +619,7 @@ def display_choose_character(window):
         widgets = [Button((screen_width/2, (screen_height/2) + 350), (300, 54), "OK", click_OK)]
 
         x, y = size[0]/6, size[1]/2
-        
+
         const_size_1, const_size_2 = 220, 160
         Celia.rect.x, Celia.rect.y = x, y - const_size_1
         Malcolm.rect.x, Malcolm.rect.y = x * 2, y - const_size_1
@@ -1082,6 +1082,7 @@ levelThree=Level(lThree,1100,478,"Level 1 to 3 bkgrnd.png")
 lFour=[]
 #Player starting position (1100, 644)
 #background,bg_image = get_background("CaveBackground1.png")
+lFour.append(Void(960,795,244,5))
 lFour.append(BlackSpike(0,767))
 lFour.append(BlackSpike(40,767))
 lFour.append(BlackSpike(80,767))
@@ -1130,10 +1131,10 @@ lFour.append(Ladder(23,0))
 lFour.append(lBorderLeft)
 lFour.append(lBorderRight)
 lFour.append(endSign(23,76)) # END SIGN
-levelFour=Level(lFour,1100,700,"CaveBackground1.png")
+levelFour=Level(lFour,1100,635,"CaveBackground1.png")
 
 lFive=[]
-lFive.append(Void(85,785,1115,15))
+lFive.append(Void(0,800,1115,15))
 lFive.append(Platform(0,700,200,80,WHITE))#Start
 lFive.append(Ladder(21,700))
 lFive.append(FallPlat(298,649,200,51))#Fall plat 1
