@@ -849,8 +849,9 @@ def collide(player, level, dx):
 def checkOverlap(player,level):
     validLadder=False
     for object in level.object_list:
-        if pygame.sprite.collide_mask(player,object):
-            validLadder=True
+        if pygame.sprite.collide_mask(player.reachBox,object):
+            if(object.name=="ladder"):
+                validLadder=True
     return validLadder
 
 def getOverlap(player, reachBox, level):
@@ -992,7 +993,7 @@ def getInput(player, level):
     vertical_collide = handle_vertical_collision(player, level, player.y_velocity)
     if player.on_ladder:
         if not checkOverlap(player,level):
-            player.on_ladder=False
+           player.on_ladder=False
 
 
 
