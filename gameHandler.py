@@ -33,6 +33,7 @@ ENDLEVEL = False
 
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
 timer = Timer()
+global last_pause_time
 
 ##############################################################
 ##############################################################
@@ -915,8 +916,12 @@ def getInput(player, level):
             x=0#placeholder
         if keys[pygame.K_ESCAPE]:
             timer.stop_timer()
-            if show_pause_menu(window):
-                display_main_menu(window)
+            global last_pause_time
+            time_since_last = timer.return_time() - last_pause_time
+            if time_since_last > 0.40:
+                if show_pause_menu(window):
+                    display_main_menu(window)
+                last_pause_time = timer.return_time()
             timer.start_timer()
 
     vertical_collide = handle_vertical_collision(player, level, player.y_velocity)
@@ -1127,6 +1132,8 @@ def loadLevel(window, level):
 
     timer.reset_timer()
     timer.start_timer()
+    global last_pause_time
+    last_pause_time = 0
     run = True
     while run:
         clock.tick(FPS)

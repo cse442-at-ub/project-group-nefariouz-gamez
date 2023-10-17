@@ -27,7 +27,6 @@ def pause_menu_settings(screen):
         Slider(((screen_size[0]/2)+150, (screen_size[1]/2)-110), 300, 'sfx'),
         Checkbox(((screen_size[0]/2+27), (screen_size[1]/2)-30), 54),
         Button((screen_size[0]/2, (screen_size[1]/2)+50), button_size, "TUTORIAL", None),
-        Button((screen_size[0]/2, (screen_size[1]/2)+130), button_size, "RETURN TO MAIN", None),
         Button((screen_size[0] / 6.557, screen_size[1] / 17.000), button_size, "RETURN", None)
     ]
 
@@ -50,16 +49,6 @@ def pause_menu_settings(screen):
             if event.type == pygame.QUIT:
                 sys.exit()
 
-            if event.type == pygame.VIDEORESIZE:
-                widgets = [
-                    Slider(((screen_size[0]/2)+150, (screen_size[1]/2)-190), button_size),
-                    Slider(((screen_size[0]/2)+150, (screen_size[1]/2)-110), button_size),
-                    Checkbox(((screen_size[0]/2+27), (screen_size[1]/2)-30), 54),
-                    Button((screen_size[0]/2, (screen_size[1]/2)+50), button_size, "TUTORIAL", None),
-                    Button((screen_size[0]/2, (screen_size[1]/2)+130), button_size, "RETURN TO MAIN", None),
-                    Button((screen_size[0] / 6.557, screen_size[1] / 17.000), button_size, "RETURN", None)
-                ]
-
             # Return if escape is pressed
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
@@ -72,8 +61,6 @@ def pause_menu_settings(screen):
                 if widgets[3].hovered:
                     show_tutorial(screen)
                 elif widgets[4].hovered:
-                    return True
-                elif widgets[5].hovered:
                     return False
 
             for widget in widgets[0:2]:
@@ -130,7 +117,6 @@ def show_pause_menu(screen):
                     return True
                 elif widgets[3].hovered:
                     sys.exit()
-
 
         # Update display
         pygame.display.update()
