@@ -619,15 +619,17 @@ def display_choose_character(window):
         widgets = [Button((screen_width/2, (screen_height/2) + 350), (300, 54), "OK", click_OK)]
 
         x, y = size[0]/6, size[1]/2
-        Celia.rect.x, Celia.rect.y = x, y - 300
-        Malcolm.rect.x, Malcolm.rect.y = x * 2, y - 300
-        Maia.rect.x, Maia.rect.y = x * 3, y - 300
-        Oscar.rect.x, Oscar.rect.y = x * 4, y - 300
+        
+        const_size_1, const_size_2 = 220, 160
+        Celia.rect.x, Celia.rect.y = x, y - const_size_1
+        Malcolm.rect.x, Malcolm.rect.y = x * 2, y - const_size_1
+        Maia.rect.x, Maia.rect.y = x * 3, y - const_size_1
+        Oscar.rect.x, Oscar.rect.y = x * 4, y - const_size_1
 
-        PlatformCelia.rect.x, PlatformCelia.rect.y = x, y - 240
-        PlatformMalcolm.rect.x, PlatformMalcolm.rect.y = x * 2, y - 240
-        PlatformMaia.rect.x, PlatformMaia.rect.y = x * 3, y - 240
-        PlatformOscar.rect.x, PlatformOscar.rect.y = x * 4, y - 240
+        PlatformCelia.rect.x, PlatformCelia.rect.y = x, y - const_size_2
+        PlatformMalcolm.rect.x, PlatformMalcolm.rect.y = x * 2, y - const_size_2
+        PlatformMaia.rect.x, PlatformMaia.rect.y = x * 3, y - const_size_2
+        PlatformOscar.rect.x, PlatformOscar.rect.y = x * 4, y - const_size_2
 
         window.blit(background, (0, 0))
 
