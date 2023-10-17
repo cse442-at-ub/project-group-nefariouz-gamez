@@ -955,7 +955,7 @@ def getInput(player, level):
             x=0#placeholder
         if keys[pygame.K_ESCAPE]:
             timer.stop_timer()
-            if show_pause_menu(window):
+            if show_pause_menu(window, VOLUME_STATES):
                 display_main_menu(window)
             timer.start_timer()
 
