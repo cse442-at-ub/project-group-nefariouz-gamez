@@ -1131,7 +1131,7 @@ lFour.append(BlackSpike(800,767))
 lFour.append(BlackSpike(840,767))
 lFour.append(BlackSpike(880,767))
 lFour.append(BlackSpike(920,767))
-lFour.append(Platform(960,720,244,80,WHITE))
+lFour.append(Platform(960,720,244,35,WHITE))
 #ladder x 1105
 lFour.append(Ladder(1105,720))
 lFour.append(FallPlat(670,695,165,32))#First Platform
