@@ -214,6 +214,7 @@ class FallPlat(Platform):
 class Ladder(Object):
     def __init__(self,x,y):
         super().__init__(x,y,33,100)
+        self.player_on=False
         self.name="ladder"
         self.xO=x
         self.yO=y
