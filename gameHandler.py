@@ -963,7 +963,7 @@ def getInput(player, level):
             global last_pause_time
             time_since_last = timer.return_time() - last_pause_time
             if time_since_last > 0.40:
-                if show_pause_menu(window):
+                if show_pause_menu(window, VOLUME_STATES):
                     display_main_menu(window)
                 last_pause_time = timer.return_time()
 
