@@ -336,12 +336,12 @@ def display_main_menu(screen):
 def scale_window_tut(screen):
     screen_width, screen_height = screen.get_size()   # find screen dimensions
 
-    background_img = pygame.image.load("assets/Background/pretutbackground.png")
+    background_img = pygame.image.load("assets/Background/newgameexplan.png")
     background_img = pygame.transform.scale(background_img, (screen_width, screen_height))   # scale background to resolution
 
     # creates widgets based on screen size
     widgets = [
-        Button((screen_width/2, (screen_height-75)), (300, 54), "CONTINUE TO GAME", cont_game),
+        Button((screen_width/2, (screen_height-200)), (300, 54), "CONTINUE TO GAME", cont_game),
     ]
 
     return widgets, background_img
@@ -1006,7 +1006,7 @@ lOne.append(spike6)
 lOne.append(endlvl1)
 lOne.append(lBorderLeft)
 lOne.append(lBorderRight)
-levelOne=Level(lOne,1135,639,"Level 1 to 3 bkgrnd.png")
+levelOne=Level(lOne,1135,639,"updated tutorial.png")
 
 BROWN=(100,65,23)
 BLUE=(0,0,255)

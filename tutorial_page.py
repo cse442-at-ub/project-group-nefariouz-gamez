@@ -6,7 +6,7 @@ from MenuWidgets import Button
 # Call show_tutorial with screen (pygame.display.set_mode(screen_size))
 def show_tutorial(screen):
     # Load in images
-    background_img = pygame.image.load("assets/Background/tutorial_background.png").convert_alpha()
+    background_img = pygame.image.load("assets/Background/updatedsettingstutorial.png").convert_alpha()
 
     # Run game loop for this page
     while True:
