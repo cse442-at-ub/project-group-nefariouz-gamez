@@ -187,9 +187,19 @@ class FallPlat(Platform):
         self.surface=pygame.Surface((self.rect.width,self.rect.height))
         self.mask = pygame.mask.from_surface(self.surface)
 
-    def check_time(self):
-        if self.timer>40: #5 Seconds time limit, 60 frame x 5 Second limit = 300
-            self.falling=True
+    def check_time(self,player):
+        c=0
+        if pygame.sprite.collide_mask(player.reachBox, self):
+            c=1
+            self.timer+=1
+        else:
+            for object in self.object_list:
+                if pygame.sprite.collide_mask(player.reachBox, object) and c==0:
+                    c=1
+                    self.timer+=1
+                    break
+        if self.timer>250: #5 Seconds time limit, 60 frame x 5 Second limit = 300
+            #self.falling=True
             #self.rect.y+=2
             self.destroy()
             for object in self.object_list:
@@ -214,6 +224,7 @@ class FallPlat(Platform):
 class Ladder(Object):
     def __init__(self,x,y):
         super().__init__(x,y,33,100)
+        self.player_on=False
         self.name="ladder"
         self.xO=x
         self.yO=y

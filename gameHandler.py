@@ -105,8 +105,8 @@ class Player(pygame.sprite.Sprite):
         self.rect=pygame.Rect(level.init_x, level.init_y,self.wO,self.hO)
         self.reachBox.x=self.rect.x-15
         self.reachBox.y=self.rect.y-15
-        self.x_vel=0
-        self.y_vel=0
+        self.x_velocity=0
+        self.y_velocity=0
         self.update()
         level.reset()
 
@@ -120,12 +120,16 @@ class Player(pygame.sprite.Sprite):
     def move_left(self, velocity):
         self.x_velocity = -velocity
         if self.direction != "left":
+            #if self.in_air: Old bug fix for mid air flip image collisions
+                #self.rect.x+=6
             self.direction = "left"
             self.animation_count = 0
 
     def move_right(self, velocity):
         self.x_velocity = velocity
         if self.direction != "right":
+            #if self.in_air:
+                #self.rect.x-=6
             self.direction = "right"
             self.animation_count = 0
     def move_up(self, velocity):
@@ -762,10 +766,10 @@ class Level():
             object.reset()
     def resize(self,factor):#resize everything in object_list, init_y,init_x by factor
         x=0
-    def loop(self):
+    def loop(self,player):
         for object in self.object_list:
             if object.name=="fall":
-                object.check_time()
+                object.check_time(player)
 
 def draw(window, background, bg_image,player,level):
     for tile in background:
@@ -783,30 +787,45 @@ def handle_vertical_collision(player, level, dy):
     collided_objects = []
     for object in level.object_list:
         if pygame.sprite.collide_mask(player, object):
-            if(object.name=="fall"):
-                object.timer+=1
+            #if(object.name=="fall"):
+                #object.timer+=1
             if(object.name=="spike"):
+                player.x_velocity=0
+                player.y_velocity=0#Helps 0 out if gravity is huge
                 player.reset(level)
                 continue
                 #keep from reseting Y
             if dy > 0 and object.name!="ladder" and not player.on_ladder:
-                #Accidental elevator bug- If a player hits their head at either the peak of their jump or they jump on a shurb that
-                #has them hit their head, they get teleported up.
-                if not player.rect.top>object.rect.top:#if the players top is not below the object's top
+                if not (player.rect.bottom-2*player.y_velocity)>object.rect.top:#if the players bottom is not within 12 pixels of the object's top
                     player.rect.bottom = object.rect.top#put the player on top of the object
-                if(object.name=="fall"):
-                    object.timer+=1
-                    object.check_time()
-                player.landed()
+                    player.landed()
+                else:
+                    if player.rect.right>object.rect.right:#Falling off right side
+                        player.rect.x=object.rect.right#(player.rect.right-object.rect.right)
+                        player.rect.x+=1
+                    elif player.rect.left<object.rect.left:#Falling of left side
+                        player.rect.x+=(object.rect.left-player.rect.right)
+                        player.rect.x-=1
+                    
             elif dy < 0 and object.name!="ladder" and not player.on_ladder:
-                player.rect.top = object.rect.bottom
-                #player.rect.y+=2
-                player.y_vel=-PLAYER_VEL*2
-                #player.rect.y=player.rect.y+5
-                player.hit_head()
+                if object.name=="tall shrub" or object.name=="small shrub":
+                    #if object.name=="small shrub":
+                        #player.y_velocity=PLAYER_VEL*2
+                        #player.hit_head()
+                    if player.rect.right>object.rect.right:#Falling onto
+                        player.rect.x=object.rect.right#(player.rect.right-object.rect.right)
+                        player.rect.x+=1
+                    elif player.rect.left<object.rect.left:#Falling onto left side
+                        player.rect.x+=(object.rect.left-player.rect.right)
+                        player.rect.x-=1
+                else:
+                    player.rect.top = object.rect.bottom
+                    #player.rect.y+=2
+                    player.y_velocity=-PLAYER_VEL*2
+                    #player.rect.y=player.rect.y+5
+                    player.hit_head()
 
             collided_objects.append(object)
-
     return collided_objects
 
 def collide(player, level, dx):
@@ -817,6 +836,8 @@ def collide(player, level, dx):
         if pygame.sprite.collide_mask(player, object) and object.name!="ladder" and object.name!="spike":
             collided_object = object
             if(collided_object.name=="spike"):
+                player.x_velocity=0
+                player.y_velocity=0
                 player.reset(level)
             if(collided_object.name == "end sign"):
                 #PLAYER HAS REACHED END OF LEVEL
@@ -836,10 +857,17 @@ def collide(player, level, dx):
 
     player.move(-dx, 0)
 
-    player.x_vel=0
+    player.x_velocity=0
     player.update()
     return collided_object
 
+def checkOverlap(player,level):
+    validLadder=False
+    for object in level.object_list:
+        if pygame.sprite.collide_mask(player.reachBox,object):
+            if(object.name=="ladder"):
+                validLadder=True
+    return validLadder
 
 def getOverlap(player, reachBox, level):
     global current_object
@@ -978,6 +1006,9 @@ def getInput(player, level):
             timer.start_timer()
 
     vertical_collide = handle_vertical_collision(player, level, player.y_velocity)
+    if player.on_ladder:
+        if not checkOverlap(player,level):
+           player.on_ladder=False
 
 
 
@@ -1056,7 +1087,7 @@ lTwo.append(Ladder(689,344))
 lTwo.append(lBorderLeft)
 lTwo.append(lBorderRight)
 lTwo.append(endlvl2)
-levelTwo=Level(lTwo,1135,556,"Level 1 to 3 bkgrnd.png")
+levelTwo=Level(lTwo,1135,538,"Level 1 to 3 bkgrnd.png")
 
 GRAY=(192,192,192)
 lThree=[]
@@ -1085,7 +1116,7 @@ lThree.append(Ladder(145,0))#LADDER 4
 lThree.append(lBorderLeft)
 lThree.append(lBorderRight)
 lThree.append(endSign(180,63)) # END SIGN
-levelThree=Level(lThree,1100,478,"Level 1 to 3 bkgrnd.png")
+levelThree=Level(lThree,1100,470,"Level 1 to 3 bkgrnd.png")
 
 lFour=[]
 #Player starting position (1100, 644)
@@ -1115,7 +1146,7 @@ lFour.append(BlackSpike(800,767))
 lFour.append(BlackSpike(840,767))
 lFour.append(BlackSpike(880,767))
 lFour.append(BlackSpike(920,767))
-lFour.append(Platform(960,720,244,80,WHITE))
+lFour.append(Platform(960,720,244,35,WHITE))
 #ladder x 1105
 lFour.append(Ladder(1105,720))
 lFour.append(FallPlat(670,695,165,32))#First Platform
@@ -1146,7 +1177,7 @@ lFive.append(Void(0,800,1115,15))
 lFive.append(Platform(0,700,200,80,WHITE))#Start
 lFive.append(Ladder(21,700))
 lFive.append(FallPlat(298,649,200,51))#Fall plat 1
-lFive.append(Platform(600, 598, 200, 51,WHITE))#plat 1
+lFive.append(Platform(600, 590, 170, 51,WHITE))#plat 1
 lFive.append(Platform(889,573,200,51,WHITE))#plat 2
 lFive.append(Platform(889,373,200,51,WHITE))#plat 3
 lFive.append(Ladder(1011,373))
@@ -1158,24 +1189,24 @@ lFive.append(FallPlat(298,384,200,51))
 lFive.append(Platform(56,190,200,51,WHITE))
 lFive.append(Ladder(215,190))
 lFive.append(Ladder(215,204))
-fpShrub1=smallShrub(345,91)
-fpShrub2=smallShrub(404,91)
+fpShrub1=smallShrub(340,91)
+fpShrub2=smallShrub(450,91)
 fallGroupFive1=[fpShrub1,fpShrub2]
 fiveFPlat1=FallPlat(298,143,200,51,PURPLE,fallGroupFive1)
 lFive.append(fpShrub1)
 lFive.append(fpShrub2)
 lFive.append(fiveFPlat1)
 
-fpShrub3=smallShrub(652,91)
-fpShrub4=smallShrub(704,91)
+fpShrub3=smallShrub(637,91)
+fpShrub4=smallShrub(749,91)
 fallGroupFive2=[fpShrub3,fpShrub4]
 fiveFPlat2=FallPlat(597,143,200,51,PURPLE,fallGroupFive2)
 lFive.append(fpShrub3)
 lFive.append(fpShrub4)
 lFive.append(fiveFPlat2)
 
-fpShrub5=smallShrub(948,91)
-fpShrub6=smallShrub(1003,91)
+fpShrub5=smallShrub(933,91)
+fpShrub6=smallShrub(1041,91)
 fallGroupFive3=[fpShrub5,fpShrub6]
 fiveFPlat3=FallPlat(889,143,200,51,PURPLE,fallGroupFive3)
 lFive.append(fpShrub5)
@@ -1208,7 +1239,7 @@ def loadLevel(window, level):
                 run = False
                 break
         playerOne.loop(FPS)
-        level.loop()
+        level.loop(playerOne)
         getInput(playerOne,level)
         draw(window, background, bg_image,playerOne,level)
     pygame.quit()
