@@ -120,12 +120,16 @@ class Player(pygame.sprite.Sprite):
     def move_left(self, velocity):
         self.x_velocity = -velocity
         if self.direction != "left":
+            if self.in_air:
+                self.rect.x+=6
             self.direction = "left"
             self.animation_count = 0
 
     def move_right(self, velocity):
         self.x_velocity = velocity
         if self.direction != "right":
+            if self.in_air:
+                self.rect.x-=6
             self.direction = "right"
             self.animation_count = 0
     def move_up(self, velocity):
