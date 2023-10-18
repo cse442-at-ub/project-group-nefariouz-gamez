@@ -808,11 +808,19 @@ def handle_vertical_collision(player, level, dy):
                         player.rect.x-=1
                     
             elif dy < 0 and object.name!="ladder" and not player.on_ladder:
-                player.rect.top = object.rect.bottom
-                #player.rect.y+=2
-                player.y_velocity=-PLAYER_VEL*2
-                #player.rect.y=player.rect.y+5
-                player.hit_head()
+                if object.name=="tall shrub":
+                    if player.rect.right>object.rect.right:#Falling off right side
+                        player.rect.x=object.rect.right#(player.rect.right-object.rect.right)
+                        player.rect.x+=1
+                    elif player.rect.left<object.rect.left:#Falling of left side
+                        player.rect.x+=(object.rect.left-player.rect.right)
+                        player.rect.x-=1
+                else:
+                    player.rect.top = object.rect.bottom
+                    #player.rect.y+=2
+                    player.y_velocity=-PLAYER_VEL*2
+                    #player.rect.y=player.rect.y+5
+                    player.hit_head()
 
             collided_objects.append(object)
     return collided_objects
