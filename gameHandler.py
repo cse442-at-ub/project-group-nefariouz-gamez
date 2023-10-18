@@ -120,16 +120,16 @@ class Player(pygame.sprite.Sprite):
     def move_left(self, velocity):
         self.x_velocity = -velocity
         if self.direction != "left":
-            if self.in_air:
-                self.rect.x+=6
+            #if self.in_air: Old bug fix for mid air flip image collisions
+                #self.rect.x+=6
             self.direction = "left"
             self.animation_count = 0
 
     def move_right(self, velocity):
         self.x_velocity = velocity
         if self.direction != "right":
-            if self.in_air:
-                self.rect.x-=6
+            #if self.in_air:
+                #self.rect.x-=6
             self.direction = "right"
             self.animation_count = 0
     def move_up(self, velocity):
@@ -808,11 +808,14 @@ def handle_vertical_collision(player, level, dy):
                         player.rect.x-=1
                     
             elif dy < 0 and object.name!="ladder" and not player.on_ladder:
-                if object.name=="tall shrub":
-                    if player.rect.right>object.rect.right:#Falling off right side
+                if object.name=="tall shrub" or object.name=="small shrub":
+                    #if object.name=="small shrub":
+                        #player.y_velocity=PLAYER_VEL*2
+                        #player.hit_head()
+                    if player.rect.right>object.rect.right:#Falling onto
                         player.rect.x=object.rect.right#(player.rect.right-object.rect.right)
                         player.rect.x+=1
-                    elif player.rect.left<object.rect.left:#Falling of left side
+                    elif player.rect.left<object.rect.left:#Falling onto left side
                         player.rect.x+=(object.rect.left-player.rect.right)
                         player.rect.x-=1
                 else:
