@@ -5,7 +5,9 @@ from os.path import isfile, join
 FPS=60
 GRAVITY=1
 BLACK=(0,0,0)
+ORANGE=(255, 102, 0)
 
+ 
 class Object(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, path=None,name=None):
         super().__init__()
@@ -127,32 +129,93 @@ class Spike(Object):
         self.image=self.original_image
         self.mask=self.original_mask
 
-class BlackSpike(Object):
-    def __init__(self,x,y):
-        super().__init__(x,y,40,34)
-        self.name="spike"
+class SmallRedShrub(smallShrub):
+    def init(self,x,y):
+        super().init(x,y)
+        #self.image=pygame.image.load("assets\Traps\SmallShrub\SmallRedShrub.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        #self.original_image=pygame.image.load("assets\Traps\SmallShrub\SmallRedShrub.png")
+
+class SmallPurpleShrub(smallShrub):
+    def init(self,x,y):
+        super().init(x,y)
+        #self.image=pygame.image.load("assets\Traps\SmallShrub\SmallPurShrub.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        #self.original_image=pygame.image.load("assets\Traps\SmallShrub\SmallPurShrub.png")
+
+class SmallPinkShrub(smallShrub):
+    def init(self,x,y):
+        super().init(x,y)
+        #self.image=pygame.image.load("assets\Traps\SmallShrub\SmallPinkShrub.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        #self.original_image=pygame.image.load("assets\Traps\SmallShrub\SmallPinkShrub.png")
+
+class TallRedShrub(TallShrub):
+    def init(self,x,y):
+        super().init(x,y)
+        #self.image=pygame.image.load("assets\Traps\TallShrub\TallRedShrub.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        #self.original_image=pygame.image.load("assets\Traps\TallShrub\TallRedShrub.png")
+
+class TallPurpleShrub(TallShrub):
+    def init(self,x,y):
+        super().init(x,y)
+        #self.image=pygame.image.load("assets\Traps\TallShrub\TallPurpShrub.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        #self.original_image=pygame.image.load("assets\Traps\TallShrub\TallPurpShrub.png")
+
+class TallPinkShrub(TallShrub):
+    def init(self,x,y):
+        super().init(x,y)
+        #self.image=pygame.image.load("assets\Traps\TallShrub\TallPinkShrub.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        #self.original_image=pygame.image.load("assets\Traps\TallShrub\TallPinkShrub.png")
+
+class BlackSpike(Spike):
+    def init(self,x,y):
+        super().init(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\BlackSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\BlackSpike.png")
 
-    def reset(self):
-        self.image=self.original_image
-        self.mask=self.original_mask
+class RedSpike(Spike):
+    def init(self,x,y):
+        super().init(x,y)
+        #self.image=pygame.image.load("assets\Traps\Spikes\RedSpike.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        #self.original_image=pygame.image.load("assets\Traps\Spikes\RedSpike.png")
 
+class BlueSpike(Spike):
+    def init(self,x,y):
+        super().init(x,y)
+        #self.image=pygame.image.load("assets\Traps\Spikes\BlueSpike.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\Spikes\BlueSpike.png")
+
+class GreenSpike(Spike):
+    def init(self,x,y):
+        super().init(x,y)
+        self.image=pygame.image.load("assets\Traps\Spikes\GreenSpike.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\Spikes\GreenSpike.png")
 
 class SideSpike(Spike):
-    def __init__(self, x, y):
-        super().__init__(x, y)
+    def init(self, x, y):
+        super().init(x, y)
         self.image=pygame.image.load("assets\Traps\Spikes\Lvl3SidewaysSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\Lvl3SidewaysSpike.png")
-
-    def reset(self):
-        self.image=self.original_image
-        self.mask=self.original_mask
-
 
 class Water(Platform):
     def __init__(self, x, y, width, height, col, path=None, name="spike"):
@@ -238,7 +301,51 @@ class Ladder(Object):
     def destroy(self):
         self.image=pygame.image.load("assets\Traps\Empty\empty.png")
         self.mask=pygame.mask.from_surface(self.image)
-    
+
+class MovePlat(Platform):
+    def init(self, x, y, width, height,lbound,rbound, col=ORANGE,oList=[],aList=[], path=None,name="move"):
+        super().init(x, y, width, height, col, path, name)
+        self.surface=pygame.Surface((width,height))
+        self.right_bound=rbound
+        self.left_bound=lbound
+        self.original_x=x
+        self.original_y=y
+        self.original_width=width
+        self.original_height=height
+        self.object_list=oList#list of objects moving with platform
+        self.copy_list=oList.copy()
+        self.adjacent_list=aList#list of platforms on same line
+        self.copya_list=aList.copy()
+        self.direction=True#True means right, False means left, all start going right
+
+    def loop(self):
+        if self.direction:#If moving right
+            self.rect.x+=1
+            if(self.rect.right==self.right_bound):#If platform has reached the right bound
+               self.direction=False#platform is now going left
+               for plat in self.adjacent_list:
+                   plat.direction=False#This platform has changed direction, every platform on this line must as well
+            for object in self.object_list:
+                object.rect.x+=1
+        else:#if moving left
+            self.rect.x-=1
+            if(self.rect.left==self.left_bound):
+                self.direction=True#platform is now going right
+                for plat in self.adjacent_list:
+                   plat.direction=True#All platforms change direction together
+            for object in self.object_list:
+                object.rect.x-=1
+
+
+    def reset(self):
+        self.timer=0
+        self.direction=True
+        self.rect.x=self.original_x
+        self.rect.y=self.original_y
+        self.object_list=self.copy_list.copy()
+        self.adjacent_list=self.copya_list.copy()
+        self.surface=pygame.Surface((self.rect.width,self.rect.height))
+        self.mask = pygame.mask.from_surface(self.surface)
 
 class endSign(Object):
     def __init__(self, x, y):
