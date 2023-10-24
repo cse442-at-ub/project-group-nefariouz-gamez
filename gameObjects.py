@@ -209,6 +209,63 @@ class GreenSpike(Spike):
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\GreenSpike.png")
 
+class GreenDSpike(Spike):##DOWN FACING GREEN SPIKE
+    def init(self,x,y):
+        super().init(x,y)
+        self.image=pygame.image.load("assets\Traps\Spikes\GreenDSpike.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\Spikes\GreenDSpike.png")
+
+class GreenLSpike(Spike):##LEFT FACING GREEN SPIKE
+    def init(self,x,y):
+        super().init(x,y)
+        self.image=pygame.image.load("assets\Traps\Spikes\GreenLSpike.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\Spikes\GreenLSpike.png")
+
+class GreenRSpike(Spike):##RIGHT FACING GREEN SPIKE
+    def init(self,x,y):
+        super().init(x,y)
+        self.image=pygame.image.load("assets\Traps\Spikes\GreenRSpike.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\Spikes\GreenRSpike.png")
+
+class GoldSpike(Spike):
+    def init(self,x,y):
+        super().init(x,y)
+        self.image=pygame.image.load("assets\Traps\Spikes\GoldSpike.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\Spikes\GoldSpike.png")
+
+class GoldDSpike(Spike):##DOWN FACING GOLD SPIKE
+    def init(self,x,y):
+        super().init(x,y)
+        self.image=pygame.image.load("assets\Traps\Spikes\GoldDSpike.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\Spikes\GoldDSpike.png")
+
+class GoldLSpike(Spike):##LEFT FACING GOLD SPIKE
+    def init(self,x,y):
+        super().init(x,y)
+        self.image=pygame.image.load("assets\Traps\Spikes\GoldLSpike.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\Spikes\GoldLSpike.png")
+
+class GoldRSpike(Spike):##RIGHT FACING GOLD SPIKE
+    def init(self,x,y):
+        super().init(x,y)
+        self.image=pygame.image.load("assets\Traps\Spikes\GoldRSpike.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\Spikes\GoldRSpike.png")
+
+
 class SideSpike(Spike):
     def init(self, x, y):
         super().init(x, y)
