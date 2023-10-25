@@ -124,6 +124,10 @@ class Spike(Object):
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\Spike.png")
+    
+    def destroy(self):
+        self.image=pygame.image.load("assets\Traps\Empty\empty.png")
+        self.mask=pygame.mask.from_surface(self.image)
 
     def reset(self):
         self.image=self.original_image
