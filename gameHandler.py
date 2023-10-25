@@ -295,6 +295,8 @@ def load_level():
         loadLevel(window, levelFour)
     elif currlvl == "5":
         loadLevel(window, levelFive)
+    elif currlvl == "11":
+        loadLevel(window, levelEleven)
     print("LOAD LEVEL " + currlvl)
 
 def settings():
@@ -698,6 +700,8 @@ def continuelvl():
         loadLevel(window, levelFour)
     elif currlvl == "5":
         loadLevel(window, levelFive)
+    elif currlvl == "11":
+        loadLevel(window, levelEleven)
     print("CONTINUE")
 
 
@@ -1235,6 +1239,39 @@ lSix.append(Platform)
 
 
 
+lEleven = []
+lEleven.append(Water(0,800,1200,1,BLUE))
+lEleven.append(Platform(1026,147,174,33,WHITE))
+lEleven.append(Platform(752,243,174,33,WHITE))
+lEleven.append(Platform(482,324,174,33,WHITE))
+lEleven.append(Platform(224,243,174,33,WHITE))
+lEleven.append(Platform(0,456,292,33,WHITE))
+lEleven.append(Platform(0,631,174,33,WHITE))
+
+# falling platform object
+lvl11FallSpike = BlueSpike(429,615)
+lvl11FallShrub = SmallRedShrub(292,596)
+lvl11FallPlat = FallPlat(292,648,174,33,PURPLE,[lvl11FallSpike,lvl11FallShrub])
+lEleven.append(lvl11FallSpike)
+lEleven.append(lvl11FallShrub)
+lEleven.append(lvl11FallPlat)
+
+lEleven.append(BlueSpike(889,210))
+lEleven.append(BlueSpike(752,210))
+lEleven.append(BlueSpike(619,291))
+lEleven.append(BlueSpike(482,291))
+lEleven.append(BlueSpike(255,423))
+lEleven.append(BlueSpike(218,423))
+lEleven.append(BlueSpike(0,423))
+lEleven.append(SmallRedShrub(545,272))
+lEleven.append(SmallRedShrub(104,404))
+lEleven.append(Ladder(365,243))
+lEleven.append(Ladder(365,285))
+lEleven.append(lBorderLeft)
+lEleven.append(lBorderRight)
+lEleven.append(endSign(10,591))
+
+levelEleven=Level(lEleven,1125,80,"Level 1 to 3 bkgrnd.png") # will change background
 
 
 def loadLevel(window, level):
