@@ -297,6 +297,8 @@ def load_level():
         loadLevel(window, levelFive)
     elif currlvl == "11":
         loadLevel(window, levelEleven)
+    elif currlvl == "12":
+        loadLevel(window, levelTwelve)
     print("LOAD LEVEL " + currlvl)
 
 def settings():
@@ -702,6 +704,8 @@ def continuelvl():
         loadLevel(window, levelFive)
     elif currlvl == "11":
         loadLevel(window, levelEleven)
+    elif currlvl == "12":
+        loadLevel(window, levelTwelve)
     print("CONTINUE")
 
 
@@ -1238,7 +1242,7 @@ lSix.append(Platform)
 
 
 
-
+# LEVEL 11
 lEleven = []
 lEleven.append(Water(0,800,1200,1,BLUE))
 lEleven.append(Platform(1026,147,174,33,WHITE))
@@ -1273,6 +1277,44 @@ lEleven.append(endSign(10,591))
 
 levelEleven=Level(lEleven,1125,80,"Level 1 to 3 bkgrnd.png") # will change background
 
+# LEVEL 12
+lTwelve = []
+lTwelve.append(Water(0,800,1200,1,BLUE))
+lTwelve.append(Platform(1026,631,174,33,WHITE))
+lTwelve.append(Platform(657,604,304,33,WHITE))
+lTwelve.append(Platform(309,395,174,33,WHITE))
+lTwelve.append(Platform(9,662,230,33, WHITE))
+lTwelve.append(Platform(14,465,206,33,WHITE))
+lTwelve.append(Platform(195,246,25,219,WHITE))
+lTwelve.append(Platform(132,416,63,19,WHITE))
+lTwelve.append(Platform(0,173,174,33,WHITE))
+
+# falling platform object
+lvl12FallSpike = BlueSpike(572,508)
+lvl12FallTallShrub = TallRedShrub(609,358)
+lvl12FallPlat = FallPlat(483,541,174,33,PURPLE,[lvl12FallSpike,lvl12FallTallShrub])
+lTwelve.append(lvl12FallSpike)
+lTwelve.append(lvl12FallTallShrub)
+lTwelve.append(lvl12FallPlat)
+
+lTwelve.append(BlueSpike(924,571))
+lTwelve.append(BlueSpike(657,571))
+lTwelve.append(BlueSpike(139,629))
+lTwelve.append(BlueSpike(87,432))
+lTwelve.append(SmallRedShrub(132,364))
+lTwelve.append(Ladder(450,395))
+lTwelve.append(Ladder(309,395))
+lTwelve.append(Ladder(309,451))
+lTwelve.append(Ladder(14,465))
+lTwelve.append(Ladder(14,562))
+lTwelve.append(Ladder(141,173))
+lTwelve.append(Ladder(86,206))
+lTwelve.append(Ladder(86,262))
+lTwelve.append(lBorderLeft)
+lTwelve.append(lBorderRight)
+lTwelve.append(endSign(10,133))
+
+levelTwelve=Level(lTwelve,1125,563,"Level 1 to 3 bkgrnd.png") # will change background
 
 def loadLevel(window, level):
     level.reset()
