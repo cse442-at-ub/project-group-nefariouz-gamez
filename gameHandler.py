@@ -770,6 +770,14 @@ class Level():
         for object in self.object_list:
             if object.name=="fall":
                 object.check_time(player)
+            if object.name=="move":
+                if not player.in_air:
+                    if pygame.sprite.collide_mask(player.reachBox, object):
+                        if object.direction:
+                            player.rect.x+=1
+                        else:
+                            player.rect.x-=1
+
 
 def draw(window, background, bg_image,player,level):
     for tile in background:
@@ -1219,6 +1227,15 @@ lFive.append(lBorderRight)
 lFive.append(endSign(1140,74)) # END SIGN
 
 levelFive=Level(lFive,50,625,"CaveBackground1.png")
+
+lSix=[]
+lSix.append(Platform(0,114,103,58,WHITE))##Start
+lSix.append(Platform)
+
+
+
+
+
 
 def loadLevel(window, level):
     level.reset()
