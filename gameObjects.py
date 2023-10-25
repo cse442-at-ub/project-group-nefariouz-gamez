@@ -130,152 +130,152 @@ class Spike(Object):
         self.mask=self.original_mask
 
 class SmallRedShrub(smallShrub):
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\SmallShrub\SmallRedShrub.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\SmallShrub\SmallRedShrub.png")
 
 class SmallPurpleShrub(smallShrub):
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\SmallShrub\SmallPurShrub.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\SmallShrub\SmallPurShrub.png")
 
 class SmallPinkShrub(smallShrub):
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\SmallShrub\SmallPinkShrub.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\SmallShrub\SmallPinkShrub.png")
 
 class TallRedShrub(TallShrub):
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\TallShrub\TallRedShrub.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\TallShrub\TallRedShrub.png")
 
 class TallPurpleShrub(TallShrub):
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\TallShrub\TallPurpShrub.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\TallShrub\TallPurpShrub.png")
 
 class TallPinkShrub(TallShrub):
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\TallShrub\TallPinkShrub.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\TallShrub\TallPinkShrub.png")
 
 class BlackSpike(Spike):
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\BlackSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\BlackSpike.png")
 
 class BlackLSpike(Spike):##LEFT FACING BLACK SPIKE
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\BlackLSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\BlackLSpike.png")
 
 class BlackRSpike(Spike):##RIGHT FACING BLACK SPIKE
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\BlackRSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\BlackRSpike.png")
 
 class RedSpike(Spike):
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\RedSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\RedSpike.png")
 
 class BlueSpike(Spike):
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\BlueSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\BlueSpike.png")
 
 class GreenSpike(Spike):
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\GreenSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\GreenSpike.png")
 
 class GreenDSpike(Spike):##DOWN FACING GREEN SPIKE
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\GreenDSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\GreenDSpike.png")
 
 class GreenLSpike(Spike):##LEFT FACING GREEN SPIKE
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\GreenLSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\GreenLSpike.png")
 
 class GreenRSpike(Spike):##RIGHT FACING GREEN SPIKE
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\GreenRSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\GreenRSpike.png")
 
 class GoldSpike(Spike):
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\GoldSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\GoldSpike.png")
 
 class GoldDSpike(Spike):##DOWN FACING GOLD SPIKE
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\GoldDSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\GoldDSpike.png")
 
 class GoldLSpike(Spike):##LEFT FACING GOLD SPIKE
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\GoldLSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\GoldLSpike.png")
 
 class GoldRSpike(Spike):##RIGHT FACING GOLD SPIKE
-    def init(self,x,y):
-        super().init(x,y)
+    def __init__(self,x,y):
+        super().__init__(x,y)
         self.image=pygame.image.load("assets\Traps\Spikes\GoldRSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
@@ -283,8 +283,8 @@ class GoldRSpike(Spike):##RIGHT FACING GOLD SPIKE
 
 
 class SideSpike(Spike):
-    def init(self, x, y):
-        super().init(x, y)
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.image=pygame.image.load("assets\Traps\Spikes\Lvl3SidewaysSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
@@ -376,8 +376,8 @@ class Ladder(Object):
         self.mask=pygame.mask.from_surface(self.image)
 
 class MovePlat(Platform):
-    def init(self, x, y, width, height,lbound,rbound, col=ORANGE,oList=[],aList=[], path=None,name="move"):
-        super().init(x, y, width, height, col, path, name)
+    def __init__(self, x, y, width, height,lbound,rbound, col=ORANGE,oList=[],aList=[], path=None,name="move"):
+        super().__init__(x, y, width, height, col, path, name)
         self.surface=pygame.Surface((width,height))
         self.right_bound=rbound
         self.left_bound=lbound
