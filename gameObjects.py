@@ -380,7 +380,7 @@ class Ladder(Object):
         self.mask=pygame.mask.from_surface(self.image)
 
 class MovePlat(Platform):
-    def __init__(self, x, y, width, height,lbound,rbound, col=ORANGE,oList=[],aList=[], path=None,name="move"):
+    def __init__(self, x, y, width, height,lbound,rbound,oList=[],aList=[], path=None,name="move",col=ORANGE,):
         super().__init__(x, y, width, height, col, path, name)
         self.surface=pygame.Surface((width,height))
         self.right_bound=rbound
@@ -395,9 +395,20 @@ class MovePlat(Platform):
         self.copya_list=aList.copy()
         self.direction=True#True means right, False means left, all start going right
 
-    def loop(self):
+    def loop(self,player):
+        c=0
         if self.direction:#If moving right
             self.rect.x+=1
+            if pygame.sprite.collide_mask(player.reachBox, self):
+                player.rect.x+=1
+                player.reachBox.rect.x+=1
+                c=1
+            else:
+                for object in self.object_list:
+                    if pygame.sprite.collide_mask(player.reachBox, object) and c==0:
+                        player.rect.x+=1
+                        player.reachBox.rect.x+=1
+                        break
             if(self.rect.right==self.right_bound):#If platform has reached the right bound
                self.direction=False#platform is now going left
                for plat in self.adjacent_list:
@@ -406,6 +417,18 @@ class MovePlat(Platform):
                 object.rect.x+=1
         else:#if moving left
             self.rect.x-=1
+            if pygame.sprite.collide_mask(player.reachBox, self):
+                if not player.in_air:
+                    player.rect.x-=1
+                    player.reachBox.rect.x-=1
+                c=1
+            else:
+                for object in self.object_list:
+                    if pygame.sprite.collide_mask(player.reachBox, object) and c==0:
+                        if not player.in_air:
+                            player.rect.x-=1
+                            player.reachBox.rect.x-=1
+                        break
             if(self.rect.left==self.left_bound):
                 self.direction=True#platform is now going right
                 for plat in self.adjacent_list:

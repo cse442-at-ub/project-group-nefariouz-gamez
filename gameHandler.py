@@ -295,6 +295,8 @@ def load_level():
         loadLevel(window, levelFour)
     elif currlvl == "5":
         loadLevel(window, levelFive)
+    elif currlvl == "6":
+        loadLevel(window,levelSix)
     elif currlvl == "11":
         loadLevel(window, levelEleven)
     elif currlvl == "12":
@@ -702,6 +704,8 @@ def continuelvl():
         loadLevel(window, levelFour)
     elif currlvl == "5":
         loadLevel(window, levelFive)
+    elif currlvl == "6":
+        loadLevel(window,levelSix)
     elif currlvl == "11":
         loadLevel(window, levelEleven)
     elif currlvl == "12":
@@ -779,12 +783,8 @@ class Level():
             if object.name=="fall":
                 object.check_time(player)
             if object.name=="move":
-                if not player.in_air:
-                    if pygame.sprite.collide_mask(player.reachBox, object):
-                        if object.direction:
-                            player.rect.x+=1
-                        else:
-                            player.rect.x-=1
+                object.loop(player)
+                
 
 
 def draw(window, background, bg_image,player,level):
@@ -1237,10 +1237,45 @@ lFive.append(endSign(1140,74)) # END SIGN
 levelFive=Level(lFive,50,625,"CaveBackground1.png")
 
 lSix=[]
+#Starting platform and cave outline
 lSix.append(Platform(0,114,103,58,WHITE))##Start
-lSix.append(Platform)
+lSix.append(Platform(0,172,34,628,GRAY))
+lSix.append(Platform(34,695,850,105,GRAY))
+lSix.append(Platform(860,405,24,290,GRAY))
+lSix.append(Platform(1166,13,34,787,GRAY))
+
+#Moving platform 1
+mp6S1=smallShrub(151,202)#Moving platform 6 shrub 1 = mp6s1
+
+lSix.append(mp6S1)
+mp6S2=smallShrub(308,202)
+lSix.append(mp6S2)
+mp6S3=ReverseSmallShrub(151,357)
+lSix.append(mp6S3)
+mp6S4=ReverseSmallShrub(308,357)
+lSix.append(mp6S4)
+mp6A=MovePlat(151,254,200,51,39,1161,[mp6S1,mp6S2,mp6S3,mp6S4])#Moving platform level 6 A
 
 
+#Moving platform 2
+mpL1=Ladder(758,256)
+mp6B=MovePlat(745,256,200,51,39,1161,[mpL1],[mp6A])
+lSix.append(mp6B)
+lSix.append(mpL1)##append ladder after platform to ensure it gets drawn OVER the platform
+mp6A.adjacent_list.append(mp6B)#add second platform to firsts adjacency list now that it 
+
+lSix.append(mp6A)##add first moving platform now that it's complete
+
+#Moving platform 3
+lSix.append(MovePlat(281,405,200,51,39,852,[],[]))
+
+#Bottom right corner tunnel
+lSix.append(Platform(1086,770,80,30,WHITE))
+lSix.append(Platform(884,457,85,30,WHITE))
+lSix.append(Platform(1081,566,85,30,WHITE))
+lSix.append(Platform(884,665,85,30,WHITE))
+
+levelSix=Level(lSix,35,50,"CaveBackground1.png")
 
 # LEVEL 11
 lEleven = []
