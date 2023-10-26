@@ -1258,12 +1258,13 @@ mp6A=MovePlat(151,254,200,51,39,1161,[mp6S1,mp6S2,mp6S3,mp6S4])#Moving platform 
 
 
 #Moving platform 2
-mpL1=Ladder(758,256)
-mp6B=MovePlat(745,256,200,51,39,1161,[mpL1],[mp6A])
+mpL1=Ladder(758,254)
+mp6B=MovePlat(745,254,200,51,39,1161,[mpL1],[mp6A])
 lSix.append(mp6B)
 lSix.append(mpL1)##append ladder after platform to ensure it gets drawn OVER the platform
-mp6A.adjacent_list.append(mp6B)#add second platform to firsts adjacency list now that it 
 
+mp6A.set_a([mp6B])#add second platform to firsts adjacency list now that it exists
+#mp6A=MovePlat(151,254,200,51,39,1161,[mp6S1,mp6S2,mp6S3,mp6S4],[mp6B])#Moving platform level 6 A
 lSix.append(mp6A)##add first moving platform now that it's complete
 
 #Moving platform 3
@@ -1274,6 +1275,36 @@ lSix.append(Platform(1086,770,80,30,WHITE))
 lSix.append(Platform(884,457,85,30,WHITE))
 lSix.append(Platform(1081,566,85,30,WHITE))
 lSix.append(Platform(884,665,85,30,WHITE))
+
+##Colored side spikes not implemented
+#lSix.append(BlackLSpike(925,490))
+
+##Bottom spikes 
+lSix.append(BlackSpike(35,662))
+lSix.append(BlackSpike(65,662))
+lSix.append(BlackSpike(100,662))
+lSix.append(BlackSpike(135,662))
+lSix.append(BlackSpike(170,662))
+lSix.append(BlackSpike(205,662))
+lSix.append(BlackSpike(240,662))
+lSix.append(BlackSpike(275,662))
+lSix.append(BlackSpike(310,662))
+lSix.append(BlackSpike(345,662))
+lSix.append(BlackSpike(380,662))
+lSix.append(BlackSpike(415,662))
+lSix.append(BlackSpike(450,662))
+lSix.append(BlackSpike(485,662))
+lSix.append(BlackSpike(520,662))
+lSix.append(BlackSpike(555,662))
+lSix.append(BlackSpike(590,662))
+lSix.append(BlackSpike(625,662))
+lSix.append(BlackSpike(660,662))
+lSix.append(BlackSpike(695,662))
+lSix.append(BlackSpike(730,662))
+lSix.append(BlackSpike(765,662))
+lSix.append(BlackSpike(795,662))
+lSix.append(BlackSpike(823,662))
+
 
 levelSix=Level(lSix,35,50,"CaveBackground1.png")
 
