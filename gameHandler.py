@@ -1250,9 +1250,9 @@ mp6S1=smallShrub(151,202)#Moving platform 6 shrub 1 = mp6s1
 lSix.append(mp6S1)
 mp6S2=smallShrub(308,202)
 lSix.append(mp6S2)
-mp6S3=ReverseSmallShrub(151,357)
+mp6S3=ReverseSmallShrub(151,305)
 lSix.append(mp6S3)
-mp6S4=ReverseSmallShrub(308,357)
+mp6S4=ReverseSmallShrub(308,305)
 lSix.append(mp6S4)
 mp6A=MovePlat(151,254,200,51,39,1161,[mp6S1,mp6S2,mp6S3,mp6S4])#Moving platform level 6 A
 
