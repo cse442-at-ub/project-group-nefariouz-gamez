@@ -7,7 +7,7 @@ GRAVITY=1
 BLACK=(0,0,0)
 ORANGE=(255, 102, 0)
 
- 
+
 class Object(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, path=None,name=None):
         super().__init__()
@@ -20,7 +20,7 @@ class Object(pygame.sprite.Sprite):
         self.original_y=0#possible use in resizing
     def draw(self, window, offset_x):
         window.blit(self.image, (self.rect.x - offset_x, self.rect.y))
-    
+
     def reset(self):
         x=0
 
@@ -103,7 +103,7 @@ class TallShrub(Object):
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\TallShrub\TallShrub.png")
         self.health=2
-        
+
     def destroy(self):
         if self.health==1:
             self.image=pygame.image.load("assets\Traps\Empty\empty.png")
@@ -124,7 +124,7 @@ class Spike(Object):
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\Spike.png")
-    
+
     def destroy(self):
         self.image=pygame.image.load("assets\Traps\Empty\empty.png")
         self.mask=pygame.mask.from_surface(self.image)
@@ -168,10 +168,10 @@ class TallRedShrub(TallShrub):
 class TallPurpleShrub(TallShrub):
     def __init__(self,x,y):
         super().__init__(x,y)
-        self.image=pygame.image.load("assets\Traps\TallShrub\TallPurpShrub.png")
+        self.image=pygame.image.load("assets\Traps\TallShrub\TallPurpleShrub.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
-        self.original_image=pygame.image.load("assets\Traps\TallShrub\TallPurpShrub.png")
+        self.original_image=pygame.image.load("assets\Traps\TallShrub\TallPurpleShrub.png")
 
 class TallPinkShrub(TallShrub):
     def __init__(self,x,y):
@@ -320,7 +320,7 @@ class FallPlat(Platform):
         self.falling=False
         self.object_list=oList
         self.copy_list=oList.copy()
-        
+
     def destroy(self):
         self.rect.width=0
         self.rect.height=0
@@ -358,8 +358,8 @@ class FallPlat(Platform):
         self.object_list=self.copy_list.copy()
         self.surface=pygame.Surface((self.rect.width,self.rect.height))
         self.mask = pygame.mask.from_surface(self.surface)
-    
-    
+
+
 
 class Ladder(Object):
     def __init__(self,x,y):
@@ -396,8 +396,8 @@ class MovePlat(Platform):
         self.direction=True#True means right, False means left, all start going right
 
     def set_a(self,platlist):
-        self.adjacent_list.append(platlist)
-        
+        self.adjacent_list =platlist
+        self.copya_list = self.adjacent_list.copy()
 
     def loop(self,player):
         c=0
