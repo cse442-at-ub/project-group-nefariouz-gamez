@@ -494,7 +494,9 @@ def click_Celia():
 def click_Malcolm():
     global current_character
     global character_text
-    global max_level_unlocked
+
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
     
     if max_level_unlocked != "" and int(max_level_unlocked) >= 5:
         current_character = "Malcolm"
@@ -510,7 +512,9 @@ def click_Malcolm():
 def click_Maia():
     global current_character
     global character_text
-    global max_level_unlocked
+
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
     
     if max_level_unlocked != "" and int(max_level_unlocked) >= 10:
         current_character = "Maia"
@@ -526,7 +530,9 @@ def click_Maia():
 def click_Oscar():
     global current_character
     global character_text
-    global max_level_unlocked
+
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
     
     if max_level_unlocked != "" and int(max_level_unlocked) >= 15:
         current_character = "Oscar"
@@ -604,8 +610,10 @@ def check_update():
 
 
 def check_unlocked_level():
-    global max_level_unlocked
     global current_character
+
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
 
     if max_level_unlocked == "" or int(max_level_unlocked) < 5:
         current_character = "Celia"
@@ -629,7 +637,10 @@ def display_choose_character(window):
     screen_width, screen_height = size[0], size[1]
     background = pygame.transform.scale(background, size)
     widgets = [Button((screen_width/2, (screen_height/2) + 160), (300, 54), "OK", click_OK)]
+    
     check_update()
+    check_unlocked_level()
+
 
     running = True
     while running:
