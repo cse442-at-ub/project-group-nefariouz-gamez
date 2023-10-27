@@ -403,7 +403,7 @@ class MovePlat(Platform):
         c=0
         if self.direction:#If moving right
             self.rect.x+=2
-            if pygame.sprite.collide_mask(player.reachBox, self):
+            if pygame.sprite.collide_mask(player.reachBox, self) and player.rect.bottom<self.rect.bottom:# and player.rect.bottom-10<self.rect.top:
                 player.rect.x+=2
                 player.reachBox.rect.x+=2
                 c=1
@@ -422,7 +422,7 @@ class MovePlat(Platform):
                 object.rect.x+=2
         else:#if moving left
             self.rect.x-=2
-            if pygame.sprite.collide_mask(player.reachBox, self):
+            if pygame.sprite.collide_mask(player.reachBox, self) and player.rect.bottom<self.rect.bottom:# and player.rect.bottom-10<self.rect.top:
                 if not player.in_air:
                     player.rect.x-=2
                     player.reachBox.rect.x-=2
@@ -478,7 +478,7 @@ class MovePlatVert(Platform):
         c=0
         if self.direction:#If moving UP
             self.rect.y-=2
-            if pygame.sprite.collide_mask(player.reachBox, self):
+            if pygame.sprite.collide_mask(player.reachBox, self) and player.rect.bottom<self.rect.bottom:# and player.rect.bottom-10<self.rect.top:
                 player.rect.y-=2
                 player.reachBox.rect.y-=2
                 c=1
@@ -497,7 +497,7 @@ class MovePlatVert(Platform):
                 object.rect.y-=2
         else:#if moving DOWN
             self.rect.y+=2
-            if pygame.sprite.collide_mask(player.reachBox, self):
+            if pygame.sprite.collide_mask(player.reachBox, self) and player.rect.bottom<self.rect.bottom:#and player.rect.bottom-10<self.rect.top:
                 if not player.in_air:
                     player.rect.y+=2
                     player.reachBox.rect.y+=2
@@ -528,6 +528,95 @@ class MovePlatVert(Platform):
         self.surface=pygame.Surface((self.rect.width,self.rect.height))
         self.mask = pygame.mask.from_surface(self.surface)
 
+class MovePlatDiag(Platform):
+    def __init__(self, x, y, width, height,rise, run,lbound,rbound,oList=[],aList=[], path=None,name="move",col=ORANGE,):
+        super().__init__(x, y, width, height, col, path, name)
+        self.surface=pygame.Surface((width,height))
+        self.right_bound=rbound
+
+        self.dy=rise#vertical speed 
+        self.dx=run#horizontal speed
+        #By using negative values for rise and/or run, diagonal direction can be changed.
+        self.left_bound=lbound
+        self.original_x=x
+        self.original_y=y
+        self.original_width=width
+        self.original_height=height
+        self.object_list=oList#list of objects moving with platform
+        self.copy_list=oList.copy()
+        self.adjacent_list=aList#list of platforms on same line
+        self.copya_list=aList.copy()
+        self.direction=True#True means right, False means left, all start going right
+
+    def set_a(self,platlist):
+        self.adjacent_list =platlist
+        self.copya_list = self.adjacent_list.copy()
+
+    def loop(self,player):
+        c=0
+        if self.direction:#If moving right
+            self.rect.x+=self.dx
+            self.rect.y-=self.dy
+            if pygame.sprite.collide_mask(player, self) and player.rect.bottom<self.rect.bottom:
+                player.rect.x+=self.dx
+                player.reachBox.rect.x+=self.dx
+                player.rect.y-=self.dy
+                player.reachBox.rect.y-=self.dy
+                c=1
+            else:
+                for object in self.object_list:
+                    if pygame.sprite.collide_mask(player, object) and c==0:
+                        player.rect.x+=self.dx
+                        player.reachBox.rect.x+=self.dx
+                        player.rect.y-=self.dy
+                        player.reachBox.rect.y-=self.dy
+                        c=1
+                        break
+            if(self.rect.right==self.right_bound or self.rect.right>self.right_bound):#If platform has reached the right bound
+               self.direction=False#platform is now going left
+               for plat in self.adjacent_list:
+                   plat.direction=False#This platform has changed direction, every platform on this line must as well
+            for object in self.object_list:
+                object.rect.x+=self.dx
+                object.rect.y-=self.dy
+        else:#if moving left
+            self.rect.x-=self.dx
+            self.rect.y+=self.dy
+            if pygame.sprite.collide_mask(player, self) and player.rect.bottom<self.rect.bottom:
+                if not player.in_air:
+                    player.rect.x-=self.dx
+                    player.rect.y+=self.dy
+                    player.reachBox.rect.y+=self.dy
+                    player.reachBox.rect.x-=self.dx
+                    c=1
+                c=1
+            else:
+                for object in self.object_list:
+                    if pygame.sprite.collide_mask(player, object) and c==0:
+                        if not player.in_air:
+                            player.rect.x-=self.dx
+                            player.reachBox.rect.x-=self.dx
+                            player.rect.y+=self.dy
+                            player.reachBox.rect.y+=self.dy
+                            c=1
+                        break
+            if(self.rect.left==self.left_bound or self.rect.left<self.left_bound):
+                self.direction=True#platform is now going right
+                for plat in self.adjacent_list:
+                   plat.direction=True#All platforms change direction together
+            for object in self.object_list:
+                object.rect.x-=self.dx
+                object.rect.y+=self.dy
+
+    def reset(self):
+        self.timer=0
+        self.direction=True
+        self.rect.x=self.original_x
+        self.rect.y=self.original_y
+        self.object_list=self.copy_list.copy()
+        self.adjacent_list=self.copya_list.copy()
+        self.surface=pygame.Surface((self.rect.width,self.rect.height))
+        self.mask = pygame.mask.from_surface(self.surface)
 
 class endSign(Object):
     def __init__(self, x, y):

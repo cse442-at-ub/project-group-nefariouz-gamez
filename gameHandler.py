@@ -6,7 +6,7 @@ import math
 import pygame
 import sys
 
-from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike
+from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike
 from MenuWidgets import *
 from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
@@ -1516,17 +1516,17 @@ lTen.append(Ladder(462,563))
 lTen.append(Ladder(606,561))
 
 mpShrub10_2 = SmallPinkShrub(715,624)
-lTen.append(MovePlat(715,676,127,33, 715, 1073, oList=[mpShrub10_2]))#Have to Change this to a MovePlatDiag
+lTen.append(MovePlatDiag(715,676,127,33, 3,2,715, 1073, oList=[mpShrub10_2]))
 lTen.append(mpShrub10_2)
 
-lTen.append(Platform(650,388,11,110,WHITE))##made height shorter as to not interfere with ladder and moved right slightly
+lTen.append(Platform(660,388,11,120,WHITE))##made height shorter as to not interfere with ladder and moved right slightly
 lTen.append(Platform(408,343,174,33,WHITE))
 
 fpLadder10_1 = Ladder(864,276)
 lTen.append(FallPlat(723,276,174,33, oList=[fpLadder10_1]))
 lTen.append(fpLadder10_1)
 
-lTen.append(MovePlatVert(563,138,37,123, 40, 309))##First vertical moving platform.
+lTen.append(MovePlatVert(563,138,37,123, 40, 309))##First vertical moving platform, bounds have been changed from figma to help the player
 
 fpSpike10_1 = RedSpike(241,266)
 lTen.append(FallPlat(196,299,126,34, oList=[fpSpike10_1]))
