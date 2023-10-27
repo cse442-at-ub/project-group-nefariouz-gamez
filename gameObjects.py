@@ -443,7 +443,6 @@ class MovePlat(Platform):
             for object in self.object_list:
                 object.rect.x-=2
 
-
     def reset(self):
         self.timer=0
         self.direction=True

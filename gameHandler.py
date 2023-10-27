@@ -949,7 +949,7 @@ def getInput(player, level):
                     if object.name=="ladder":
                         player.on_ladder=True
                         player.in_air=False
-                        player.rect.x=object.xO-15#set x value to Ladder x Valued
+                        player.rect.x=object.rect.x-15#set x value to Ladder x Valued
                         #player.rect.y=player.rect.y+1
                         g=1
             if g==0:
@@ -969,7 +969,7 @@ def getInput(player, level):
                         if player.rect.bottom<object.rect.bottom+7:#if the players feet are above the bottom of the object
                             if g==0:#if the player has not yet been st
                                 g=1
-                                player.rect.x=object.xO-15#set x value to Ladder x Valued
+                                player.rect.x=object.rect.x-15#set x value to Ladder x Valued
                                 player.on_ladder=True
                                 player.in_air=False
                             #player.rect.y=player.rect.y+1
@@ -1008,7 +1008,7 @@ def getInput(player, level):
                         if player.rect.bottom-1>object.rect.top:#prevent getting on ladder with W at top of ladder
                             player.on_ladder=True
                             player.in_air=False
-                            player.rect.x=object.xO-15
+                            player.rect.x=object.rect.x-15
                             player.move_up(PLAYER_VEL)
 
         if keys[pygame.K_SPACE]:
@@ -1024,7 +1024,7 @@ def getInput(player, level):
                         if player.rect.bottom<object.rect.bottom:
                             player.on_ladder=True
                             player.in_air=False
-                            player.rect.x=object.xO-15
+                            player.rect.x=object.rect.x-15
 
             player.rect.y-=3
         if keys[pygame.K_d] and not collide_right and not player.on_ladder and not player.chop:
