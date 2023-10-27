@@ -287,20 +287,29 @@ def load_level():
     # Loads level based on what current level you're on in
     lvlfile = open("currentLevel.txt", "r")
     currlvl = lvlfile.read()
-    if currlvl == "2":
-        loadLevel(window, levelTwo)
-    elif currlvl == "3":
-        loadLevel(window, levelThree)
-    elif currlvl == "4":
-        loadLevel(window, levelFour)
-    elif currlvl == "5":
-        loadLevel(window, levelFive)
-    elif currlvl == "6":
-        loadLevel(window,levelSix)
-    elif currlvl == "11":
-        loadLevel(window, levelEleven)
-    elif currlvl == "12":
-        loadLevel(window, levelTwelve)
+    match currlvl:
+        case "2":
+            loadLevel(window, levelTwo)
+        case "3":
+            loadLevel(window, levelThree)
+        case "4":
+            loadLevel(window, levelFour)
+        case "5":
+            loadLevel(window, levelFive)
+        case "6":
+            loadLevel(window, levelSix)
+        case "7":
+            loadLevel(window, levelSeven)
+        case "8":
+            loadLevel(window, levelEight)
+        case "9":
+            loadLevel(window, levelNine)
+        case "10":
+            loadLevel(window, levelTen)
+        case "11":
+            loadLevel(window, levelEleven)
+        case "12":
+            loadLevel(window, levelTwelve)
     print("LOAD LEVEL " + currlvl)
 
 def settings():
@@ -696,20 +705,29 @@ def scale_window_between(screen):
 def continuelvl():
     lvlf = open("currentLevel.txt", "r")
     currlvl = lvlf.read()
-    if currlvl == "2":
-        loadLevel(window, levelTwo)
-    elif currlvl == "3":
-        loadLevel(window, levelThree)
-    elif currlvl == "4":
-        loadLevel(window, levelFour)
-    elif currlvl == "5":
-        loadLevel(window, levelFive)
-    elif currlvl == "6":
-        loadLevel(window,levelSix)
-    elif currlvl == "11":
-        loadLevel(window, levelEleven)
-    elif currlvl == "12":
-        loadLevel(window, levelTwelve)
+    match currlvl:
+        case "2":
+            loadLevel(window, levelTwo)
+        case "3":
+            loadLevel(window, levelThree)
+        case "4":
+            loadLevel(window, levelFour)
+        case "5":
+            loadLevel(window, levelFive)
+        case "6":
+            loadLevel(window, levelSix)
+        case "7":
+            loadLevel(window, levelSeven)
+        case "8":
+            loadLevel(window, levelEight)
+        case "9":
+            loadLevel(window, levelNine)
+        case "10":
+            loadLevel(window, levelTen)
+        case "11":
+            loadLevel(window, levelEleven)
+        case "12":
+            loadLevel(window, levelTwelve)
     print("CONTINUE")
 
 
@@ -784,7 +802,7 @@ class Level():
                 object.check_time(player)
             if object.name=="move":
                 object.loop(player)
-                
+
 
 
 def draw(window, background, bg_image,player,level):
@@ -822,7 +840,7 @@ def handle_vertical_collision(player, level, dy):
                     elif player.rect.left<object.rect.left:#Falling of left side
                         player.rect.x+=(object.rect.left-player.rect.right)
                         player.rect.x-=1
-                    
+
             elif dy < 0 and object.name!="ladder" and not player.on_ladder:
                 if object.name=="tall shrub" or object.name=="small shrub":
                     #if object.name=="small shrub":
@@ -1232,81 +1250,274 @@ lFive.append(fiveFPlat3)
 lFive.append(Platform(1097,114,103,58,WHITE))
 lFive.append(lBorderLeft)
 lFive.append(lBorderRight)
-lFive.append(endSign(1140,74)) # END SIGN
 
+# End Level 6
+lFive.append(endSign(1140,74))
 levelFive=Level(lFive,50,625,"CaveBackground1.png")
 
+# LEVEL 6
 lSix=[]
-#Starting platform and cave outline
+lSix.append(Void(0,800,1115,15))
 lSix.append(Platform(0,114,103,58,WHITE))##Start
+lSix.append(Platform(0,0,1200,13,GRAY))
 lSix.append(Platform(0,172,34,628,GRAY))
 lSix.append(Platform(34,695,850,105,GRAY))
+
+# Moving platform line 1
+mpo6_1 = []
+mpo6_1.append(smallShrub(151,202))
+mpo6_1.append(smallShrub(308,202))
+mpo6_1.append(ReverseSmallShrub(151,305))
+mpo6_1.append(ReverseSmallShrub(308,305))
+mp6_1  = MovePlat(151, 254, 200, 51, 34, 1166, oList=mpo6_1)
+
+mpo6_2 = []
+mpo6_2.append(Ladder(758, 256))
+mp6_2  = MovePlat(745, 256, 200, 51, 34, 1166, oList=mpo6_2, aList=[mp6_1])
+
+mp6_1.set_a([mp6_2])
+lSix.append(mp6_1)
+lSix.extend(mpo6_1)
+lSix.append(mp6_2)
+lSix.extend(mpo6_2)
+
+lSix.append(MovePlat(281, 405, 200, 51, 34, 860))
+
+# Spikes at bottom
+lSix.append(BlackSpike(35,662))
+lSix.append(BlackSpike(72,662))
+lSix.append(BlackSpike(109,662))
+lSix.append(BlackSpike(146,662))
+lSix.append(BlackSpike(183,662))
+lSix.append(BlackSpike(220,662))
+lSix.append(BlackSpike(257,662))
+lSix.append(BlackSpike(294,662))
+lSix.append(BlackSpike(331,662))
+lSix.append(BlackSpike(368,662))
+lSix.append(BlackSpike(405,662))
+lSix.append(BlackSpike(442,662))
+lSix.append(BlackSpike(479,662))
+lSix.append(BlackSpike(516,662))
+lSix.append(BlackSpike(553,662))
+lSix.append(BlackSpike(590,662))
+lSix.append(BlackSpike(627,662))
+lSix.append(BlackSpike(664,662))
+lSix.append(BlackSpike(701,662))
+lSix.append(BlackSpike(738,662))
+lSix.append(BlackSpike(775,662))
+lSix.append(BlackSpike(812,662))
+lSix.append(BlackSpike(849,662))
+
 lSix.append(Platform(860,405,24,290,GRAY))
 lSix.append(Platform(1166,13,34,787,GRAY))
-
-#Moving platform 1
-mp6S1=smallShrub(151,202)#Moving platform 6 shrub 1 = mp6s1
-
-lSix.append(mp6S1)
-mp6S2=smallShrub(308,202)
-lSix.append(mp6S2)
-mp6S3=ReverseSmallShrub(151,305)
-lSix.append(mp6S3)
-mp6S4=ReverseSmallShrub(308,305)
-lSix.append(mp6S4)
-mp6A=MovePlat(151,254,200,51,39,1161,[mp6S1,mp6S2,mp6S3,mp6S4])#Moving platform level 6 A
-
-
-#Moving platform 2
-mpL1=Ladder(758,254)
-mp6B=MovePlat(745,254,200,51,39,1161,[mpL1],[mp6A])
-lSix.append(mp6B)
-lSix.append(mpL1)##append ladder after platform to ensure it gets drawn OVER the platform
-
-mp6A.set_a([mp6B])#add second platform to firsts adjacency list now that it exists
-#mp6A=MovePlat(151,254,200,51,39,1161,[mp6S1,mp6S2,mp6S3,mp6S4],[mp6B])#Moving platform level 6 A
-lSix.append(mp6A)##add first moving platform now that it's complete
-
-#Moving platform 3
-lSix.append(MovePlat(281,405,200,51,39,852,[],[]))
-
-#Bottom right corner tunnel
-lSix.append(Platform(1086,770,80,30,WHITE))
 lSix.append(Platform(884,457,85,30,WHITE))
 lSix.append(Platform(1081,566,85,30,WHITE))
 lSix.append(Platform(884,665,85,30,WHITE))
+lSix.append(Platform(1081,770,85,30,WHITE))
 
-##Colored side spikes not implemented
-#lSix.append(BlackLSpike(925,490))
+# End Level 6
+lSix.append(endSign(1086,730))
+levelSix=Level(lSix,25,50,"CaveBackground1.png")
 
-##Bottom spikes 
-lSix.append(BlackSpike(35,662))
-lSix.append(BlackSpike(65,662))
-lSix.append(BlackSpike(100,662))
-lSix.append(BlackSpike(135,662))
-lSix.append(BlackSpike(170,662))
-lSix.append(BlackSpike(205,662))
-lSix.append(BlackSpike(240,662))
-lSix.append(BlackSpike(275,662))
-lSix.append(BlackSpike(310,662))
-lSix.append(BlackSpike(345,662))
-lSix.append(BlackSpike(380,662))
-lSix.append(BlackSpike(415,662))
-lSix.append(BlackSpike(450,662))
-lSix.append(BlackSpike(485,662))
-lSix.append(BlackSpike(520,662))
-lSix.append(BlackSpike(555,662))
-lSix.append(BlackSpike(590,662))
-lSix.append(BlackSpike(625,662))
-lSix.append(BlackSpike(660,662))
-lSix.append(BlackSpike(695,662))
-lSix.append(BlackSpike(730,662))
-lSix.append(BlackSpike(765,662))
-lSix.append(BlackSpike(795,662))
-lSix.append(BlackSpike(823,662))
+# LEVEL 7
+lSeven=[]
+lSeven.append(Void(0,800,1200,15))
+lSeven.append(Ladder(1093,0))
+lSeven.append(Ladder(1093,100))
+lSeven.append(Ladder(1093,200))
+lSeven.append(Platform(926,295,200,51,WHITE))##Start
+lSeven.append(Platform(0,0,890,105,GRAY))
+lSeven.append(Platform(0,0,34,800,GRAY))
+lSeven.append(Platform(1126,0,74,800,GRAY))
+
+# Moving platform line 1
+mp07_1 = []
+mp07_1.append(smallShrub(95,299))
+mp07_1.append(ReverseSmallShrub(245,402))
+mp07_1.append(Ladder(145, 350))
+mp7_1 = MovePlat(95, 351, 200, 51, 34, 1052, oList=mp07_1)
+
+mpo7_2 = []
+mpo7_2.append(smallShrub(641,299))
+mpo7_2.append(ReverseSmallShrub(792,402))
+mp7_2 = MovePlat(642, 351, 200, 51, 34, 1052, oList=mpo7_2, aList=[mp7_1])
+mp7_1.set_a([mp7_2])
+
+lSeven.append(mp7_1)
+lSeven.extend(mp07_1)
+lSeven.append(mp7_2)
+lSeven.extend(mpo7_2)
+
+# Moving platform line 2
+mp07_3 = []
+mp07_3.append(smallShrub(330,456))
+mp07_3.append(ReverseSmallShrub(330,559))
+mp7_3 = MovePlat(178, 508, 200, 51, 34, 1126, oList=mp07_3)
+
+mpo7_4 = []
+mpo7_4.append(smallShrub(624,457))
+mpo7_4.append(ReverseSmallShrub(624,559))
+mpo7_4.append(Ladder(673, 509))
+mpo7_4.append(smallShrub(786,457))
+mp7_4 = MovePlat(634, 508, 200, 51, 34, 1126, oList=mpo7_4, aList=[mp7_3])
+mp7_3.set_a([mp7_4])
+
+lSeven.append(mp7_3)
+lSeven.extend(mp07_3)
+lSeven.append(mp7_4)
+lSeven.extend(mpo7_4)
+
+# Moving platform line 3
+mp07_5 = []
+mp07_5.append(smallShrub(320,611))
+mp07_5.append(smallShrub(472,611))
+mp7_5 = MovePlat(320, 663, 200, 51, 34, 1126, oList=mp07_5)
+
+mpo7_6 = []
+mpo7_6.append(smallShrub(786,611))
+mp7_6 =  MovePlat(792, 663, 200, 51, 34, 1126, oList=mpo7_6, aList=[mp7_5])
+mp7_5.set_a([mp7_6])
+
+lSeven.append(mp7_5)
+lSeven.extend(mp07_5)
+lSeven.append(mp7_6)
+lSeven.extend(mpo7_6)
+
+# End Level 7
+lSeven.append(endSign(1085,630))
+levelSeven=Level(lSeven,1040,225,"CaveBackground1.png")
+
+# LEVEL 8
+lEight=[]
+lEight.append(Void(0,800,1200,15))
+lEight.append(Platform(0,0,74,800,GRAY))
+lEight.append(Platform(74,663,187,137,WHITE))##Start
+lEight.append(RedSpike(261, 767))
+lEight.append(RedSpike(301, 767))
+lEight.append(RedSpike(341, 767))
+lEight.append(RedSpike(381, 767))
+lEight.append(Platform(418,663,187,137,WHITE))
+lEight.append(RedSpike(605, 767))
+lEight.append(RedSpike(647, 767))
+lEight.append(RedSpike(689, 767))
+lEight.append(RedSpike(733, 767))
+lEight.append(Platform(774,663,187,137,WHITE))
+lEight.append(RedSpike(962, 767))
+lEight.append(RedSpike(1002, 767))
+lEight.append(RedSpike(1042, 767))
+lEight.append(RedSpike(1082, 767))
+lEight.append(RedSpike(1122, 767))
+lEight.append(RedSpike(1162, 767))
+lEight.append(RedSpike(1202, 767))
+lEight.append(Platform(1020,604,180,30,WHITE))
+lEight.append(Platform(825,375,155,30,WHITE))
+lEight.append(Ladder(947,375))
+
+lEight.append(FallPlat(672,375,75,30))
+lEight.append(FallPlat(570,405,50,30))
+lEight.append(FallPlat(475,375,50,30))
+fpShrub8_1 = SmallPurpleShrub(378,353)
+lEight.append(FallPlat(376,405,50,30, oList=[fpShrub8_1]))
+lEight.append(fpShrub8_1)
+lEight.append(FallPlat(253,375,75,30))
+
+lEight.append(FallPlat(253,186,75,30))
+lEight.append(FallPlat(376,211,50,30))
+lEight.append(FallPlat(475,197,50,30))
+fpShrub8_2 = SmallPurpleShrub(570,164)
+lEight.append(FallPlat(570,216,50,30, oList=[fpShrub8_2]))
+lEight.append(fpShrub8_2)
+lEight.append(FallPlat(672,186,75,30))
 
 
-levelSix=Level(lSix,35,50,"CaveBackground1.png")
+lEight.append(Platform(74,175,155,30,WHITE))
+lEight.append(Ladder(175,175))
+lEight.append(Ladder(175,245))
+lEight.append(Platform(74,345,155,30,WHITE))
+lEight.append(Ladder(930,-10))
+lEight.append(Ladder(930,60))
+lEight.append(Platform(825,160,155,30,WHITE))
+
+# End Level 8
+lEight.append(endSign(890,120))
+levelEight=Level(lEight,80,590,"mysticalBackground.png")
+
+# LEVEL 9
+lNine=[]
+lNine.append(Void(0,800,1200,15))
+lNine.append(Platform(858,709,155,30,WHITE))##Start
+lNine.append(Ladder(931,709))
+lNine.append(Platform(661,709,155,30,WHITE))
+lNine.append(SmallPurpleShrub(686, 657))
+lNine.append(RedSpike(776, 675))
+lNine.append(Platform(414,709,155,30,WHITE))
+lNine.append(RedSpike(491, 675))
+lNine.append(Platform(212,681,155,30,WHITE))
+lNine.append(TallPurpleShrub(319, 498))
+lNine.append(Platform(220,386,158,30,WHITE))
+lNine.append(Ladder(220,386))
+lNine.append(Ladder(220,484))
+lNine.append(Ladder(220,581))
+lNine.append(Platform(378,311,37,105,WHITE))
+lNine.append(Ladder(343,189))
+lNine.append(Ladder(343,286))
+lNine.append(RedSpike(385, 278))
+lNine.append(FallPlat(415,311,129,26))
+mpLadder8_1 = Ladder(731,200)
+lNine.append(MovePlat(731, 199, 129, 26, 649, 953, oList=[mpLadder8_1]))
+lNine.append(mpLadder8_1)
+mpLadder8_1 = Ladder(593,78)
+lNine.append(MovePlat(497, 78, 129, 26, 462, 737, oList=[mpLadder8_1]))
+lNine.append(mpLadder8_1)
+lNine.append(Platform(295,128,129,26,WHITE))
+lNine.append(Platform(200,111,24,17,WHITE))
+lNine.append(Platform(139,94,24,17,WHITE))
+lNine.append(Platform(0,94,105,17,WHITE))
+lNine.append(Ladder(22,-6))
+
+# End Level 9
+lNine.append(endSign(69,61))
+levelNine=Level(lNine,872,645,"mysticalBackground.png")
+
+# LEVEL 10
+lTen=[]
+lTen.append(Void(0,800,1200,15))
+lTen.append(Platform(0,700,174,33,WHITE))##Start
+lTen.append(Ladder(22,700))
+
+fpShrub10_1 = SmallPurpleShrub(249,632)
+lTen.append(FallPlat(249,683,174,33, oList=[fpShrub10_1]))
+lTen.append(fpShrub10_1)
+
+lTen.append(Platform(525,709,174,33,WHITE))
+lTen.append(RedSpike(606, 676))
+lTen.append(Platform(462,563,174,33,WHITE))
+lTen.append(Ladder(462,563))
+lTen.append(Ladder(606,561))
+
+mpShrub10_2 = SmallPinkShrub(715,624)
+lTen.append(MovePlat(715,676,127,33, 715, 1073, oList=[mpShrub10_2]))
+lTen.append(mpShrub10_2)
+
+lTen.append(Platform(639,388,11,209,WHITE))
+lTen.append(Platform(408,343,174,33,WHITE))
+
+fpLadder10_1 = Ladder(864,276)
+lTen.append(FallPlat(723,276,174,33, oList=[fpLadder10_1]))
+lTen.append(fpLadder10_1)
+
+lTen.append(MovePlat(563,138,37,123, 560, 570))
+
+fpSpike10_1 = RedSpike(241,266)
+lTen.append(FallPlat(196,299,126,34, oList=[fpSpike10_1]))
+lTen.append(fpSpike10_1)
+
+lTen.append(Platform(0,147,174,33,WHITE))
+lTen.append(Ladder(141, 147))
+
+# End Level 10
+lTen.append(endSign(80, 107))
+levelTen=Level(lTen,60,630,"mysticalBackground.png")
 
 # LEVEL 11
 lEleven = []
