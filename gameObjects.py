@@ -144,10 +144,10 @@ class SmallRedShrub(smallShrub):
 class SmallPurpleShrub(smallShrub):
     def __init__(self,x,y):
         super().__init__(x,y)
-        self.image=pygame.image.load("assets\Traps\SmallShrub\SmallPurShrub.png")
+        self.image=pygame.image.load("assets\Traps\SmallShrub\SmallPurpleShrub.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
-        self.original_image=pygame.image.load("assets\Traps\SmallShrub\SmallPurShrub.png")
+        self.original_image=pygame.image.load("assets\Traps\SmallShrub\SmallPurpleShrub.png")
 
 class SmallPinkShrub(smallShrub):
     def __init__(self,x,y):
