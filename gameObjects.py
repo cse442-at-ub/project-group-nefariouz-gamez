@@ -453,6 +453,82 @@ class MovePlat(Platform):
         self.surface=pygame.Surface((self.rect.width,self.rect.height))
         self.mask = pygame.mask.from_surface(self.surface)
 
+
+class MovePlatVert(Platform):
+    def __init__(self, x, y, width, height,hbound,lbound,oList=[],aList=[], path=None,name="move",col=ORANGE,):
+        super().__init__(x, y, width, height, col, path, name)
+        self.surface=pygame.Surface((width,height))
+        self.high_bound=hbound
+        self.low_bound=lbound
+        self.original_x=x
+        self.original_y=y
+        self.original_width=width
+        self.original_height=height
+        self.object_list=oList#list of objects moving with platform
+        self.copy_list=oList.copy()
+        self.adjacent_list=aList#list of platforms on same line
+        self.copya_list=aList.copy()
+        self.direction=True#True means up, False means down, all start going UP
+
+    def set_a(self,platlist):
+        self.adjacent_list =platlist
+        self.copya_list = self.adjacent_list.copy()
+
+    def loop(self,player):
+        c=0
+        if self.direction:#If moving UP
+            self.rect.y-=2
+            if pygame.sprite.collide_mask(player.reachBox, self):
+                player.rect.y-=2
+                player.reachBox.rect.y-=2
+                c=1
+            else:
+                for object in self.object_list:
+                    if pygame.sprite.collide_mask(player.reachBox, object) and c==0:
+                        player.rect.y-=2
+                        player.reachBox.rect.y-=2
+                        c=1
+                        break
+            if(self.rect.top==self.high_bound or self.rect.top<self.high_bound):#If platform has reached the high bound
+               self.direction=False#platform is now going DOWN
+               for plat in self.adjacent_list:
+                   plat.direction=False#This platform has changed direction, every platform on this line must as well
+            for object in self.object_list:
+                object.rect.y-=2
+        else:#if moving DOWN
+            self.rect.y+=2
+            if pygame.sprite.collide_mask(player.reachBox, self):
+                if not player.in_air:
+                    player.rect.y+=2
+                    player.reachBox.rect.y+=2
+                    c=1
+                c=1
+            else:
+                for object in self.object_list:
+                    if pygame.sprite.collide_mask(player.reachBox, object) and c==0:
+                        if not player.in_air:
+                            player.rect.y+=2
+                            player.reachBox.rect.y+=2
+                            c=1
+                        break
+            if(self.rect.bottom==self.low_bound or self.rect.bottom>self.low_bound):
+                self.direction=True#platform is now going UP
+                for plat in self.adjacent_list:
+                   plat.direction=True#All platforms change direction together
+            for object in self.object_list:
+                object.rect.y+=2
+
+    def reset(self):
+        self.timer=0
+        self.direction=True
+        self.rect.x=self.original_x
+        self.rect.y=self.original_y
+        self.object_list=self.copy_list.copy()
+        self.adjacent_list=self.copya_list.copy()
+        self.surface=pygame.Surface((self.rect.width,self.rect.height))
+        self.mask = pygame.mask.from_surface(self.surface)
+
+
 class endSign(Object):
     def __init__(self, x, y):
         super().__init__(x, y, 40, 40)

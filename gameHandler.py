@@ -6,7 +6,7 @@ import math
 import pygame
 import sys
 
-from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike
+from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike
 from MenuWidgets import *
 from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
@@ -1322,7 +1322,8 @@ lSix.append(Platform(884,457,85,30,WHITE))
 lSix.append(Platform(1081,566,85,30,WHITE))
 lSix.append(Platform(884,665,85,30,WHITE))
 lSix.append(Platform(1081,770,85,30,WHITE))
-
+lSix.append(lBorderLeft)
+lSix.append(lBorderRight)
 # End Level 6
 lSix.append(endSign(1086,730))
 levelSix=Level(lSix,25,50,"CaveBackground1.png")
@@ -1392,6 +1393,9 @@ lSeven.append(mp7_6)
 lSeven.extend(mpo7_6)
 
 # End Level 7
+lSeven.append(lBorderLeft)
+lSeven.append(lBorderRight)
+
 lSeven.append(endSign(1085,630))
 levelSeven=Level(lSeven,1040,225,"CaveBackground1.png")
 
@@ -1447,6 +1451,9 @@ lEight.append(Ladder(930,60))
 lEight.append(Platform(825,160,155,30,WHITE))
 
 # End Level 8
+lEight.append(lBorderLeft)
+lEight.append(lBorderRight)
+
 lEight.append(endSign(890,120))
 levelEight=Level(lEight,80,590,"mysticalBackground.png")
 
@@ -1466,24 +1473,29 @@ lNine.append(Platform(220,386,158,30,WHITE))
 lNine.append(Ladder(220,386))
 lNine.append(Ladder(220,484))
 lNine.append(Ladder(220,581))
-lNine.append(Platform(378,311,37,105,WHITE))
-lNine.append(Ladder(343,189))
-lNine.append(Ladder(343,286))
-lNine.append(RedSpike(385, 278))
-lNine.append(FallPlat(415,311,129,26))
+lNine.append(Platform(378,325,37,91,WHITE))#Moved down to give more leeway to player
+
+lNine.append(Ladder(325,189))#These ladders got moved left
+lNine.append(Ladder(325,286))
+
+lNine.append(RedSpike(378, 292))#moved back to original x now that ladder has been moved, moved down to give more leeway
+lNine.append(FallPlat(415,325,129,26))#moved down to accomodate new spike
 mpLadder8_1 = Ladder(731,200)
 lNine.append(MovePlat(731, 199, 129, 26, 649, 953, oList=[mpLadder8_1]))
 lNine.append(mpLadder8_1)
 mpLadder8_1 = Ladder(593,78)
 lNine.append(MovePlat(497, 78, 129, 26, 462, 737, oList=[mpLadder8_1]))
 lNine.append(mpLadder8_1)
-lNine.append(Platform(295,128,129,26,WHITE))
+lNine.append(Platform(295,103,129,12,WHITE))#Moved this platform up from 128 Y
 lNine.append(Platform(200,111,24,17,WHITE))
 lNine.append(Platform(139,94,24,17,WHITE))
 lNine.append(Platform(0,94,105,17,WHITE))
 lNine.append(Ladder(22,-6))
 
 # End Level 9
+lNine.append(lBorderLeft)
+lNine.append(lBorderRight)
+
 lNine.append(endSign(69,61))
 levelNine=Level(lNine,872,645,"mysticalBackground.png")
 
@@ -1504,17 +1516,17 @@ lTen.append(Ladder(462,563))
 lTen.append(Ladder(606,561))
 
 mpShrub10_2 = SmallPinkShrub(715,624)
-lTen.append(MovePlat(715,676,127,33, 715, 1073, oList=[mpShrub10_2]))
+lTen.append(MovePlat(715,676,127,33, 715, 1073, oList=[mpShrub10_2]))#Have to Change this to a MovePlatDiag
 lTen.append(mpShrub10_2)
 
-lTen.append(Platform(639,388,11,209,WHITE))
+lTen.append(Platform(650,388,11,110,WHITE))##made height shorter as to not interfere with ladder and moved right slightly
 lTen.append(Platform(408,343,174,33,WHITE))
 
 fpLadder10_1 = Ladder(864,276)
 lTen.append(FallPlat(723,276,174,33, oList=[fpLadder10_1]))
 lTen.append(fpLadder10_1)
 
-lTen.append(MovePlat(563,138,37,123, 560, 570))
+lTen.append(MovePlatVert(563,138,37,123, 40, 309))##First vertical moving platform.
 
 fpSpike10_1 = RedSpike(241,266)
 lTen.append(FallPlat(196,299,126,34, oList=[fpSpike10_1]))
@@ -1524,6 +1536,9 @@ lTen.append(Platform(0,147,174,33,WHITE))
 lTen.append(Ladder(141, 147))
 
 # End Level 10
+lTen.append(lBorderLeft)
+lTen.append(lBorderRight)
+
 lTen.append(endSign(80, 107))
 levelTen=Level(lTen,60,630,"mysticalBackground.png")
 
@@ -1556,6 +1571,7 @@ lEleven.append(SmallRedShrub(545,272))
 lEleven.append(SmallRedShrub(104,404))
 lEleven.append(Ladder(365,243))
 lEleven.append(Ladder(365,285))
+
 lEleven.append(lBorderLeft)
 lEleven.append(lBorderRight)
 lEleven.append(endSign(10,591))
@@ -1595,6 +1611,7 @@ lTwelve.append(Ladder(14,562))
 lTwelve.append(Ladder(141,173))
 lTwelve.append(Ladder(86,206))
 lTwelve.append(Ladder(86,262))
+
 lTwelve.append(lBorderLeft)
 lTwelve.append(lBorderRight)
 lTwelve.append(endSign(10,133))
