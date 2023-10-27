@@ -301,6 +301,8 @@ def load_level():
         loadLevel(window, levelEleven)
     elif currlvl == "12":
         loadLevel(window, levelTwelve)
+    elif currlvl == "13":
+        loadLevel(window, levelThirteen)
     print("LOAD LEVEL " + currlvl)
 
 def settings():
@@ -710,6 +712,8 @@ def continuelvl():
         loadLevel(window, levelEleven)
     elif currlvl == "12":
         loadLevel(window, levelTwelve)
+    elif currlvl == "13":
+        loadLevel(window, levelThirteen)
     print("CONTINUE")
 
 
@@ -1381,6 +1385,43 @@ lTwelve.append(lBorderRight)
 lTwelve.append(endSign(10,133))
 
 levelTwelve=Level(lTwelve,1125,563,"Level 1 to 3 bkgrnd.png") # will change background
+
+# LEVEL 13
+lthirteen = []
+lthirteen.append(Water(0,800,1200,1,BLUE))
+lthirteen.append(Platform(1061,173,139,33,WHITE))
+lthirteen.append(Platform(532,559,32,32,WHITE))
+lthirteen.append(Platform(394,579,61,32,WHITE))
+lthirteen.append(Platform(201,611,145,32,WHITE))
+lthirteen.append(Platform(46,736,111,32,WHITE))
+lthirteen.append(Platform(52,603,66,33,WHITE))
+lthirteen.append(Platform(52,472,85,33,WHITE))
+lthirteen.append(Platform(0,241,138,33,WHITE))
+
+# Angled platform
+# code here
+
+# Moving platform
+l13mpShrub = SmallPurpleShrub(660,402) # Moving platform shrub
+lthirteen.append(l13mpShrub)
+l13mp = MovePlat(661,454,99,26,610,814,[l13mpShrub], [])
+lthirteen.append(l13mp)
+
+lthirteen.append(GreenSpike(309,578))
+lthirteen.append(GreenSpike(87,703))
+lthirteen.append(GreenSpike(51,439))
+lthirteen.append(SmallPurpleShrub(386,527))
+lthirteen.append(SmallPurpleShrub(100,189))
+lthirteen.append(Ladder(49,603))
+lthirteen.append(Ladder(104,472))
+lthirteen.append(Ladder(57,324))
+lthirteen.append(Ladder(57,241))
+
+lthirteen.append(lBorderLeft)
+lthirteen.append(lBorderRight)
+lthirteen.append(endSign(2,201))
+
+levelThirteen=Level(lthirteen,1130,93,"Level 1 to 3 bkgrnd.png") # will change background
 
 def loadLevel(window, level):
     level.reset()
