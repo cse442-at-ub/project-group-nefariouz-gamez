@@ -1585,7 +1585,7 @@ lEleven.append(lBorderLeft)
 lEleven.append(lBorderRight)
 lEleven.append(endSign(10,591))
 
-levelEleven=Level(lEleven,1125,80,"Level 1 to 3 bkgrnd.png") # will change background
+levelEleven=Level(lEleven,1125,80,"lvl-11-12-background.png") # will change background
 
 # LEVEL 12
 lTwelve = []
@@ -1625,7 +1625,7 @@ lTwelve.append(lBorderLeft)
 lTwelve.append(lBorderRight)
 lTwelve.append(endSign(10,133))
 
-levelTwelve=Level(lTwelve,1125,563,"Level 1 to 3 bkgrnd.png") # will change background
+levelTwelve=Level(lTwelve,1125,563,"lvl-11-12-background.png") # will change background
 
 # LEVEL 13
 lthirteen = []
@@ -1662,7 +1662,7 @@ lthirteen.append(lBorderLeft)
 lthirteen.append(lBorderRight)
 lthirteen.append(endSign(2,201))
 
-levelThirteen=Level(lthirteen,1130,93,"Level 1 to 3 bkgrnd.png") # will change background
+levelThirteen=Level(lthirteen,1130,93,"lvl-13-16-background.png") # will change background
 
 # LEVEL 14
 lFourteen = []
@@ -1710,7 +1710,7 @@ lFourteen.append(lBorderLeft)
 lFourteen.append(lBorderRight)
 lFourteen.append(endSign(10,88))
 
-levelFourteen=Level(lFourteen,1125,174,"Level 1 to 3 bkgrnd.png") # will change background
+levelFourteen=Level(lFourteen,1125,174,"lvl-13-16-background.png") # will change background
 
 # LEVEL 15
 lFifteen = []
@@ -1773,7 +1773,7 @@ lFifteen.append(lBorderLeft)
 lFifteen.append(lBorderRight)
 lFifteen.append(endSign(3,727))
 
-levelFifteen=Level(lFifteen,1135,58,"Level 1 to 3 bkgrnd.png") # will change background
+levelFifteen=Level(lFifteen,1135,58,"lvl-13-16-background.png") # will change background
 
 def loadLevel(window, level):
     level.reset()
