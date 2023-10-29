@@ -30,6 +30,7 @@ FPS = 60
 PLAYER_VEL=5 #Player Movement speed
 WHITE=(255,255,255)
 PURPLE=(128,0,128)
+BEIGE=(200,200,161)
 ENDLEVEL = False
 
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
@@ -313,6 +314,8 @@ def load_level():
             loadLevel(window, levelTwelve)
         case "13":
             loadLevel(window, levelThirteen)
+        case "14":
+            loadLevel(window, levelFourteen)
 
     print("LOAD LEVEL " + currlvl)
 
@@ -735,6 +738,8 @@ def continuelvl():
             loadLevel(window, levelTwelve)
         case "13":
             loadLevel(window, levelThirteen)
+        case "14":
+            loadLevel(window, levelFourteen)
 
     print("CONTINUE")
 
@@ -1654,6 +1659,54 @@ lthirteen.append(lBorderRight)
 lthirteen.append(endSign(2,201))
 
 levelThirteen=Level(lthirteen,1130,93,"Level 1 to 3 bkgrnd.png") # will change background
+
+# LEVEL 14
+lFourteen = []
+lFourteen.append(Water(0,800,1200,1,BLUE))
+lFourteen.append(Platform(1061,241,139,33,WHITE))
+lFourteen.append(Platform(1025,106,67,33,WHITE))
+lFourteen.append(Platform(569,425,145,33,WHITE))
+lFourteen.append(Platform(0,426,134,33,WHITE))
+lFourteen.append(Platform(0,244,101,33,WHITE))
+lFourteen.append(Platform(0,128,138,33,WHITE))
+
+lFourteen.append(MovePlatVert(737,347,22,59,228,458,[],[]))
+
+lFourteen.append(FallPlat(945,161,56,33,BEIGE,[]))
+lFourteen.append(FallPlat(862,201,56,33,BEIGE,[]))
+lFourteen.append(FallPlat(786,334,56,33,BEIGE,[]))
+lFourteen.append(FallPlat(353,493,185,33,BEIGE,[]))
+lFourteen.append(FallPlat(149,585,185,33,BEIGE,[]))
+lFourteen.append(FallPlat(207,128,56,33,BEIGE,[]))
+
+l14mpSpike = GreenSpike(360,96)
+lFourteen.append(l14mpSpike)
+l14mpLadder = Ladder(315,129)
+lFourteen.append(l14mpLadder)
+l14mp1 = MovePlat(315,129,112,22,305,535,[l14mpSpike, l14mpLadder], [])
+lFourteen.append(l14mp1)
+lFourteen.append(l14mpSpike)
+lFourteen.append(l14mpLadder)
+
+l14mp2 = MovePlat(235,243,112,22,127,357,[],[])
+lFourteen.append(l14mp2)
+
+lFourteen.append(Ladder(1060,106))
+lFourteen.append(Ladder(101,426))
+lFourteen.append(Ladder(35,244))
+
+lFourteen.append(GreenSpike(604,393))
+lFourteen.append(GreenSpike(569,393))
+
+lFourteen.append(TallPurpleShrub(628,243))
+lFourteen.append(SmallPurpleShrub(31,374))
+lFourteen.append(SmallPurpleShrub(68,76))
+
+lFourteen.append(lBorderLeft)
+lFourteen.append(lBorderRight)
+lFourteen.append(endSign(10,88))
+
+levelFourteen=Level(lFourteen,1125,174,"Level 1 to 3 bkgrnd.png") # will change background
 
 def loadLevel(window, level):
     level.reset()
