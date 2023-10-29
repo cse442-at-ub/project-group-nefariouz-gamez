@@ -316,6 +316,8 @@ def load_level():
             loadLevel(window, levelThirteen)
         case "14":
             loadLevel(window, levelFourteen)
+        case "15":
+            loadLevel(window, levelFifteen)
 
     print("LOAD LEVEL " + currlvl)
 
@@ -740,6 +742,8 @@ def continuelvl():
             loadLevel(window, levelThirteen)
         case "14":
             loadLevel(window, levelFourteen)
+        case "15":
+            loadLevel(window, levelFifteen)
 
     print("CONTINUE")
 
@@ -1707,6 +1711,69 @@ lFourteen.append(lBorderRight)
 lFourteen.append(endSign(10,88))
 
 levelFourteen=Level(lFourteen,1125,174,"Level 1 to 3 bkgrnd.png") # will change background
+
+# LEVEL 15
+lFifteen = []
+lFifteen.append(Water(0,800,1200,1,BLUE))
+lFifteen.append(Platform(1124,128,76,33,WHITE))
+lFifteen.append(Platform(662,142,82,19,WHITE))
+lFifteen.append(Platform(634,250,142,33,WHITE))
+lFifteen.append(Platform(485,360,216,15,WHITE))
+lFifteen.append(Platform(452,360,33,216,WHITE))
+lFifteen.append(Platform(452,576,232,33,WHITE))
+lFifteen.append(Platform(0,767,44,33,WHITE))
+lFifteen.append(FallPlat(847,267,302,33,BEIGE,[]))
+lFifteen.append(FallPlat(885,516,74,33,BEIGE,[]))
+lFifteen.append(FallPlat(993,602,74,33,BEIGE,[]))
+lFifteen.append(FallPlat(885,684,74,33,BEIGE,[]))
+lFifteen.append(FallPlat(321,142,302,19,BEIGE,[]))
+
+lFifteen.append(MovePlatVert(302,701,22,139,610,840,[],[]))
+
+l15small1 = SmallPurpleShrub(935,373)
+lFifteen.append(l15small1)
+l15small2 = SmallPurpleShrub(1051,373)
+lFifteen.append(l15small2)
+l15mp1 = MovePlat(948,425,139,22,857,1087,[l15small1,l15small2],[])
+lFifteen.append(l15mp1)
+
+l15small3 = SmallPurpleShrub(753,643)
+lFifteen.append(l15small3)
+l15mp2 = MovePlat(708,695,139,22,617,847,[l15small3],[])
+lFifteen.append(l15mp2)
+
+l15small4 = SmallPurpleShrub(448,701)
+lFifteen.append(l15small4)
+l15spike1 = GreenSpike(395,720)
+lFifteen.append(l15spike1)
+l15mp3 = MovePlat(342,753,139,22,342,572,[l15small4,l15spike1],[])
+lFifteen.append(l15mp3)
+
+l15small5 = SmallPurpleShrub(130,701)
+lFifteen.append(l15small5)
+l15spike2 = GreenSpike(195,720)
+lFifteen.append(l15spike2)
+l15mp4 = MovePlat(145,753,139,22,54,284,[l15small5,l15spike2],[])
+lFifteen.append(l15mp4)
+
+lFifteen.append(Ladder(1124,128))
+lFifteen.append(Ladder(711,142))
+lFifteen.append(Ladder(634,250))
+lFifteen.append(Ladder(485,360))
+lFifteen.append(Ladder(485,430))
+lFifteen.append(Ladder(618,576))
+lFifteen.append(Ladder(6,767))
+lFifteen.append(TallPurpleShrub(660,-41))
+lFifteen.append(TallPurpleShrub(524,393))
+lFifteen.append(SmallPurpleShrub(660,198))
+lFifteen.append(GreenSpike(576,543))
+lFifteen.append(GreenSpike(485,543))
+
+lFifteen.append(lBorderLeft)
+lFifteen.append(lBorderRight)
+lFifteen.append(endSign(3,727))
+
+levelFifteen=Level(lFifteen,1135,58,"Level 1 to 3 bkgrnd.png") # will change background
 
 def loadLevel(window, level):
     level.reset()
