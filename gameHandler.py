@@ -6,7 +6,7 @@ import math
 import pygame
 import sys
 
-from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AngledPlatform
+from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
 from MenuWidgets import *
 from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
@@ -925,7 +925,7 @@ def handle_vertical_collision(player, level, dy):
                 continue
                 #keep from reseting Y
             if dy > 0 and object.name!="ladder" and not player.on_ladder:
-                if not (player.rect.bottom-2*player.y_velocity)>object.rect.top:#if the players bottom is not within 12 pixels of the object's top
+                if not (player.rect.bottom-2*player.y_velocity)>object.rect.top or object.name=="angle":#if the players bottom is not within 12 pixels of the object's top
                     player.rect.bottom = object.rect.top#put the player on top of the object
                     player.landed()
                 else:
@@ -1757,7 +1757,9 @@ lthirteen.append(Platform(52,472,85,33,WHITE))
 lthirteen.append(Platform(0,241,138,33,WHITE))
 
 # Angled platform
-# lthirteen.append(AngledPlatform(849,330,177,33,30))
+lthirteen.append(AngleSpike(913,351))
+
+lthirteen.append(AnglePlat(849,330))
 
 # Moving platform
 l13mpShrub = SmallPurpleShrub(660,402) # Moving platform shrub

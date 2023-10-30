@@ -640,3 +640,34 @@ class endSign(Object):
         self.original_y=y#THIS
         self.original_mask = pygame.mask.from_surface(self.image)
         self.original_image = pygame.image.load("assets/Special/EndSign.png")
+
+class AnglePlat(Object):#205 125
+    def __init__(self, x, y):
+        super().__init__(x,y,205,125)
+        self.name = "angle"
+        self.image=pygame.image.load("assets\Terrain\AngledPlatform.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_x=x#THIS
+        self.original_y=y#THIS
+        self.original_mask = pygame.mask.from_surface(self.image)
+        self.original_image = pygame.image.load("assets\Terrain\AngledPlatform.png")
+
+class AngleSpike(Object):
+    def __init__(self, x, y):
+        super().__init__(x,y,41,41,None,"spike")
+        self.name = "spike"
+        self.image=pygame.image.load("assets\Traps\Spikes\GreenSpikeAngled.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_x=x#THIS
+        self.original_y=y#THIS
+        self.original_mask = pygame.mask.from_surface(self.image)
+        self.original_image = pygame.image.load("assets\Traps\Spikes\GreenSpikeAngled.png")
+    def destroy(self):
+        self.image=pygame.image.load("assets\Traps\Empty\empty.png")
+        self.mask=pygame.mask.from_surface(self.image)
+
+    def reset(self):
+        self.rect.x=self.original_x#THIS
+        self.rect.y=self.original_y#THIS
+        self.image=self.original_image
+        self.mask=self.original_mask
