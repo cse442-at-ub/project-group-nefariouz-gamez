@@ -138,6 +138,7 @@ class Player(pygame.sprite.Sprite):
         self.y_velocity=velocity
     # does not allow double jump
     def jump(self):
+        global current_character
         if self.y_velocity > .5:# Can only jump if not going down
             placeholder=0
         else:# if not falling
@@ -148,6 +149,8 @@ class Player(pygame.sprite.Sprite):
             self.jump_count += 1
             if self.jump_count == 1:
                 self.fall_count = 0
+            if self.jump_count == 2:
+                self.y_velocity = -self.GRAVITY * 7
 
     def landed(self):
         self.in_air=False
@@ -202,6 +205,11 @@ class Player(pygame.sprite.Sprite):
             if self.jump_count == 1:
                 if not self.chop:
                     sprite_sheet = "jump"
+                else:
+                    sprite_sheet = "chop"
+            elif self.jump_count == 2:
+                if not self.chop:
+                    sprite_sheet = "double_jump" # TODO replace Malcolm and Oscar's animation in files (create 2 new animations)
                 else:
                     sprite_sheet = "chop"
 
@@ -966,7 +974,7 @@ def getInput(player, level):
             if g==0:
                 player.on_ladder=False
                 player.rect.y-=8
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and player.jump_count < 1:
             player.on_ladder=False
             player.jump()
         if keys[pygame.K_s]:
@@ -1022,7 +1030,7 @@ def getInput(player, level):
                             player.rect.x=object.xO-15
                             player.move_up(PLAYER_VEL)
 
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and player.jump_count < 1:
             if player.in_air==False:
                 player.jump()
         if keys[pygame.K_a] and not collide_left and not player.on_ladder and not player.chop:
@@ -1057,6 +1065,12 @@ def getInput(player, level):
                 last_pause_time = timer.return_time()
 
             timer.start_timer()
+            
+        # TODO check if we need jump/phase behavior for onLadder (don't think so...)
+        if current_character == "Malcolm":
+            print(current_object)
+            if keys[pygame.K_q] and player.jump_count == 1 and player.in_air:
+                player.jump()
 
     vertical_collide = handle_vertical_collision(player, level, player.y_velocity)
     if player.on_ladder:
