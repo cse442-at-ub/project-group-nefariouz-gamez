@@ -320,6 +320,14 @@ def load_level():
             loadLevel(window, levelFifteen)
         case "16":
             loadLevel(window, levelSixteen)
+        case "17":
+            loadLevel(window, levelSeventeen)
+        case "18":
+            loadLevel(window, levelEighteen)
+        case "19":
+            loadLevel(window, levelNineteen)
+        case "20":
+            loadLevel(window, levelTwenty)
 
     print("LOAD LEVEL " + currlvl)
 
@@ -748,6 +756,14 @@ def continuelvl():
             loadLevel(window, levelFifteen)
         case "16":
             loadLevel(window, levelSixteen)
+        case "17":
+            loadLevel(window, levelSeventeen)
+        case "18":
+            loadLevel(window, levelEighteen)
+        case "19":
+            loadLevel(window, levelNineteen)
+        case "20":
+            loadLevel(window, levelTwenty)
 
     print("CONTINUE")
 
@@ -1807,23 +1823,23 @@ levelFifteen=Level(lFifteen,1135,58,"lvl-13-16-background.png") # will change ba
 lSixteen = []
 lSixteen.append(Water(0,800,1200,1,BLUE))
 lSixteen.append(Platform(0,0,44,33,WHITE))
-lSixteen.append(Platform(0,154,170,33,BEIGE))
-lSixteen.append(Platform(711,302,44,33,BEIGE))
-lSixteen.append(Platform(808,302,44,33,BEIGE))
-lSixteen.append(Platform(906,302,44,33,BEIGE))
+lSixteen.append(FallPlat(0,154,170,33,BEIGE))
+lSixteen.append(FallPlat(711,302,44,33,BEIGE))
+lSixteen.append(FallPlat(808,302,44,33,BEIGE))
+lSixteen.append(FallPlat(906,302,44,33,BEIGE))
 lSixteen.append(Platform(974,326,133,33,WHITE))
 lSixteen.append(Platform(974,358,14,280,WHITE))
 lSixteen.append(Platform(1093,358,14,280,WHITE))
-lSixteen.append(Platform(1024,743,33,22,BEIGE))
-lSixteen.append(Platform(765,424,33,33,BEIGE))
-lSixteen.append(Platform(863,424,33,33,BEIGE))
+lSixteen.append(FallPlat(1024,743,33,22,BEIGE))
+lSixteen.append(FallPlat(765,424,33,33,BEIGE))
+lSixteen.append(FallPlat(863,424,33,33,BEIGE))
 lSixteen.append(Platform(633,767,33,33,WHITE))
 lSixteen.append(Platform(159,560,507,33,WHITE))
 lSixteen.append(Platform(557,390,58,33,WHITE))
 lSixteen.append(Platform(446,333,116,33,WHITE))
-lSixteen.append(Platform(354,386,44,33,BEIGE))
-lSixteen.append(Platform(256,386,44,33,BEIGE))
-lSixteen.append(Platform(159,386,44,33,BEIGE))
+lSixteen.append(FallPlat(354,386,44,33,BEIGE))
+lSixteen.append(FallPlat(256,386,44,33,BEIGE))
+lSixteen.append(FallPlat(159,386,44,33,BEIGE))
 lSixteen.append(Platform(0,741,40,33,WHITE))
 lSixteen.append(Platform(80,300,15,270,WHITE))
 lSixteen.append(Ladder(529,332))
@@ -1872,11 +1888,11 @@ lSixteen.append(l16mp1spike)
 l16mp1 = MovePlat(218,132,162,22,218,458,[l16mp1spike,l16mp1shrub],[])
 lSixteen.append(l16mp1)
 
-l16mp2shrub1 = SmallPinkShrub(406,196)
-l16mp2shrub2 = SmallPinkShrub(584,196)
+l16mp2shrub1 = SmallPinkShrub(406,188)
+l16mp2shrub2 = SmallPinkShrub(584,188)
 lSixteen.append(l16mp2shrub1)
 lSixteen.append(l16mp2shrub2)
-l16mp2 = MovePlat(422,248,195,22,407,695,[l16mp2shrub1,l16mp2shrub2],[])
+l16mp2 = MovePlat(422,240,195,22,407,695,[l16mp2shrub1,l16mp2shrub2],[])
 lSixteen.append(l16mp2)
 
 l16mp3shrub1 = TallPinkShrub(807, 560)
@@ -1895,20 +1911,132 @@ lSixteen.append(lBorderRight)
 lSixteen.append(lBorderLeft)
 lSixteen.append(endSign(0,700))
 
-
-
 levelSixteen=Level(lSixteen,0,75,"lvl-13-16-background.png")
 
+# LEVEL 17
 lSeventeen = []
+lSeventeen.append(Water(0,800,1200,1,BLUE))
+lSeventeen.append(Platform(489,112,711,33,WHITE))
+lSeventeen.append(Platform(474,112,15,81,WHITE))
+lSeventeen.append(Platform(395,181,94,15,WHITE))
+lSeventeen.append(Platform(152,193,249,15,WHITE))
+lSeventeen.append(Platform(0,182,170,15,WHITE))
+lSeventeen.append(Platform(0,327,567,33,WHITE))
+lSeventeen.append(Platform(0,350,15,172,WHITE))
+lSeventeen.append(Platform(0,489,68,33,WHITE))
+lSeventeen.append(Platform(0,617,68,33,WHITE))
+lSeventeen.append(Platform(258,427,52,15,WHITE))
+lSeventeen.append(Platform(766,382,434,16,WHITE))
+lSeventeen.append(Platform(766,484,434,16,WHITE))
+lSeventeen.append(Platform(1089,616,68,33,WHITE))
+lSeventeen.append(Platform(1114,741,107,33,WHITE))
+lSeventeen.append(Platform(0,256,52,16,WHITE))
+
+lSeventeen.append(Ladder(36,489))
+lSeventeen.append(Ladder(0,617))
+lSeventeen.append(Ladder(1135,382))
+lSeventeen.append(Ladder(1119,616))
+
+l17mp1 = MovePlat(882,644,42,22,835,1027)
+lSeventeen.append(l17mp1)
+l17mp2 = MovePlat(443,730,42,22,363,522)
+lSeventeen.append(l17mp2)
+l17mp3 = MovePlat(222,490,25,25,93,258)
+lSeventeen.append(l17mp3)
+l17mp4 = MovePlat(719,492,25,25,617,750)
+lSeventeen.append(l17mp4)
+l17mp5 = MovePlat(803,333,10,10,767,827)
+lSeventeen.append(l17mp5)
+l17mp6 = MovePlat(527,261,24,14,453,569)
+lSeventeen.append(l17mp6)
+l17mp7 = MovePlat(330,275,15,15,316,432)
+lSeventeen.append(l17mp7)
+l17mp8 = MovePlat(188,269,10,10,174,290)
+lSeventeen.append(l17mp8)
+
+lSeventeen.append(FallPlat(747,694,33,25,BEIGE))
+lSeventeen.append(FallPlat(653,711,33,25,BEIGE))
+lSeventeen.append(FallPlat(559,711,33,25,BEIGE))
+lSeventeen.append(FallPlat(311,719,33,25,BEIGE))
+lSeventeen.append(FallPlat(137,732,106,25,BEIGE))
+lSeventeen.append(FallPlat(0,739,106,25,BEIGE))
+lSeventeen.append(FallPlat(356,460,25,25,BEIGE))
+lSeventeen.append(FallPlat(411,473,25,25,BEIGE))
+lSeventeen.append(FallPlat(473,480,25,25,BEIGE))
+lSeventeen.append(FallPlat(531,490,25,25,BEIGE))
+lSeventeen.append(FallPlat(1105,340,20,6,BEIGE))
+lSeventeen.append(FallPlat(1070,320,20,6,BEIGE))
+lSeventeen.append(FallPlat(1025,300,25,16,BEIGE))
+lSeventeen.append(FallPlat(840,300,25,16,BEIGE))
+lSeventeen.append(FallPlat(118,277,25,10,BEIGE))
+lSeventeen.append(FallPlat(72,270,25,10,BEIGE))
+
+lSeventeen.append(MovePlatVert(268,680,22,55,593,747))
+lSeventeen.append(MovePlatVert(684,277,55,20,230,382))
+lSeventeen.append(MovePlatVert(600,207,55,20,230,312))
+
+
+lSeventeen.append(MovePlatDiag(900,261,10,10,1,2,870,930))
+lSeventeen.append(MovePlatDiag(980,261,10,10,-1,2,940,1000))
+
+lSeventeen.append(GreenSpike(0,294))
+lSeventeen.append(GreenSpike(37,294))
+lSeventeen.append(GreenSpike(74,294))
+lSeventeen.append(GreenSpike(111,294))
+lSeventeen.append(GreenSpike(148,294))
+lSeventeen.append(GreenSpike(185,294))
+lSeventeen.append(GreenSpike(222,294))
+lSeventeen.append(GreenSpike(259,294))
+lSeventeen.append(GreenSpike(296,294))
+lSeventeen.append(GreenSpike(333,294))
+lSeventeen.append(GreenSpike(370,294))
+lSeventeen.append(GreenSpike(407,294))
+lSeventeen.append(GreenSpike(444,294))
+lSeventeen.append(GreenSpike(481,294))
+lSeventeen.append(GreenSpike(518,294))
+
+lSeventeen.append(GreenSpike(766,349))
+lSeventeen.append(GreenSpike(800,349))
+lSeventeen.append(GreenSpike(835,349))
+lSeventeen.append(GreenSpike(869,349))
+lSeventeen.append(GreenSpike(906,349))
+lSeventeen.append(GreenSpike(940,349))
+lSeventeen.append(GreenSpike(975,349))
+lSeventeen.append(GreenSpike(1009,349))
+lSeventeen.append(GreenSpike(1045,349))
+lSeventeen.append(GreenSpike(1080,349))
+
+lSeventeen.append(SmallPurpleShrub(1056,432))
+lSeventeen.append(SmallPurpleShrub(1008,432))
+lSeventeen.append(SmallPurpleShrub(960,432))
+lSeventeen.append(SmallPurpleShrub(912,432))
+lSeventeen.append(SmallPurpleShrub(864,432))
+lSeventeen.append(SmallPurpleShrub(816,432))
+
+
+
+lSeventeen.append(endSign(5,216))
+lSeventeen.append(lBorderRight)
+lSeventeen.append(lBorderLeft)
+
+levelSeventeen=Level(lSeventeen,1120,650,"lvl-13-16-background.png")
 
 
 lEighteen = []
 
+levelEighteen=Level(lSeventeen,0,75,"lvl-13-16-background.png")
+
 
 lNineteen = []
 
+levelNineteen=Level(lNineteen,0,75,"lvl-13-16-background.png")
+
 
 lTwenty = []
+
+levelTwenty=Level(lTwenty,0,75,"lvl-13-16-background.png")
+
+
 
 def loadLevel(window, level):
     level.reset()
