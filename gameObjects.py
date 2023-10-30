@@ -50,7 +50,8 @@ class Platform(Object):
         #if offset_x!=0:
            # self.mask = pygame.mask.from_surface(self.surface)
     def reset(self):
-        x=0
+        self.rect.x=self.original_x
+        self.rect.y=self.original_y
 
 class Block(Object):
     def __init__(self, x, y, size,path):
@@ -140,8 +141,8 @@ class Spike(Object):
         self.mask=pygame.mask.from_surface(self.image)
 
     def reset(self):
-        self.rect.x=self.original_x#THIS
-        self.rect.y=self.original_y#THIS
+        self.rect.x=self.original_x
+        self.rect.y=self.original_y
         self.image=self.original_image
         self.mask=self.original_mask
 
@@ -240,6 +241,12 @@ class GreenSpike(Spike):
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\GreenSpike.png")
+
+    def reset(self):
+        self.rect.x=self.original_x
+        self.rect.y=self.original_y
+        self.image=self.original_image
+        self.mask=self.original_mask
 
 class GreenDSpike(Spike):##DOWN FACING GREEN SPIKE
     def __init__(self,x,y):
