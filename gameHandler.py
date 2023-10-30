@@ -10,6 +10,7 @@ from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, W
 from MenuWidgets import *
 from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
+from competitiveMainMenu import show_competitve_main_menu
 from level_timer import *
 
 from os import listdir
@@ -744,6 +745,10 @@ def continuelvl():
             loadLevel(window, levelFourteen)
         case "15":
             loadLevel(window, levelFifteen)
+        case _:
+            # COMPETITIVE MAIN MENU TAKES OVER FROM HERE
+            # show_competitve_main_menu(window
+            pass
 
     print("CONTINUE")
 
