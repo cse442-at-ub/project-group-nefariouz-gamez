@@ -252,7 +252,7 @@ class Player(pygame.sprite.Sprite):
 
     def draw(self, window, offset_x):
         #self.reachBox.draw(window,0)------------VISUALISE reachBox
-        window.blit(self.sprite, (self.rect.x - offset_x, self.rect.y))
+        window.blit(self.sprite, (self.rect.x + offset_x, self.rect.y))# - to +
 
 ##############################################################
 ##############################################################
@@ -815,6 +815,7 @@ class Level():
         x=0
     def loop(self,player):
         for object in self.object_list:
+            #if object.name=="fall"or object.name=="move" or object.name=="plat":
             if object.name=="fall":
                 object.check_time(player)
             if object.name=="move":
@@ -822,14 +823,15 @@ class Level():
 
 
 
-def draw(window, background, bg_image,player,level):
+def draw(window, background, bg_image,player,level,offset):
     for tile in background:
-        window.blit(bg_image, tile)
+        offtile=(tile.__getitem__(0)+offset,tile.__getitem__(1))
+        window.blit(bg_image, offtile)
 
     for object in level.object_list:
-        object.draw(window,0)
+        object.draw(window,offset)
 
-    player.draw(window,0)
+    player.draw(window,offset)
 
     pygame.display.update()
 
@@ -1062,6 +1064,10 @@ def getInput(player, level):
            player.on_ladder=False
 
 
+BLACK=(0,0,0)
+fullScreenLeft=Platform(-2000,0,2000,2000,BLACK,None,"spike")
+fullScreenRight=Platform(1201,0,2000,2000,BLACK,None,"spike")
+fullScreenBottom=Platform(-2000,801,5200,2000,BLACK,None,"spike")
 
 lOne=[]
 lBorderLeft=Platform(-1,0,1,800,WHITE)
@@ -1094,8 +1100,14 @@ lOne.append(spike4)
 lOne.append(spike5)
 lOne.append(spike6)
 lOne.append(endlvl1)
+
 lOne.append(lBorderLeft)
 lOne.append(lBorderRight)
+
+lOne.append(fullScreenLeft)
+lOne.append(fullScreenBottom)
+lOne.append(fullScreenRight)
+
 levelOne=Level(lOne,1135,639,"updated tutorial.png")
 
 BROWN=(100,65,23)
@@ -1135,8 +1147,12 @@ lTwo.append(Ladder(1101,424))
 lTwo.append(Ladder(1101,324))
 lTwo.append(Ladder(689,440))
 lTwo.append(Ladder(689,344))
+
+
 lTwo.append(lBorderLeft)
 lTwo.append(lBorderRight)
+
+
 lTwo.append(endlvl2)
 levelTwo=Level(lTwo,1135,538,"Level 1 to 3 bkgrnd.png")
 
@@ -1777,13 +1793,17 @@ levelFifteen=Level(lFifteen,1135,58,"lvl-13-16-background.png") # will change ba
 
 def loadLevel(window, level):
     level.reset()
+    level.object_list.append(fullScreenLeft)
+    level.object_list.append(fullScreenBottom)
+    level.object_list.append(fullScreenRight)    
     clock = pygame.time.Clock()
     background=level.background
     bg_image=level.bg_image
     playerOne=Player(level.init_x,level.init_y,30,64)
-
+    check_size=(1200,800)
     timer.reset_timer()
     timer.start_timer()
+    offset=0
     global last_pause_time
     last_pause_time = 0
     run = True
@@ -1795,8 +1815,21 @@ def loadLevel(window, level):
                 break
         playerOne.loop(FPS)
         level.loop(playerOne)
+        screen_size=pygame.display.get_window_size()
+        width=screen_size.__getitem__(0)
+        if screen_size != check_size:
+            offset=(abs((width-1200)))/2
+        else:
+            offset=0
+        #       for object in level.object_list:
+        #        object.rect.x=object.original_x+offset
+        #elif offset !=0:
+        #    for object in level.object_list:
+        #        object.rect.x-=offset
+        #    offset=0
         getInput(playerOne,level)
-        draw(window, background, bg_image,playerOne,level)
+        draw(window, background, bg_image,playerOne,level,offset)
+       
     pygame.quit()
     quit()
 

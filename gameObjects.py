@@ -16,10 +16,13 @@ class Object(pygame.sprite.Sprite):
         self.image = pygame.Surface((width, height), pygame.SRCALPHA)
         self.width, self.height, self.name = width, height, name
         self.original_image=pygame.Surface((width, height), pygame.SRCALPHA)
-        self.original_x=0
-        self.original_y=0#possible use in resizing
+        self.original_x=x
+        self.original_y=y#possible use in resizing
     def draw(self, window, offset_x):
-        window.blit(self.image, (self.rect.x - offset_x, self.rect.y))
+        window.blit(self.image, (self.rect.x+offset_x, self.rect.y))
+        #self.rect.x=self.original_x+offset_x
+        
+
 
     def reset(self):
         x=0
@@ -35,14 +38,17 @@ def get_block(size,ipath):#added path so it's not always terrain.png
 
 
 class Platform(Object):
-    def __init__(self, x, y, width, height,col, path=None, name=None):
+    def __init__(self, x, y, width, height,col, path=None, name="plat"):
         super().__init__(x, y, width, height, path, name)
         self.color=col
         self.surface=pygame.Surface((width,height))
         self.surface.fill(self.color)
         self.mask = pygame.mask.from_surface(self.surface)
     def draw(self, window,offset_x):
-        pygame.draw.rect(window,self.color,self.rect)
+        #self.rect.x=self.original_x+offset_x
+        pygame.draw.rect(window,self.color,(self.rect.x + offset_x, self.rect.y,self.rect.width,self.rect.height))
+        #if offset_x!=0:
+           # self.mask = pygame.mask.from_surface(self.surface)
     def reset(self):
         x=0
 
@@ -98,6 +104,8 @@ class TallShrub(Object):
     def __init__(self,x,y):
         super().__init__(x,y,48,183)
         self.name="tall shrub"
+        self.original_x=x#THIS
+        self.original_y=y#THIS
         self.image=pygame.image.load("assets\Traps\TallShrub\TallShrub.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
@@ -413,7 +421,7 @@ class MovePlat(Platform):
                 c=1
             else:
                 for object in self.object_list:
-                    if pygame.sprite.collide_mask(player.reachBox, object) and c==0:
+                    if pygame.sprite.collide_mask(player, object) and c==0:
                         player.rect.x+=2
                         player.reachBox.rect.x+=2
                         c=1
@@ -434,7 +442,7 @@ class MovePlat(Platform):
                 c=1
             else:
                 for object in self.object_list:
-                    if pygame.sprite.collide_mask(player.reachBox, object) and c==0:
+                    if pygame.sprite.collide_mask(player, object) and c==0:
                         if not player.in_air:
                             player.rect.x-=2
                             player.reachBox.rect.x-=2
@@ -628,5 +636,7 @@ class endSign(Object):
         self.name = "end sign"
         self.image=pygame.image.load("assets/Special/EndSign.png")
         self.mask= pygame.mask.from_surface(self.image)
+        self.original_x=x#THIS
+        self.original_y=y#THIS
         self.original_mask = pygame.mask.from_surface(self.image)
         self.original_image = pygame.image.load("assets/Special/EndSign.png")
