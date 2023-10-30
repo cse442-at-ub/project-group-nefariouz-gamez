@@ -744,6 +744,8 @@ def continuelvl():
             loadLevel(window, levelFourteen)
         case "15":
             loadLevel(window, levelFifteen)
+        case "16":
+            loadLevel(window, levelSixteen)
 
     print("CONTINUE")
 
@@ -1774,6 +1776,81 @@ lFifteen.append(lBorderRight)
 lFifteen.append(endSign(3,727))
 
 levelFifteen=Level(lFifteen,1135,58,"lvl-13-16-background.png") # will change background
+
+
+# LEVEL SIXTEEN
+lSixteen = []
+lSixteen.append(Platform(0,0,44,100,WHITE))
+lSixteen.append(Platform(44,121,44,33,BEIGE))
+lSixteen.append(Platform(117,121,44,33,BEIGE))
+lSixteen.append(Platform(190,121,44,33,BEIGE))
+lSixteen.append(Platform(755,269,44,33,BEIGE))
+lSixteen.append(Platform(852,269,44,33,BEIGE))
+lSixteen.append(Platform(950,269,44,33,BEIGE))
+lSixteen.append(Platform(974,326,133,33,WHITE))
+lSixteen.append(Platform(988,358,14,280,WHITE))
+lSixteen.append(Platform(1093,638,14,280,WHITE))
+lSixteen.append(Platform(1057,743,33,22,BEIGE))
+lSixteen.append(Platform(798,391,33,33,BEIGE))
+lSixteen.append(Platform(896,361,33,33,BEIGE))
+lSixteen.append(Platform(633,767,33,33,BEIGE))
+lSixteen.append(Platform(159,560,507,33,BEIGE))
+lSixteen.append(Platform(557,390,58,33,BEIGE))
+lSixteen.append(Platform(446,333,116,33,BEIGE))
+lSixteen.append(Platform(398,386,44,33,BEIGE))
+lSixteen.append(Platform(300,386,44,33,BEIGE))
+lSixteen.append(Platform(203,386,44,33,BEIGE))
+lSixteen.append(Platform(0,741,40,33,WHITE))
+lSixteen.append(Ladder(529,332))
+lSixteen.append(Ladder(582,390))
+lSixteen.append(Ladder(582,460))
+lSixteen.append(Ladder(633,560))
+lSixteen.append(Ladder(633,630))
+lSixteen.append(Ladder(1024,326))
+lSixteen.append(Ladder(1024,396))
+lSixteen.append(Ladder(1024,467))
+lSixteen.append(Ladder(1024,537))
+lSixteen.append(Ladder(6,0))
+lSixteen.append(GreenSpike(633,734))
+lSixteen.append(GreenSpike(542,527))
+lSixteen.append(GreenSpike(402,527))
+lSixteen.append(GreenSpike(368,527))
+lSixteen.append(GreenSpike(333,527))
+lSixteen.append(GreenSpike(299,527))
+lSixteen.append(GreenSpike(262,527))
+lSixteen.append(GreenSpike(228,527))
+lSixteen.append(GreenSpike(192,527))
+lSixteen.append(GreenSpike(159,527))
+lSixteen.append(GreenRSpike(1021,358))
+lSixteen.append(GreenRSpike(1021,392))
+lSixteen.append(GreenRSpike(1021,427))
+lSixteen.append(GreenRSpike(1021,461))
+lSixteen.append(GreenRSpike(1021,498))
+lSixteen.append(GreenRSpike(1021,532))
+lSixteen.append(GreenRSpike(1021,567))
+lSixteen.append(GreenRSpike(1021,601))
+lSixteen.append(GreenLSpike(1060,358))
+lSixteen.append(GreenLSpike(1060,392))
+lSixteen.append(GreenLSpike(1060,427))
+lSixteen.append(GreenLSpike(1060,461))
+lSixteen.append(GreenLSpike(1060,498))
+lSixteen.append(GreenLSpike(1060,532))
+lSixteen.append(GreenLSpike(1060,567))
+lSixteen.append(GreenLSpike(1060,601))
+lSixteen.append(TallPinkShrub(446,390))
+
+levelSixteen=Level(lSixteen,44,121,"lvl-13-16-background.png")
+
+lSeventeen = []
+
+
+lEighteen = []
+
+
+lNineteen = []
+
+
+lTwenty = []
 
 def loadLevel(window, level):
     level.reset()
