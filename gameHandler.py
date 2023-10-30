@@ -327,7 +327,7 @@ def load_level():
         case "19":
             loadLevel(window, levelNineteen)
         case "20":
-            loadLevel(window, levelTwenty)
+            loadLevel(window, levelOne)
 
     print("LOAD LEVEL " + currlvl)
 
@@ -763,7 +763,7 @@ def continuelvl():
         case "19":
             loadLevel(window, levelNineteen)
         case "20":
-            loadLevel(window, levelTwenty)
+            loadLevel(window, levelOne)
 
     print("CONTINUE")
 
@@ -797,6 +797,62 @@ def display_between_level_page(screen):
         draw_text("You Beat Level " + printlvl + "!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-130))
         draw_text("Your Time Was: " + currtime + "s", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-70))
 
+        for widget in widgets:
+            widget.draw(screen)
+
+        pygame.display.flip()
+    pygame.quit()
+    
+
+##############################################################
+##############################################################
+################### POST LEVEL 20 SCREEN #####################
+##############################################################
+##############################################################
+
+def scale_window_endgame(screen):
+    screen_width, screen_height = screen.get_size()   # find screen dimensions
+
+    background_img = pygame.image.load("assets\Background\BetlvlBackground.png")
+    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))   # scale background to resolution
+
+    # create widgets based on screen size
+    widgets = [
+        Button((screen_width/2, (screen_height/2)+50), (300, 54), "RETURN TO MAIN", return_main)
+    ]
+
+    return widgets, screen_width, screen_height, background_img
+
+
+def display_endgame_level_page(screen):
+    widgets, screen_width, screen_height, background_img = scale_window_endgame(screen)
+
+    #get level num
+    lvlf = open("currentLevel.txt", "r")
+    currlvl = lvlf.read()
+    printlvl = str(int(currlvl) - 1)
+    lvlf.close()
+
+    currtime = str(round(timer.return_time(), 2))
+
+    betweenlvl = True
+    while betweenlvl:
+        for event in pygame.event.get():
+            #event handler
+            if event.type == pygame.QUIT:
+                betweenlvl=False
+
+            for widget in widgets:
+                if type(widget) == Button or type(widget) == Checkbox:
+                    widget.handle_event(event)
+                elif type(widget) == Slider:
+                    widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed())
+
+        screen.blit(background_img, (0,0))
+        draw_text("Congratulations!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-190))
+        draw_text("You Have Beaten Shrubbery Quest!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-130))
+        draw_text("Your Time For Level 20 Was: " + currtime + "s", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-80))
+        draw_text("You Can Now Access Challenge Mode!", pygame.font.Font(None, 56),(34, 90, 48), ((screen_width/2), (screen_height/2)-30))
         for widget in widgets:
             widget.draw(screen)
 
@@ -922,8 +978,10 @@ def collide(player, level, dx):
                 lvlf.write(str(levelnum))
                 lvlf.close()
                 # THEN OPEN BETWEEN LEVEL MENU
-                display_between_level_page(window)
-                print("END LEVEL")
+                if levelnum > 20:
+                    display_endgame_level_page(window)
+                else:
+                    display_between_level_page(window)
             break
 
     player.move(-dx, 0)
