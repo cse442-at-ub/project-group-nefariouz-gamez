@@ -196,18 +196,18 @@ class BlackSpike(Spike):
 class BlackLSpike(Spike):##LEFT FACING BLACK SPIKE
     def __init__(self,x,y):
         super().__init__(x,y)
-        self.image=pygame.image.load("assets\Traps\Spikes\BlackLSpike.png")
+        self.image=pygame.transform.rotate(pygame.image.load("assets\Traps\Spikes\BlackSpike.png"), 90)
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
-        self.original_image=pygame.image.load("assets\Traps\Spikes\BlackLSpike.png")
+        self.original_image=pygame.transform.rotate(pygame.image.load("assets\Traps\Spikes\BlackSpike.png"), 90)
 
 class BlackRSpike(Spike):##RIGHT FACING BLACK SPIKE
     def __init__(self,x,y):
         super().__init__(x,y)
-        self.image=pygame.image.load("assets\Traps\Spikes\BlackRSpike.png")
+        self.image=pygame.transform.rotate(pygame.image.load("assets\Traps\Spikes\BlackSpike.png"), -90)
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
-        self.original_image=pygame.image.load("assets\Traps\Spikes\BlackRSpike.png")
+        self.original_image=pygame.transform.rotate(pygame.image.load("assets\Traps\Spikes\BlackSpike.png"), -90)
 
 class RedSpike(Spike):
     def __init__(self,x,y):
@@ -538,7 +538,7 @@ class MovePlatDiag(Platform):
         self.surface=pygame.Surface((width,height))
         self.right_bound=rbound
 
-        self.dy=rise#vertical speed 
+        self.dy=rise#vertical speed
         self.dx=run#horizontal speed
         #By using negative values for rise and/or run, diagonal direction can be changed.
         self.left_bound=lbound
