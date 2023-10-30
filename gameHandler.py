@@ -6,7 +6,7 @@ import math
 import pygame
 import sys
 
-from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike
+from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AngledPlatform
 from MenuWidgets import *
 from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
@@ -1585,7 +1585,7 @@ lEleven.append(lBorderLeft)
 lEleven.append(lBorderRight)
 lEleven.append(endSign(10,591))
 
-levelEleven=Level(lEleven,1125,80,"lvl-11-12-background.png") # will change background
+levelEleven=Level(lEleven,1125,80,"lvl-11-12-background.png")
 
 # LEVEL 12
 lTwelve = []
@@ -1625,7 +1625,7 @@ lTwelve.append(lBorderLeft)
 lTwelve.append(lBorderRight)
 lTwelve.append(endSign(10,133))
 
-levelTwelve=Level(lTwelve,1125,563,"lvl-11-12-background.png") # will change background
+levelTwelve=Level(lTwelve,1125,563,"lvl-11-12-background.png")
 
 # LEVEL 13
 lthirteen = []
@@ -1640,7 +1640,7 @@ lthirteen.append(Platform(52,472,85,33,WHITE))
 lthirteen.append(Platform(0,241,138,33,WHITE))
 
 # Angled platform
-# code here
+# lthirteen.append(AngledPlatform(849,330,177,33,30))
 
 # Moving platform
 l13mpShrub = SmallPurpleShrub(660,402) # Moving platform shrub
@@ -1662,7 +1662,7 @@ lthirteen.append(lBorderLeft)
 lthirteen.append(lBorderRight)
 lthirteen.append(endSign(2,201))
 
-levelThirteen=Level(lthirteen,1130,93,"lvl-13-16-background.png") # will change background
+levelThirteen=Level(lthirteen,1130,93,"lvl-13-16-background.png")
 
 # LEVEL 14
 lFourteen = []
@@ -1710,7 +1710,7 @@ lFourteen.append(lBorderLeft)
 lFourteen.append(lBorderRight)
 lFourteen.append(endSign(10,88))
 
-levelFourteen=Level(lFourteen,1125,174,"lvl-13-16-background.png") # will change background
+levelFourteen=Level(lFourteen,1125,174,"lvl-13-16-background.png")
 
 # LEVEL 15
 lFifteen = []
@@ -1773,7 +1773,7 @@ lFifteen.append(lBorderLeft)
 lFifteen.append(lBorderRight)
 lFifteen.append(endSign(3,727))
 
-levelFifteen=Level(lFifteen,1135,58,"lvl-13-16-background.png") # will change background
+levelFifteen=Level(lFifteen,1135,58,"lvl-13-16-background.png")
 
 def loadLevel(window, level):
     level.reset()
