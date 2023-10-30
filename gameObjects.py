@@ -244,10 +244,10 @@ class GreenSpike(Spike):
 class GreenDSpike(Spike):##DOWN FACING GREEN SPIKE
     def __init__(self,x,y):
         super().__init__(x,y)
-        self.image=pygame.image.load("assets\Traps\Spikes\GreenDSpike.png")
+        self.image=pygame.image.load("assets\Traps\Spikes\DownGreenSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
-        self.original_image=pygame.image.load("assets\Traps\Spikes\GreenDSpike.png")
+        self.original_image=pygame.image.load("assets\Traps\Spikes\DownGreenSpike.png")
 
 class GreenLSpike(Spike):##LEFT FACING GREEN SPIKE
     def __init__(self,x,y):
