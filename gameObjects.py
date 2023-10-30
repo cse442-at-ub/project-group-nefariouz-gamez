@@ -16,10 +16,13 @@ class Object(pygame.sprite.Sprite):
         self.image = pygame.Surface((width, height), pygame.SRCALPHA)
         self.width, self.height, self.name = width, height, name
         self.original_image=pygame.Surface((width, height), pygame.SRCALPHA)
-        self.original_x=0
-        self.original_y=0#possible use in resizing
+        self.original_x=x
+        self.original_y=y#possible use in resizing
     def draw(self, window, offset_x):
-        window.blit(self.image, (self.rect.x - offset_x, self.rect.y))
+        window.blit(self.image, (self.rect.x+offset_x, self.rect.y))
+        #self.rect.x=self.original_x+offset_x
+        
+
 
     def reset(self):
         x=0
@@ -35,14 +38,17 @@ def get_block(size,ipath):#added path so it's not always terrain.png
 
 
 class Platform(Object):
-    def __init__(self, x, y, width, height,col, path=None, name=None):
+    def __init__(self, x, y, width, height,col, path=None, name="plat"):
         super().__init__(x, y, width, height, path, name)
         self.color=col
         self.surface=pygame.Surface((width,height))
         self.surface.fill(self.color)
         self.mask = pygame.mask.from_surface(self.surface)
     def draw(self, window,offset_x):
-        pygame.draw.rect(window,self.color,self.rect)
+        #self.rect.x=self.original_x+offset_x
+        pygame.draw.rect(window,self.color,(self.rect.x + offset_x, self.rect.y,self.rect.width,self.rect.height))
+        #if offset_x!=0:
+           # self.mask = pygame.mask.from_surface(self.surface)
     def reset(self):
         x=0
 
@@ -98,6 +104,8 @@ class TallShrub(Object):
     def __init__(self,x,y):
         super().__init__(x,y,48,183)
         self.name="tall shrub"
+        self.original_x=x#THIS
+        self.original_y=y#THIS
         self.image=pygame.image.load("assets\Traps\TallShrub\TallShrub.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
@@ -120,6 +128,8 @@ class Spike(Object):
     def __init__(self,x,y):
         super().__init__(x,y,40,34)
         self.name="spike"
+        self.original_x=x#THIS
+        self.original_y=y#THIS
         self.image=pygame.image.load("assets\Traps\Spikes\Spike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
@@ -130,6 +140,8 @@ class Spike(Object):
         self.mask=pygame.mask.from_surface(self.image)
 
     def reset(self):
+        self.rect.x=self.original_x#THIS
+        self.rect.y=self.original_y#THIS
         self.image=self.original_image
         self.mask=self.original_mask
 
@@ -192,18 +204,18 @@ class BlackSpike(Spike):
 class BlackLSpike(Spike):##LEFT FACING BLACK SPIKE
     def __init__(self,x,y):
         super().__init__(x,y)
-        self.image=pygame.image.load("assets\Traps\Spikes\BlackLSpike.png")
+        self.image=pygame.transform.rotate(pygame.image.load("assets\Traps\Spikes\BlackSpike.png"), 90)
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
-        self.original_image=pygame.image.load("assets\Traps\Spikes\BlackLSpike.png")
+        self.original_image=pygame.transform.rotate(pygame.image.load("assets\Traps\Spikes\BlackSpike.png"), 90)
 
 class BlackRSpike(Spike):##RIGHT FACING BLACK SPIKE
     def __init__(self,x,y):
         super().__init__(x,y)
-        self.image=pygame.image.load("assets\Traps\Spikes\BlackRSpike.png")
+        self.image=pygame.transform.rotate(pygame.image.load("assets\Traps\Spikes\BlackSpike.png"), -90)
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
-        self.original_image=pygame.image.load("assets\Traps\Spikes\BlackRSpike.png")
+        self.original_image=pygame.transform.rotate(pygame.image.load("assets\Traps\Spikes\BlackSpike.png"), -90)
 
 class RedSpike(Spike):
     def __init__(self,x,y):
@@ -240,18 +252,18 @@ class GreenDSpike(Spike):##DOWN FACING GREEN SPIKE
 class GreenLSpike(Spike):##LEFT FACING GREEN SPIKE
     def __init__(self,x,y):
         super().__init__(x,y)
-        self.image=pygame.image.load("assets\Traps\Spikes\GreenLSpike.png")
+        self.image=pygame.image.load("assets\Traps\Spikes\LeftGreenSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
-        self.original_image=pygame.image.load("assets\Traps\Spikes\GreenLSpike.png")
+        self.original_image=pygame.image.load("assets\Traps\Spikes\LeftGreenSpike.png")
 
 class GreenRSpike(Spike):##RIGHT FACING GREEN SPIKE
     def __init__(self,x,y):
         super().__init__(x,y)
-        self.image=pygame.image.load("assets\Traps\Spikes\GreenRSpike.png")
+        self.image=pygame.image.load("assets\Traps\Spikes\RightGreenSpike.png")
         self.mask=pygame.mask.from_surface(self.image)
         self.original_mask=pygame.mask.from_surface(self.image)
-        self.original_image=pygame.image.load("assets\Traps\Spikes\GreenRSpike.png")
+        self.original_image=pygame.image.load("assets\Traps\Spikes\RightGreenSpike.png")
 
 class GoldSpike(Spike):
     def __init__(self,x,y):
@@ -409,7 +421,7 @@ class MovePlat(Platform):
                 c=1
             else:
                 for object in self.object_list:
-                    if pygame.sprite.collide_mask(player.reachBox, object) and c==0:
+                    if pygame.sprite.collide_mask(player, object) and c==0:
                         player.rect.x+=2
                         player.reachBox.rect.x+=2
                         c=1
@@ -430,7 +442,7 @@ class MovePlat(Platform):
                 c=1
             else:
                 for object in self.object_list:
-                    if pygame.sprite.collide_mask(player.reachBox, object) and c==0:
+                    if pygame.sprite.collide_mask(player, object) and c==0:
                         if not player.in_air:
                             player.rect.x-=2
                             player.reachBox.rect.x-=2
@@ -478,13 +490,13 @@ class MovePlatVert(Platform):
         c=0
         if self.direction:#If moving UP
             self.rect.y-=2
-            if pygame.sprite.collide_mask(player.reachBox, self) and player.rect.bottom<self.rect.bottom:# and player.rect.bottom-10<self.rect.top:
+            if pygame.sprite.collide_mask(player, self) and player.rect.bottom<self.rect.bottom:# and player.rect.bottom-10<self.rect.top:
                 player.rect.y-=2
                 player.reachBox.rect.y-=2
                 c=1
             else:
                 for object in self.object_list:
-                    if pygame.sprite.collide_mask(player.reachBox, object) and c==0:
+                    if pygame.sprite.collide_mask(player, object) and c==0:
                         player.rect.y-=2
                         player.reachBox.rect.y-=2
                         c=1
@@ -497,7 +509,7 @@ class MovePlatVert(Platform):
                 object.rect.y-=2
         else:#if moving DOWN
             self.rect.y+=2
-            if pygame.sprite.collide_mask(player.reachBox, self) and player.rect.bottom<self.rect.bottom:#and player.rect.bottom-10<self.rect.top:
+            if pygame.sprite.collide_mask(player, self) and player.rect.bottom<self.rect.bottom:#and player.rect.bottom-10<self.rect.top:
                 if not player.in_air:
                     player.rect.y+=2
                     player.reachBox.rect.y+=2
@@ -505,7 +517,7 @@ class MovePlatVert(Platform):
                 c=1
             else:
                 for object in self.object_list:
-                    if pygame.sprite.collide_mask(player.reachBox, object) and c==0:
+                    if pygame.sprite.collide_mask(player, object) and c==0:
                         if not player.in_air:
                             player.rect.y+=2
                             player.reachBox.rect.y+=2
@@ -534,7 +546,7 @@ class MovePlatDiag(Platform):
         self.surface=pygame.Surface((width,height))
         self.right_bound=rbound
 
-        self.dy=rise#vertical speed 
+        self.dy=rise#vertical speed
         self.dx=run#horizontal speed
         #By using negative values for rise and/or run, diagonal direction can be changed.
         self.left_bound=lbound
@@ -624,5 +636,7 @@ class endSign(Object):
         self.name = "end sign"
         self.image=pygame.image.load("assets/Special/EndSign.png")
         self.mask= pygame.mask.from_surface(self.image)
+        self.original_x=x#THIS
+        self.original_y=y#THIS
         self.original_mask = pygame.mask.from_surface(self.image)
         self.original_image = pygame.image.load("assets/Special/EndSign.png")
