@@ -327,7 +327,7 @@ def load_level():
         case "19":
             loadLevel(window, levelNineteen)
         case "20":
-            loadLevel(window, levelOne)
+            loadLevel(window, levelTwenty)
 
     print("LOAD LEVEL " + currlvl)
 
@@ -763,7 +763,7 @@ def continuelvl():
         case "19":
             loadLevel(window, levelNineteen)
         case "20":
-            loadLevel(window, levelOne)
+            loadLevel(window, levelTwenty)
 
     print("CONTINUE")
 
@@ -2072,17 +2072,31 @@ lSeventeen.append(SmallPurpleShrub(864,432))
 lSeventeen.append(SmallPurpleShrub(816,432))
 
 
-
 lSeventeen.append(endSign(5,216))
 lSeventeen.append(lBorderRight)
 lSeventeen.append(lBorderLeft)
 
 levelSeventeen=Level(lSeventeen,1120,650,"lvl-13-16-background.png")
 
-
+# LEVEL 18
 lEighteen = []
+lEighteen.append(Water(0,800,1200,1,BLUE))
+lEighteen.append(Platform(1129,259,74,16,WHITE))
+lEighteen.append(Platform(904,172,300,15,WHITE))
+lEighteen.append(Platform(887,327,313,33,WHITE))
+lEighteen.append(Platform(716,522,47,15,WHITE))
+lEighteen.append(Platform(531,627,184,15,WHITE))
+lEighteen.append(Platform(427,736,48,20,WHITE))
+lEighteen.append(Platform(0,766,118,34,WHITE))
 
-levelEighteen=Level(lSeventeen,0,75,"lvl-13-16-background.png")
+lEighteen.append(Ladder(887,327))
+lEighteen.append(Ladder(716,522))
+lEighteen.append(Ladder(584,626))
+
+lEighteen.append(endSign(20,726))
+lEighteen.append(lBorderRight)
+lEighteen.append(lBorderLeft)
+levelEighteen=Level(lEighteen,1130,185,"lvl-13-16-background.png")
 
 
 lNineteen = []
