@@ -463,8 +463,17 @@ def display_settings_page(screen):
 character_font = pygame.font.Font(None, 32)
 f = open("CurrentCharacter.txt", "r")
 current_character = f.read()
-if current_character == "":
-    print("Text Empty, make default Celia")
+
+maxlevelread = open("MaxUnlocked.txt", "r")
+max_level_unlocked = maxlevelread.read()
+if current_character == "" or max_level_unlocked == "" or int(max_level_unlocked) < 5:
+    current_character = "Celia"
+    f.close()
+    f = open("CurrentCharacter.txt", "w")
+    f.write("Celia")
+    f.close()
+    f = open("CurrentCharacter.txt", "r")
+elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (current_character == "Maia" and int(max_level_unlocked) < 10) or (current_character == "Oscar" and int(max_level_unlocked) < 15):
     current_character = "Celia"
     f.close()
     f = open("CurrentCharacter.txt", "w")
@@ -473,9 +482,16 @@ if current_character == "":
     f = open("CurrentCharacter.txt", "r")
 character_text = character_font.render("You are currently playing as " + current_character + "!", False, "Black")
 print(current_character)
-
-maxlevelread = open("MaxUnlocked.txt", "r")
-max_level_unlocked = maxlevelread.read()
+clevel = open("currentLevel.txt", "r")
+current_level = clevel.read()
+max_level = str(int(current_level) - 1)
+clevel.close()
+maxlevelread.close()
+if max_level_unlocked == "" or int(max_level_unlocked) < int(max_level):
+    max_level_unlocked = max_level
+    w_max = open("MaxUnlocked.txt", "w")
+    w_max.write(str(max_level_unlocked))
+    w_max.close()
 
 def click_Celia():
     global current_character
@@ -588,8 +604,17 @@ def check_update():
     f = open("CurrentCharacter.txt", "r")
     current_character = f.read()
     print(current_character)
-    if current_character == "":
-        print(".txt Empty")
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
+    
+    if current_character == "" or max_level_unlocked == "" or int(max_level_unlocked) < 5:
+        f.close()
+        f = open("CurrentCharacter.txt", "w")
+        f.write("Celia")
+        f.close()
+        f = open("CurrentCharacter.txt", "r")
+        click_Celia()
+    elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (current_character == "Maia" and int(max_level_unlocked) < 10) or (current_character == "Oscar" and int(max_level_unlocked) < 15):
         f.close()
         f = open("CurrentCharacter.txt", "w")
         f.write("Celia")
