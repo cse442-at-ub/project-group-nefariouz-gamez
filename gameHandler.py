@@ -470,7 +470,8 @@ def choose_character():
     print("CHOOSE CHARACTER")
 
 def return_main():
-    if competitive == "True":
+    global competitive
+    if competitive:
         display_competitive_main_menu(window)
     else:
         display_main_menu(window)
@@ -823,7 +824,7 @@ def display_between_level_page(screen):
 
         pygame.display.flip()
     pygame.quit()
-    
+
 
 ##############################################################
 ##############################################################
@@ -1152,7 +1153,8 @@ def getInput(player, level):
             time_since_last = timer.return_time() - last_pause_time
             if time_since_last > 0.40:
                 if show_pause_menu(window, VOLUME_STATES):
-                    if competitive == "True":
+                    global competitive
+                    if competitive:
                         display_competitive_main_menu(window)
                     else:
                         display_main_menu(window)
@@ -2567,7 +2569,7 @@ def loadLevel(window, level):
     level.reset()
     level.object_list.append(fullScreenLeft)
     level.object_list.append(fullScreenBottom)
-    level.object_list.append(fullScreenRight)    
+    level.object_list.append(fullScreenRight)
     clock = pygame.time.Clock()
     background=level.background
     bg_image=level.bg_image
@@ -2601,17 +2603,14 @@ def loadLevel(window, level):
         #    offset=0
         getInput(playerOne,level)
         draw(window, background, bg_image,playerOne,level,offset)
-       
+
     pygame.quit()
     quit()
 
 if __name__ == "__main__":
     global competitive
-    lvlf = open("competitive.txt", "r")
-    competitive = lvlf.read()
-    lvlf.close()
-
-    if competitive == "True":
+    if os.path.exists("competitive.txt"):
+        competitive = True
         display_competitive_main_menu(window)
     else:
         display_main_menu(window)
