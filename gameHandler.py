@@ -1757,23 +1757,19 @@ levelTwelve=Level(lTwelve,1125,536,"newlvl-11-12-background.png")
 lthirteen = []
 lthirteen.append(Water(0,800,1200,1,BLACK))
 lthirteen.append(Platform(1061,173,139,33,WHITE))
-lthirteen.append(Platform(532,559,32,32,WHITE))
+# lthirteen.append(Platform(532,559,32,32,WHITE))
 lthirteen.append(Platform(394,579,67,32,WHITE))
-lthirteen.append(Platform(201,611,145,32,WHITE))
+lthirteen.append(Platform(250,611,96,32,WHITE))
 lthirteen.append(Platform(46,765,111,32,WHITE))
-lthirteen.append(Platform(52,603,66,33,WHITE))
-lthirteen.append(Platform(52,472,85,33,WHITE))
+lthirteen.append(Platform(52,603,92,33,WHITE))
+lthirteen.append(Platform(52,472,95,33,WHITE))
+lthirteen.append(Platform(141,505,6,131,WHITE))
 lthirteen.append(Platform(0,241,138,33,WHITE))
 
-# Angled platform
-lthirteen.append(AngleSpike(913,351))
-
-lthirteen.append(AnglePlat(849,330))
-
 # Moving platform
-l13mpShrub = SmallPurpleShrub(660,402) # Moving platform shrub
+l13mpShrub = SmallPurpleShrub(724,400) # Moving platform shrub
 lthirteen.append(l13mpShrub)
-l13mp = MovePlat(661,454,99,26,610,814,[l13mpShrub], [])
+l13mp = MovePlat(668,452,99,26,555,799,[l13mpShrub], [])
 lthirteen.append(l13mp)
 
 lthirteen.append(GreenSpike(309,578))
@@ -1790,7 +1786,26 @@ lthirteen.append(lBorderLeft)
 lthirteen.append(lBorderRight)
 lthirteen.append(endSign(2,201))
 
-levelThirteen=Level(lthirteen,1130,93,"newlvl-13-16-background.png")
+
+
+
+
+
+
+
+
+
+# change backgorund back
+
+
+
+
+
+
+
+
+
+levelThirteen=Level(lthirteen,1130,93,"lvl-13-16-background.png")
 
 # LEVEL 14
 lFourteen = []
