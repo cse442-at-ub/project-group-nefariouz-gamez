@@ -1717,14 +1717,14 @@ levelEleven=Level(lEleven,1125,80,"newlvl-11-12-background.png")
 # LEVEL 12
 lTwelve = []
 lTwelve.append(Water(0,800,1200,1,BLACK))
-lTwelve.append(Platform(1026,631,174,33,WHITE))
-lTwelve.append(Platform(657,604,304,33,WHITE))
+lTwelve.append(Platform(1017,604,183,33,WHITE))
+lTwelve.append(Platform(652,604,327,33,WHITE))
 lTwelve.append(Platform(309,395,174,33,WHITE))
 lTwelve.append(Platform(9,662,230,33, WHITE))
 lTwelve.append(Platform(14,465,206,33,WHITE))
 lTwelve.append(Platform(195,246,25,219,WHITE))
-lTwelve.append(Platform(132,416,63,19,WHITE))
-lTwelve.append(Platform(0,173,174,33,WHITE))
+lTwelve.append(Platform(163,416,33,19,WHITE))
+lTwelve.append(Platform(0,173,152,33,WHITE))
 
 # falling platform object
 lvl12FallSpike = BlueSpike(572,508)
@@ -1734,25 +1734,24 @@ lTwelve.append(lvl12FallSpike)
 lTwelve.append(lvl12FallTallShrub)
 lTwelve.append(lvl12FallPlat)
 
-lTwelve.append(BlueSpike(924,571))
-lTwelve.append(BlueSpike(657,571))
+lTwelve.append(BlueSpike(941,571))
+lTwelve.append(BlueSpike(652,571))
 lTwelve.append(BlueSpike(139,629))
-lTwelve.append(BlueSpike(87,432))
-lTwelve.append(SmallRedShrub(132,364))
+lTwelve.append(BlueSpike(117,432))
+lTwelve.append(SmallRedShrub(148,364))
 lTwelve.append(Ladder(450,395))
 lTwelve.append(Ladder(309,395))
 lTwelve.append(Ladder(309,451))
 lTwelve.append(Ladder(14,465))
 lTwelve.append(Ladder(14,562))
-lTwelve.append(Ladder(141,173))
-lTwelve.append(Ladder(86,206))
-lTwelve.append(Ladder(86,262))
+lTwelve.append(Ladder(119,173))
+lTwelve.append(Ladder(119,230))
 
 lTwelve.append(lBorderLeft)
 lTwelve.append(lBorderRight)
 lTwelve.append(endSign(10,133))
 
-levelTwelve=Level(lTwelve,1125,563,"newlvl-11-12-background.png")
+levelTwelve=Level(lTwelve,1125,536,"newlvl-11-12-background.png")
 
 # LEVEL 13
 lthirteen = []
