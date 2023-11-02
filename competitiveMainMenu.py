@@ -4,7 +4,7 @@ from MenuWidgets import *
 
 
 # Call show_tutorial with screen (pygame.display.set_mode(screen_size))
-def show_competitve_main_menu(screen):
+def show_competitive_main_menu(screen):
     # Load in background image
     background_img = pygame.image.load("assets/Background/TitleNoShear.png").convert_alpha()
 
@@ -49,7 +49,7 @@ def show_competitve_main_menu(screen):
                 elif widgets[4].hovered:
                     return "SETTINGS"
                 elif widgets[5].hovered:
-                    return "QUIT"
+                    sys.exit()
 
         # Update display
         pygame.display.update()
@@ -61,4 +61,4 @@ if __name__ == '__main__':
     screen_size = (1200, 800)
     screen = pygame.display.set_mode(screen_size, pygame.RESIZABLE)
     pygame.display.set_caption("Shrubbery Quest")
-    print(show_competitve_main_menu(screen))
+    print(show_competitive_main_menu(screen))
