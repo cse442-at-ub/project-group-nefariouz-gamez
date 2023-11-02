@@ -1757,7 +1757,6 @@ levelTwelve=Level(lTwelve,1125,536,"newlvl-11-12-background.png")
 lthirteen = []
 lthirteen.append(Water(0,800,1200,1,BLACK))
 lthirteen.append(Platform(1061,173,139,33,WHITE))
-# lthirteen.append(Platform(532,559,32,32,WHITE))
 lthirteen.append(Platform(394,579,67,32,WHITE))
 lthirteen.append(Platform(250,611,96,32,WHITE))
 lthirteen.append(Platform(46,765,111,32,WHITE))
@@ -1786,44 +1785,25 @@ lthirteen.append(lBorderLeft)
 lthirteen.append(lBorderRight)
 lthirteen.append(endSign(2,201))
 
-
-
-
-
-
-
-
-
-
-# change backgorund back
-
-
-
-
-
-
-
-
-
-levelThirteen=Level(lthirteen,1130,93,"lvl-13-16-background.png")
+levelThirteen=Level(lthirteen,1130,93,"newlvl-13-16-background.png")
 
 # LEVEL 14
 lFourteen = []
 lFourteen.append(Water(0,800,1200,1,BLACK))
 lFourteen.append(Platform(1061,241,139,33,WHITE))
 lFourteen.append(Platform(1025,106,67,33,WHITE))
-lFourteen.append(Platform(549,425,145,33,WHITE))
+lFourteen.append(Platform(499,425,145,33,WHITE))
 lFourteen.append(Platform(0,426,134,33,WHITE))
 lFourteen.append(Platform(0,264,101,33,WHITE))
 lFourteen.append(Platform(0,128,138,33,WHITE))
 
-lFourteen.append(MovePlatVert(727,347,22,59,228,458,[],[]))
+lFourteen.append(MovePlatVert(702,347,22,59,228,458,[],[]))
 
 lFourteen.append(FallPlat(945,161,56,33,BEIGE,[]))
 lFourteen.append(FallPlat(862,201,56,33,BEIGE,[]))
 lFourteen.append(FallPlat(786,334,56,33,BEIGE,[]))
-lFourteen.append(FallPlat(353,493,185,33,BEIGE,[]))
-lFourteen.append(FallPlat(149,585,185,33,BEIGE,[]))
+lFourteen.append(FallPlat(303,493,135,33,BEIGE,[]))
+lFourteen.append(FallPlat(149,585,135,33,BEIGE,[]))
 lFourteen.append(FallPlat(207,128,56,33,BEIGE,[]))
 
 l14mpSpike = GreenSpike(355,96)
@@ -1842,10 +1822,10 @@ lFourteen.append(Ladder(1060,106))
 lFourteen.append(Ladder(101,426))
 lFourteen.append(Ladder(35,264))
 
-lFourteen.append(GreenSpike(584,393))
-lFourteen.append(GreenSpike(549,393))
+lFourteen.append(GreenSpike(534,393))
+lFourteen.append(GreenSpike(499,393))
 
-lFourteen.append(TallPurpleShrub(608,243))
+lFourteen.append(TallPurpleShrub(558,243))
 lFourteen.append(SmallPurpleShrub(31,374))
 lFourteen.append(SmallPurpleShrub(68,76))
 
