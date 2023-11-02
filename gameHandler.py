@@ -2013,34 +2013,49 @@ levelSixteen=Level(lSixteen,0,0,"newlvl-13-16-background.png")
 
 # LEVEL 17
 lSeventeen = []
-lSeventeen.append(Water(0,800,1200,1,BLUE))
-lSeventeen.append(Platform(489,112,711,33,WHITE))
-lSeventeen.append(Platform(474,112,15,81,WHITE))
-lSeventeen.append(Platform(395,181,94,15,WHITE))
-lSeventeen.append(Platform(152,193,249,15,WHITE))
-lSeventeen.append(Platform(0,182,170,15,WHITE))
-lSeventeen.append(Platform(0,327,567,33,WHITE))
-lSeventeen.append(Platform(0,350,15,172,WHITE))
-lSeventeen.append(Platform(0,489,68,33,WHITE))
-lSeventeen.append(Platform(0,617,68,33,WHITE))
-lSeventeen.append(Platform(258,427,52,15,WHITE))
-lSeventeen.append(Platform(766,382,434,16,WHITE))
-lSeventeen.append(Platform(766,484,434,16,WHITE))
-lSeventeen.append(Platform(1089,616,68,33,WHITE))
+#bottom level
+#starting platforms
+lSeventeen.append(Platform(1070,634,68,33,WHITE))
+lSeventeen.append(Ladder(1100,634))
 lSeventeen.append(Platform(1114,741,107,33,WHITE))
-lSeventeen.append(Platform(0,256,52,16,WHITE))
-
-lSeventeen.append(Ladder(36,489))
-lSeventeen.append(Ladder(0,617))
-lSeventeen.append(Ladder(1135,382))
-lSeventeen.append(Ladder(1119,616))
-
+lSeventeen.append(Water(0,800,1200,1,BLUE))
+lSeventeen.append(FallPlat(747,694,33,25,BEIGE))
+lSeventeen.append(FallPlat(653,711,33,25,BEIGE))
+lSeventeen.append(FallPlat(559,711,33,25,BEIGE))
+lSeventeen.append(FallPlat(330,719,33,25,BEIGE))
 l17mp1 = MovePlat(882,644,42,22,835,1027)
 lSeventeen.append(l17mp1)
-l17mp2 = MovePlat(443,730,42,22,363,522)
+l17mp2 = MovePlat(456,730,42,22,390,522)
 lSeventeen.append(l17mp2)
-l17mp3 = MovePlat(222,490,25,25,93,258)
+lSeventeen.append(MovePlatVert(268,680,22,55,625,775))
+lSeventeen.append(FallPlat(137,732,106,25,BEIGE))
+lSeventeen.append(FallPlat(0,732,106,25,BEIGE))
+
+#middle level
+lSeventeen.append(Platform(0,548,68,33,WHITE))
+lSeventeen.append(Ladder(36,548))
+lSeventeen.append(Ladder(36,633))
+lSeventeen.append(Platform(0,350,15,200,WHITE))
+l17mp3 = MovePlat(222,500,35,25,93,245)
 lSeventeen.append(l17mp3)
+lSeventeen.append(Platform(0,327,567,33,WHITE))
+lSeventeen.append(FallPlat(288,500,25,25,BEIGE))
+lSeventeen.append(FallPlat(356,520,25,25,BEIGE))
+lSeventeen.append(FallPlat(411,540,25,25,BEIGE))
+lSeventeen.append(FallPlat(473,550,25,25,BEIGE))
+lSeventeen.append(FallPlat(531,530,25,25,BEIGE))
+
+
+lSeventeen.append(Platform(766,382,434,16,WHITE))
+lSeventeen.append(Platform(766,484,434,16,WHITE))
+
+#end platform
+lSeventeen.append(Platform(0,256,52,16,WHITE))
+
+lSeventeen.append(Ladder(1135,382))
+
+
+
 l17mp4 = MovePlat(719,492,25,25,617,750)
 lSeventeen.append(l17mp4)
 l17mp5 = MovePlat(803,333,10,10,767,827)
@@ -2052,16 +2067,9 @@ lSeventeen.append(l17mp7)
 l17mp8 = MovePlat(188,269,10,10,174,290)
 lSeventeen.append(l17mp8)
 
-lSeventeen.append(FallPlat(747,694,33,25,BEIGE))
-lSeventeen.append(FallPlat(653,711,33,25,BEIGE))
-lSeventeen.append(FallPlat(559,711,33,25,BEIGE))
-lSeventeen.append(FallPlat(311,719,33,25,BEIGE))
-lSeventeen.append(FallPlat(137,732,106,25,BEIGE))
-lSeventeen.append(FallPlat(0,739,106,25,BEIGE))
-lSeventeen.append(FallPlat(356,460,25,25,BEIGE))
-lSeventeen.append(FallPlat(411,473,25,25,BEIGE))
-lSeventeen.append(FallPlat(473,480,25,25,BEIGE))
-lSeventeen.append(FallPlat(531,490,25,25,BEIGE))
+
+
+
 lSeventeen.append(FallPlat(1105,340,20,6,BEIGE))
 lSeventeen.append(FallPlat(1070,320,20,6,BEIGE))
 lSeventeen.append(FallPlat(1025,300,25,16,BEIGE))
@@ -2069,7 +2077,7 @@ lSeventeen.append(FallPlat(840,300,25,16,BEIGE))
 lSeventeen.append(FallPlat(118,277,25,10,BEIGE))
 lSeventeen.append(FallPlat(72,270,25,10,BEIGE))
 
-lSeventeen.append(MovePlatVert(268,680,22,55,593,747))
+
 lSeventeen.append(MovePlatVert(684,277,55,20,230,382))
 lSeventeen.append(MovePlatVert(600,207,55,20,230,312))
 
