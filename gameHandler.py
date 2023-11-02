@@ -10,6 +10,7 @@ from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, W
 from MenuWidgets import *
 from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
+from competitiveMainMenu import show_competitive_main_menu
 from level_timer import *
 
 from os import listdir
@@ -37,6 +38,7 @@ ENDLEVEL = False
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
 timer = Timer()
 global last_pause_time
+
 
 ##############################################################
 ##############################################################
@@ -366,6 +368,21 @@ def display_main_menu(screen):
     pygame.quit()
 
 
+def display_competitive_main_menu(screen):
+    while True:
+        match show_competitive_main_menu(screen):
+            case "START":
+                start_game()
+            case "LOAD":
+                load_level()
+            case"CHALLENGE MODE":
+                pass
+            case "LEADERBOARD":
+                pass
+            case "SETTINGS":
+                settings()
+
+
 ##############################################################
 ##############################################################
 ######################## TUTORIAL ############################
@@ -453,7 +470,10 @@ def choose_character():
     print("CHOOSE CHARACTER")
 
 def return_main():
-    display_main_menu(window)
+    if competitive == "True":
+        display_competitive_main_menu(window)
+    else:
+        display_main_menu(window)
     print("RETURN TO MAIN")
 
 def display_settings_page(screen):
@@ -1132,7 +1152,10 @@ def getInput(player, level):
             time_since_last = timer.return_time() - last_pause_time
             if time_since_last > 0.40:
                 if show_pause_menu(window, VOLUME_STATES):
-                    display_main_menu(window)
+                    if competitive == "True":
+                        display_competitive_main_menu(window)
+                    else:
+                        display_main_menu(window)
                 last_pause_time = timer.return_time()
 
             timer.start_timer()
@@ -2583,4 +2606,12 @@ def loadLevel(window, level):
     quit()
 
 if __name__ == "__main__":
-    display_main_menu(window)
+    global competitive
+    lvlf = open("competitive.txt", "r")
+    competitive = lvlf.read()
+    lvlf.close()
+
+    if competitive == "True":
+        display_competitive_main_menu(window)
+    else:
+        display_main_menu(window)
