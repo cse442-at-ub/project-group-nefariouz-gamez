@@ -253,7 +253,7 @@ class Player(pygame.sprite.Sprite):
             self.hit_count = 0
         # FIXED NO LOOP YAY!!!!! :D
         # change to FPS
-        if self.chop_count > fps/6:
+        if self.chop_count > fps/25:
             self.end_chop()
 
         self.fall_count += 1
@@ -1198,9 +1198,7 @@ def getInput(player, level):
 
             timer.start_timer()
             
-        # TODO check if we need jump/phase behavior for onLadder (don't think so...)
         if current_character == "Malcolm":
-            print(current_object)
             if keys[pygame.K_q] and player.jump_count == 1 and player.in_air:
                 player.jump()
 
