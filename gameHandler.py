@@ -1102,7 +1102,7 @@ def getInput(player, level):
 
         if keys[pygame.K_e]:
             if player.e_timer==0:
-                player.e_timer=8
+                player.e_timer=19
                 #getOverlap(player,player.reachBox,level)
                 #No breaking things while on ladder, no sprites for that
         if keys[pygame.K_q]:

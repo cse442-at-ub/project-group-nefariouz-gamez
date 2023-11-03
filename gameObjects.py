@@ -123,6 +123,8 @@ class TallShrub(Object):
     def reset(self):
         self.image=self.original_image
         self.mask=self.original_mask
+        self.rect.x=self.original_x
+        self.rect.y=self.original_y
         self.health=2
 
 class Spike(Object):
