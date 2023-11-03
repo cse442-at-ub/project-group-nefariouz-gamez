@@ -470,8 +470,7 @@ def choose_character():
     print("CHOOSE CHARACTER")
 
 def return_main():
-    global competitive
-    if competitive:
+    if os.path.exists("competitive.txt"):
         display_competitive_main_menu(window)
     else:
         display_main_menu(window)
@@ -1003,6 +1002,7 @@ def collide(player, level, dx):
                 lvlf.close()
                 # THEN OPEN BETWEEN LEVEL MENU
                 if levelnum > 20:
+                    open("competitive.txt", "x").close()
                     display_endgame_level_page(window)
                 else:
                     display_between_level_page(window)
@@ -1153,8 +1153,7 @@ def getInput(player, level):
             time_since_last = timer.return_time() - last_pause_time
             if time_since_last > 0.40:
                 if show_pause_menu(window, VOLUME_STATES):
-                    global competitive
-                    if competitive:
+                    if os.path.exists("competitive.txt"):
                         display_competitive_main_menu(window)
                     else:
                         display_main_menu(window)
@@ -2687,7 +2686,7 @@ lTwenty.append(l20mp4)
 lTwenty.append(endSign(1150,147))
 lTwenty.append(lBorderRight)
 lTwenty.append(lBorderLeft)
-#levelTwenty=Level(lTwenty,470,5,"newlvl-20-background.png")
+# levelTwenty=Level(lTwenty,470,5,"newlvl-20-background.png")
 levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")
 
 
@@ -2734,9 +2733,7 @@ def loadLevel(window, level):
     quit()
 
 if __name__ == "__main__":
-    global competitive
     if os.path.exists("competitive.txt"):
-        competitive = True
         display_competitive_main_menu(window)
     else:
         display_main_menu(window)
