@@ -10,6 +10,7 @@ from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, W
 from MenuWidgets import *
 from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
+from competitiveMainMenu import show_competitive_main_menu
 from level_timer import *
 
 from os import listdir
@@ -37,6 +38,7 @@ ENDLEVEL = False
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
 timer = Timer()
 global last_pause_time
+
 
 ##############################################################
 ##############################################################
@@ -366,6 +368,21 @@ def display_main_menu(screen):
     pygame.quit()
 
 
+def display_competitive_main_menu(screen):
+    while True:
+        match show_competitive_main_menu(screen):
+            case "START":
+                start_game()
+            case "LOAD":
+                load_level()
+            case"CHALLENGE MODE":
+                pass
+            case "LEADERBOARD":
+                pass
+            case "SETTINGS":
+                settings()
+
+
 ##############################################################
 ##############################################################
 ######################## TUTORIAL ############################
@@ -453,7 +470,11 @@ def choose_character():
     print("CHOOSE CHARACTER")
 
 def return_main():
-    display_main_menu(window)
+    global competitive
+    if competitive:
+        display_competitive_main_menu(window)
+    else:
+        display_main_menu(window)
     print("RETURN TO MAIN")
 
 def display_settings_page(screen):
@@ -803,7 +824,7 @@ def display_between_level_page(screen):
 
         pygame.display.flip()
     pygame.quit()
-    
+
 
 ##############################################################
 ##############################################################
@@ -1081,7 +1102,7 @@ def getInput(player, level):
 
         if keys[pygame.K_e]:
             if player.e_timer==0:
-                player.e_timer=8
+                player.e_timer=19
                 #getOverlap(player,player.reachBox,level)
                 #No breaking things while on ladder, no sprites for that
         if keys[pygame.K_q]:
@@ -1132,7 +1153,11 @@ def getInput(player, level):
             time_since_last = timer.return_time() - last_pause_time
             if time_since_last > 0.40:
                 if show_pause_menu(window, VOLUME_STATES):
-                    display_main_menu(window)
+                    global competitive
+                    if competitive:
+                        display_competitive_main_menu(window)
+                    else:
+                        display_main_menu(window)
                 last_pause_time = timer.return_time()
 
             timer.start_timer()
@@ -1841,7 +1866,7 @@ lFifteen.append(Water(0,800,1200,1,BLACK))
 lFifteen.append(Platform(1124,128,76,33,WHITE))
 lFifteen.append(Platform(662,142,82,19,WHITE))
 lFifteen.append(Platform(634,250,142,33,WHITE))
-lFifteen.append(Platform(452,500,222,15,WHITE))
+lFifteen.append(Platform(454,501,218,15,WHITE))
 lFifteen.append(Platform(0,767,44,33,WHITE))
 
 lFifteen.append(FallPlat(452,429,222,15,BEIGE,[]))
@@ -1867,9 +1892,9 @@ lFifteen.append(l15small2)
 l15mp1 = MovePlat(948,425,139,22,857,1087,[l15small1,l15small2],[])
 lFifteen.append(l15mp1)
 
-l15small3 = SmallPurpleShrub(753,643)
+l15small3 = TallPurpleShrub(754,517)
 lFifteen.append(l15small3)
-l15mp2 = MovePlat(708,695,139,22,617,847,[l15small3],[])
+l15mp2 = MovePlat(708,700,139,22,617,847,[l15small3],[])
 lFifteen.append(l15mp2)
 
 l15small4 = SmallPurpleShrub(446,701)
@@ -1890,37 +1915,37 @@ lFifteen.append(Ladder(1124,128))
 lFifteen.append(Ladder(711,142))
 lFifteen.append(Ladder(634,250))
 lFifteen.append(Ladder(6,767))
-lFifteen.append(TallPurpleShrub(660,-41))
+lFifteen.append(SmallPurpleShrub(660,90))
 lFifteen.append(SmallPurpleShrub(660,198))
 
-lFifteen.append(Platform(247,233,33,10,WHITE))
+lFifteen.append(Platform(247,234,33,10,WHITE))
 lFifteen.append(GreenSpike(245,200))
 
-lFifteen.append(Platform(95,327,33,10,WHITE))
+lFifteen.append(Platform(95,328,33,10,WHITE))
 lFifteen.append(GreenSpike(93,294))
 
-lFifteen.append(Platform(366,329,33,10,WHITE))
+lFifteen.append(Platform(366,330,33,10,WHITE))
 lFifteen.append(GreenSpike(364,296))
 
-lFifteen.append(Platform(24,442,33,10,WHITE))
+lFifteen.append(Platform(24,443,33,10,WHITE))
 lFifteen.append(GreenSpike(22,409))
 
-lFifteen.append(Platform(297,513,33,10,WHITE))
+lFifteen.append(Platform(297,514,33,10,WHITE))
 lFifteen.append(GreenSpike(295,480))
 
-lFifteen.append(Platform(247,375,33,10,WHITE))
+lFifteen.append(Platform(247,376,33,10,WHITE))
 lFifteen.append(GreenSpike(245,342))
 
-lFifteen.append(Platform(192,453,33,10,WHITE))
+lFifteen.append(Platform(192,454,33,10,WHITE))
 lFifteen.append(GreenSpike(190,420))
 
-lFifteen.append(Platform(362,604,33,10,WHITE))
+lFifteen.append(Platform(362,605,33,10,WHITE))
 lFifteen.append(GreenSpike(360,571))
 
-lFifteen.append(Platform(207,590,33,10,WHITE))
+lFifteen.append(Platform(207,591,33,10,WHITE))
 lFifteen.append(GreenSpike(205,557))
 
-lFifteen.append(Platform(63,587,33,10,WHITE))
+lFifteen.append(Platform(63,588,33,10,WHITE))
 lFifteen.append(GreenSpike(61,554))
 
 lFifteen.append(lBorderLeft)
@@ -2540,7 +2565,7 @@ def loadLevel(window, level):
     level.reset()
     level.object_list.append(fullScreenLeft)
     level.object_list.append(fullScreenBottom)
-    level.object_list.append(fullScreenRight)    
+    level.object_list.append(fullScreenRight)
     clock = pygame.time.Clock()
     background=level.background
     bg_image=level.bg_image
@@ -2574,9 +2599,14 @@ def loadLevel(window, level):
         #    offset=0
         getInput(playerOne,level)
         draw(window, background, bg_image,playerOne,level,offset)
-       
+
     pygame.quit()
     quit()
 
 if __name__ == "__main__":
-    display_main_menu(window)
+    global competitive
+    if os.path.exists("competitive.txt"):
+        competitive = True
+        display_competitive_main_menu(window)
+    else:
+        display_main_menu(window)
