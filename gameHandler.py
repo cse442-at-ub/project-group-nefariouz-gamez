@@ -1866,7 +1866,7 @@ lFifteen.append(Water(0,800,1200,1,BLACK))
 lFifteen.append(Platform(1124,128,76,33,WHITE))
 lFifteen.append(Platform(662,142,82,19,WHITE))
 lFifteen.append(Platform(634,250,142,33,WHITE))
-lFifteen.append(Platform(452,500,222,15,WHITE))
+lFifteen.append(Platform(454,501,218,15,WHITE))
 lFifteen.append(Platform(0,767,44,33,WHITE))
 
 lFifteen.append(FallPlat(452,429,222,15,BEIGE,[]))
@@ -1892,9 +1892,9 @@ lFifteen.append(l15small2)
 l15mp1 = MovePlat(948,425,139,22,857,1087,[l15small1,l15small2],[])
 lFifteen.append(l15mp1)
 
-l15small3 = SmallPurpleShrub(753,643)
+l15small3 = TallPurpleShrub(754,517)
 lFifteen.append(l15small3)
-l15mp2 = MovePlat(708,695,139,22,617,847,[l15small3],[])
+l15mp2 = MovePlat(708,700,139,22,617,847,[l15small3],[])
 lFifteen.append(l15mp2)
 
 l15small4 = SmallPurpleShrub(446,701)
@@ -1915,37 +1915,37 @@ lFifteen.append(Ladder(1124,128))
 lFifteen.append(Ladder(711,142))
 lFifteen.append(Ladder(634,250))
 lFifteen.append(Ladder(6,767))
-lFifteen.append(TallPurpleShrub(660,-41))
+lFifteen.append(SmallPurpleShrub(660,90))
 lFifteen.append(SmallPurpleShrub(660,198))
 
-lFifteen.append(Platform(247,233,33,10,WHITE))
+lFifteen.append(Platform(247,234,33,10,WHITE))
 lFifteen.append(GreenSpike(245,200))
 
-lFifteen.append(Platform(95,327,33,10,WHITE))
+lFifteen.append(Platform(95,328,33,10,WHITE))
 lFifteen.append(GreenSpike(93,294))
 
-lFifteen.append(Platform(366,329,33,10,WHITE))
+lFifteen.append(Platform(366,330,33,10,WHITE))
 lFifteen.append(GreenSpike(364,296))
 
-lFifteen.append(Platform(24,442,33,10,WHITE))
+lFifteen.append(Platform(24,443,33,10,WHITE))
 lFifteen.append(GreenSpike(22,409))
 
-lFifteen.append(Platform(297,513,33,10,WHITE))
+lFifteen.append(Platform(297,514,33,10,WHITE))
 lFifteen.append(GreenSpike(295,480))
 
-lFifteen.append(Platform(247,375,33,10,WHITE))
+lFifteen.append(Platform(247,376,33,10,WHITE))
 lFifteen.append(GreenSpike(245,342))
 
-lFifteen.append(Platform(192,453,33,10,WHITE))
+lFifteen.append(Platform(192,454,33,10,WHITE))
 lFifteen.append(GreenSpike(190,420))
 
-lFifteen.append(Platform(362,604,33,10,WHITE))
+lFifteen.append(Platform(362,605,33,10,WHITE))
 lFifteen.append(GreenSpike(360,571))
 
-lFifteen.append(Platform(207,590,33,10,WHITE))
+lFifteen.append(Platform(207,591,33,10,WHITE))
 lFifteen.append(GreenSpike(205,557))
 
-lFifteen.append(Platform(63,587,33,10,WHITE))
+lFifteen.append(Platform(63,588,33,10,WHITE))
 lFifteen.append(GreenSpike(61,554))
 
 lFifteen.append(lBorderLeft)
