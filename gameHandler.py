@@ -1173,6 +1173,10 @@ fullScreenLeft=Platform(-2000,0,2000,2000,BLACK,None,"spike")
 fullScreenRight=Platform(1201,0,2000,2000,BLACK,None,"spike")
 fullScreenBottom=Platform(-2000,801,5200,2000,BLACK,None,"spike")
 
+
+##############################################################
+######################## LEVEL 01 ############################
+##############################################################
 lOne=[]
 lBorderLeft=Platform(-1,0,1,800,WHITE)
 lBorderRight=Platform(1201,0,1,800,WHITE)
@@ -1216,6 +1220,10 @@ levelOne=Level(lOne,1135,639,"updated tutorial.png")
 
 BROWN=(100,65,23)
 BLUE=(0,0,255)
+
+##############################################################
+######################## LEVEL 02 ############################
+##############################################################
 lTwo=[]
 #Player starting position (1135,655)
 #background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
@@ -1289,6 +1297,10 @@ lThree.append(lBorderRight)
 lThree.append(endSign(180,63)) # END SIGN
 levelThree=Level(lThree,1100,470,"Level 1 to 3 bkgrnd.png")
 
+
+##############################################################
+######################## LEVEL 04 ############################
+##############################################################
 lFour=[]
 #Player starting position (1100, 644)
 #background,bg_image = get_background("CaveBackground1.png")
@@ -1343,6 +1355,10 @@ lFour.append(lBorderRight)
 lFour.append(endSign(23,76)) # END SIGN
 levelFour=Level(lFour,1100,635,"CaveBackground1.png")
 
+
+##############################################################
+######################## LEVEL 05 ############################
+##############################################################
 lFive=[]
 lFive.append(Void(0,800,1115,15))
 lFive.append(Platform(0,700,200,80,WHITE))#Start
@@ -1392,7 +1408,9 @@ lFive.append(lBorderRight)
 lFive.append(endSign(1140,74))
 levelFive=Level(lFive,50,625,"CaveBackground1.png")
 
-# LEVEL 6
+##############################################################
+######################## LEVEL 06 ############################
+##############################################################
 lSix=[]
 lSix.append(Void(0,800,1115,15))
 lSix.append(Platform(0,114,103,58,WHITE))##Start
@@ -1473,7 +1491,9 @@ lSix.append(lBorderRight)
 lSix.append(endSign(1086,730))
 levelSix=Level(lSix,25,50,"CaveBackground1.png")
 
-# LEVEL 7
+##############################################################
+######################## LEVEL 07 ############################
+##############################################################
 lSeven=[]
 lSeven.append(Void(0,800,1200,15))
 lSeven.append(Void(884,-5,242,5))
@@ -1546,7 +1566,9 @@ lSeven.append(lBorderRight)
 lSeven.append(endSign(1160,663+24))
 levelSeven=Level(lSeven,1040,225,"CaveBackground1.png")
 
-# LEVEL 8
+##############################################################
+######################## LEVEL 08 ############################
+##############################################################
 lEight=[]
 lEight.append(Void(0,800,1200,15))
 lEight.append(Platform(0,0,74,560,GRAY))
@@ -1608,7 +1630,9 @@ lEight.append(lBorderRight)
 lEight.append(endSign(890,120))
 levelEight=Level(lEight,70,590,"mysticalBackground.png")
 
-# LEVEL 9
+##############################################################
+######################## LEVEL 09 ############################
+##############################################################
 lNine=[]
 lNine.append(Void(0,800,1200,15))
 lNine.append(Platform(858,759,155,30,WHITE))##Start
@@ -1651,7 +1675,9 @@ lNine.append(lBorderRight)
 lNine.append(endSign(69,60))
 levelNine=Level(lNine,872,645,"mysticalBackground.png")
 
-# LEVEL 10
+##############################################################
+######################## LEVEL 10 ############################
+##############################################################
 lTen=[]
 lTen.append(Void(0,800,1200,15))
 lTen.append(Platform(0,700,174,33,WHITE))##Start
@@ -1694,7 +1720,9 @@ lTen.append(lBorderRight)
 lTen.append(endSign(40, 107))
 levelTen=Level(lTen,60,630,"mysticalBackground.png")
 
-# LEVEL 11
+##############################################################
+######################## LEVEL 11 ############################
+##############################################################
 lEleven = []
 lEleven.append(Water(0,800,1200,1,BLACK))
 lEleven.append(Platform(1026,147,174,33,WHITE))
@@ -1739,7 +1767,9 @@ lEleven.append(endSign(10,564))
 
 levelEleven=Level(lEleven,1125,80,"newlvl-11-12-background.png")
 
-# LEVEL 12
+##############################################################
+######################## LEVEL 12 ############################
+##############################################################
 lTwelve = []
 lTwelve.append(Water(0,800,1200,1,BLACK))
 lTwelve.append(Platform(1017,604,183,33,WHITE))
@@ -1778,7 +1808,9 @@ lTwelve.append(endSign(10,133))
 
 levelTwelve=Level(lTwelve,1125,536,"newlvl-11-12-background.png")
 
-# LEVEL 13
+##############################################################
+######################## LEVEL 13 ############################
+##############################################################
 lthirteen = []
 lthirteen.append(Water(0,800,1200,1,BLACK))
 lthirteen.append(Platform(1061,173,139,33,WHITE))
@@ -1812,7 +1844,9 @@ lthirteen.append(endSign(2,201))
 
 levelThirteen=Level(lthirteen,1130,93,"newlvl-13-16-background.png")
 
-# LEVEL 14
+##############################################################
+######################## LEVEL 14 ############################
+##############################################################
 lFourteen = []
 lFourteen.append(Water(0,800,1200,1,BLACK))
 lFourteen.append(Platform(1061,241,139,33,WHITE))
@@ -1860,7 +1894,9 @@ lFourteen.append(endSign(10,88))
 
 levelFourteen=Level(lFourteen,1125,174,"newlvl-13-16-background.png")
 
-# LEVEL 15
+##############################################################
+######################## LEVEL 15 ############################
+##############################################################
 lFifteen = []
 lFifteen.append(Water(0,800,1200,1,BLACK))
 lFifteen.append(Platform(1124,128,76,33,WHITE))
@@ -1955,7 +1991,9 @@ lFifteen.append(endSign(3,727))
 levelFifteen=Level(lFifteen,1135,58,"newlvl-13-16-background.png")
 
 
-# LEVEL SIXTEEN
+##############################################################
+######################## LEVEL 16 ############################
+##############################################################
 lSixteen = []
 lSixteen.append(Water(0,800,1200,1,BLUE))
 lSixteen.append(Platform(0,118,440,30,WHITE))
@@ -2067,7 +2105,9 @@ lSixteen.append(endSign(0,700))
 
 levelSixteen=Level(lSixteen,0,0,"newlvl-13-16-background.png")
 
-# LEVEL 17
+##############################################################
+######################## LEVEL 17 ############################
+##############################################################
 lSeventeen = []
 #bottom level
 #starting platforms
@@ -2145,11 +2185,8 @@ lSeventeen.append(l17mp8)
 lSeventeen.append(FallPlat(118,277,25,10,BEIGE))
 lSeventeen.append(FallPlat(72,270,25,10,BEIGE))
 
-
-lSeventeen.append(MovePlatVert(684,277,55,20,230,382))
-lSeventeen.append(MovePlatVert(600,207,55,20,230,312))
-
-
+lSeventeen.append(MovePlatVert(684,277,55,20,200,350))
+lSeventeen.append(MovePlatVert(600,207,55,20,200,312))
 
 lSeventeen.append(GreenSpike(0,294))
 lSeventeen.append(GreenSpike(37,294))
@@ -2192,10 +2229,14 @@ lSeventeen.append(endSign(5,216))
 lSeventeen.append(lBorderRight)
 lSeventeen.append(lBorderLeft)
 
-levelSeventeen=Level(lSeventeen,1120,100,"newlvl-17-18-background.png")
-#levelSeventeen=Level(lSeventeen,1120,650,"newlvl-13-16-background.png")
+#levelSeventeen=Level(lSeventeen,1120,100,"newlvl-17-18-background.png")
+levelSeventeen=Level(lSeventeen,1120,650,"newlvl-13-16-background.png")
 
-# LEVEL 18
+
+
+##############################################################
+######################## LEVEL 18 ############################
+##############################################################
 lEighteen = []
 lEighteen.append(Water(0,800,1200,1,BLUE))
 
@@ -2327,10 +2368,12 @@ lEighteen.append(Platform(0,766,118,34,WHITE))
 lEighteen.append(endSign(20,726))
 lEighteen.append(lBorderRight)
 lEighteen.append(lBorderLeft)
-levelEighteen=Level(lEighteen,1130,400,"newlvl-17-18-background.png")
-#levelEighteen=Level(lEighteen,1130,185,"newlvl-17-18-background.png")
+#levelEighteen=Level(lEighteen,1130,400,"newlvl-17-18-background.png")
+levelEighteen=Level(lEighteen,1130,185,"newlvl-17-18-background.png")
 
-# LEVEL 19
+##############################################################
+######################## LEVEL 19 ############################
+##############################################################
 lNineteen = []
 
 lNineteen.append(Platform(0,0,133,40,WHITE))
@@ -2533,7 +2576,9 @@ levelNineteen=Level(lNineteen,35,65,"newlvl-19-background.png")
 
 
 
-
+##############################################################
+######################## LEVEL 20 ############################
+##############################################################
 lTwenty = []
 
 lTwenty.append(Water(0,780,1200,40,BLUE))
