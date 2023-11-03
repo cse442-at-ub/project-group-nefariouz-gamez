@@ -142,6 +142,7 @@ class Player(pygame.sprite.Sprite):
         self.y_velocity=velocity
     # does not allow double jump
     def jump(self):
+        global current_character
         if self.y_velocity > .5:# Can only jump if not going down
             placeholder=0
         else:# if not falling
@@ -152,6 +153,8 @@ class Player(pygame.sprite.Sprite):
             self.jump_count += 1
             if self.jump_count == 1:
                 self.fall_count = 0
+            if self.jump_count == 2:
+                self.y_velocity = -self.GRAVITY * 7
 
     def landed(self):
         self.in_air=False
@@ -208,6 +211,11 @@ class Player(pygame.sprite.Sprite):
                     sprite_sheet = "jump"
                 else:
                     sprite_sheet = "chop"
+            elif self.jump_count == 2:
+                if not self.chop:
+                    sprite_sheet = "double_jump" # TODO replace Malcolm and Oscar's animation in files (create 2 new animations)
+                else:
+                    sprite_sheet = "chop"
 
             # elif self.jump_count == 2:
             #     sprite_sheet = "double_jump"
@@ -247,7 +255,7 @@ class Player(pygame.sprite.Sprite):
             self.hit_count = 0
         # FIXED NO LOOP YAY!!!!! :D
         # change to FPS
-        if self.chop_count > fps/6:
+        if self.chop_count > fps/25:
             self.end_chop()
 
         self.fall_count += 1
@@ -518,8 +526,17 @@ def display_settings_page(screen):
 character_font = pygame.font.Font(None, 32)
 f = open("CurrentCharacter.txt", "r")
 current_character = f.read()
-if current_character == "":
-    print("Text Empty, make default Celia")
+
+maxlevelread = open("MaxUnlocked.txt", "r")
+max_level_unlocked = maxlevelread.read()
+if current_character == "" or max_level_unlocked == "" or int(max_level_unlocked) < 5:
+    current_character = "Celia"
+    f.close()
+    f = open("CurrentCharacter.txt", "w")
+    f.write("Celia")
+    f.close()
+    f = open("CurrentCharacter.txt", "r")
+elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (current_character == "Maia" and int(max_level_unlocked) < 10) or (current_character == "Oscar" and int(max_level_unlocked) < 15):
     current_character = "Celia"
     f.close()
     f = open("CurrentCharacter.txt", "w")
@@ -528,74 +545,83 @@ if current_character == "":
     f = open("CurrentCharacter.txt", "r")
 character_text = character_font.render("You are currently playing as " + current_character + "!", False, "Black")
 print(current_character)
+clevel = open("currentLevel.txt", "r")
+current_level = clevel.read()
+max_level = str(int(current_level) - 1)
+clevel.close()
+maxlevelread.close()
+if max_level_unlocked == "" or int(max_level_unlocked) < int(max_level):
+    max_level_unlocked = max_level
+    w_max = open("MaxUnlocked.txt", "w")
+    w_max.write(str(max_level_unlocked))
+    w_max.close()
 
-# onClick events for each character and the OK button
 def click_Celia():
     global current_character
     global character_text
     current_character = "Celia"
-    character_text =character_font.render("You have selected Celia", False, "Black")
-    Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia1.png'))
-    PlatformCelia.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformCelia.png'))
+    character_text = character_font.render("You have selected Celia", False, "Black")
 
+    Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png'))
+    Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMalcolm.png'))
     Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMaia.png'))
     Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveOscar.png'))
-    Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMalcolm.png'))
 
-    PlatformMalcolm.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDMalcolm.png'))
-    PlatformMaia.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDMaia.png'))
-    PlatformOscar.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDOscar.png'))
+    check_unlocked_level()
 
 
 def click_Malcolm():
     global current_character
     global character_text
-    current_character = "Malcolm"
-    character_text =character_font.render("You have selected Malcolm", False, "Black")
-    Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Malcolm1.png'))
-    PlatformMalcolm.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformMalcolm.png'))
 
-    Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveCelia.png'))
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
+    
+    if max_level_unlocked != "" and int(max_level_unlocked) >= 5:
+        current_character = "Malcolm"
+        character_text = character_font.render("You have selected Malcolm", False, "Black")
+        Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Malcolm.png'))
+        Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveCelia.png'))
     Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMaia.png'))
     Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveOscar.png'))
 
-    PlatformCelia.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDCelia.png'))
-    PlatformMaia.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDMaia.png'))
-    PlatformOscar.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDOscar.png'))
+    check_unlocked_level()
 
 
 def click_Maia():
     global current_character
     global character_text
-    current_character = "Maia"
-    character_text = character_font.render("You have selected Maia", False, "Black")
-    Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Maia1.png'))
-    PlatformMaia.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformMaia.png'))
 
-    Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveCelia.png'))
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
+    
+    if max_level_unlocked != "" and int(max_level_unlocked) >= 10:
+        current_character = "Maia"
+        character_text = character_font.render("You have selected Maia", False, "Black")
+        Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Maia.png'))
+        Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveCelia.png'))
+        Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMalcolm.png'))
     Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveOscar.png'))
-    Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMalcolm.png'))
-
-    PlatformCelia.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDCelia.png'))
-    PlatformMalcolm.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDMalcolm.png'))
-    PlatformOscar.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDOscar.png'))
+    
+    check_unlocked_level()
 
 
 def click_Oscar():
     global current_character
     global character_text
-    current_character = "Oscar"
-    character_text = character_font.render("You have selected Oscar", False, "Black")
-    Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Oscar1.png'))
-    PlatformOscar.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformOscar.png'))
 
-    Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveCelia.png'))
-    Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMaia.png'))
-    Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMalcolm.png'))
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
+    
+    if max_level_unlocked != "" and int(max_level_unlocked) >= 15:
+        current_character = "Oscar"
+        character_text = character_font.render("You have selected Oscar", False, "Black")
+        Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Oscar.png'))
+        Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveCelia.png'))
+        Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMalcolm.png'))
+        Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMaia.png'))
 
-    PlatformCelia.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDCelia.png'))
-    PlatformMalcolm.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDMalcolm.png'))
-    PlatformMaia.image = pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformDMaia.png'))
+    check_unlocked_level()
 
 
 # confirms player's selected choice, writes character's name to "CurrentCharacter.txt"
@@ -626,24 +652,32 @@ class ClickableSprite(pygame.sprite.Sprite):
                     self.callback()
 
 # initializing characters, their platforms, and OK button as clickable objects
-Celia = ClickableSprite(pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia1.png')), 50, 330, click_Celia)
-Malcolm = ClickableSprite(pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Malcolm1.png')), 250, 350, click_Malcolm)
-Maia = ClickableSprite(pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Maia1.png')), 450, 350, click_Maia)
-Oscar = ClickableSprite(pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Oscar1.png')), 650, 330, click_Oscar)
+Celia = ClickableSprite(pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png')), 50, 330, click_Celia)
+Malcolm = ClickableSprite(pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Malcolm.png')), 250, 350, click_Malcolm)
+Maia = ClickableSprite(pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Maia.png')), 450, 350, click_Maia)
+Oscar = ClickableSprite(pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Oscar.png')), 650, 330, click_Oscar)
 
-PlatformCelia = ClickableSprite(pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformCelia.png')), Celia.rect.x, Celia.rect.y + 60, click_Celia)
-PlatformMalcolm = ClickableSprite(pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformMalcolm.png')), Malcolm.rect.x, Malcolm.rect.y + 60, click_Malcolm)
-PlatformMaia = ClickableSprite(pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformMaia.png')), Maia.rect.x, Maia.rect.y + 60, click_Maia)
-PlatformOscar = ClickableSprite(pygame.image.load(os.path.join('assets', 'Platforms', 'PlatformOscar.png')), Oscar.rect.x, Oscar.rect.y + 60, click_Oscar)
 
 def check_update():
     global current_character
     global character_text
+
+    check_unlocked_level()
+
     f = open("CurrentCharacter.txt", "r")
     current_character = f.read()
     print(current_character)
-    if current_character == "":
-        print(".txt Empty")
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
+    
+    if current_character == "" or max_level_unlocked == "" or int(max_level_unlocked) < 5:
+        f.close()
+        f = open("CurrentCharacter.txt", "w")
+        f.write("Celia")
+        f.close()
+        f = open("CurrentCharacter.txt", "r")
+        click_Celia()
+    elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (current_character == "Maia" and int(max_level_unlocked) < 10) or (current_character == "Oscar" and int(max_level_unlocked) < 15):
         f.close()
         f = open("CurrentCharacter.txt", "w")
         f.write("Celia")
@@ -662,13 +696,39 @@ def check_update():
     character_text = character_font.render("You are currently playing as " + f.read() + "!", False, "Black")
     print(current_character)
 
+
+def check_unlocked_level():
+    global current_character
+
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
+
+    if max_level_unlocked == "" or int(max_level_unlocked) < 5:
+        current_character = "Celia"
+        f = open("CurrentCharacter.txt", "w")
+        f.write("Celia")
+        f.close()
+        Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png'))
+        Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMalcolm.png'))
+        Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
+        Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+    elif int(max_level_unlocked) < 10:
+        Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
+        Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+    elif int(max_level_unlocked) < 15:
+        Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+
+
 def display_choose_character(window):
     background = pygame.image.load("assets/Background/BetLvlBackground.png")
     size = pygame.display.get_window_size()
     screen_width, screen_height = size[0], size[1]
     background = pygame.transform.scale(background, size)
     widgets = [Button((screen_width/2, (screen_height/2) + 160), (300, 54), "OK", click_OK)]
+    
     check_update()
+    check_unlocked_level()
+
 
     running = True
     while running:
@@ -693,18 +753,9 @@ def display_choose_character(window):
         Maia.rect.x, Maia.rect.y = x * 3, y - const_size_1
         Oscar.rect.x, Oscar.rect.y = x * 4, y - const_size_1
 
-        PlatformCelia.rect.x, PlatformCelia.rect.y = x, y - const_size_2
-        PlatformMalcolm.rect.x, PlatformMalcolm.rect.y = x * 2, y - const_size_2
-        PlatformMaia.rect.x, PlatformMaia.rect.y = x * 3, y - const_size_2
-        PlatformOscar.rect.x, PlatformOscar.rect.y = x * 4, y - const_size_2
-
         window.blit(background, (0, 0))
 
         spriteGroup = pygame.sprite.Group(Celia, Malcolm, Maia, Oscar)
-        platformGroup = pygame.sprite.Group(PlatformCelia, PlatformMalcolm, PlatformMaia, PlatformOscar)
-
-        platformGroup.update(events)
-        platformGroup.draw(window)
 
         spriteGroup.update(events)
         spriteGroup.draw(window)
@@ -797,6 +848,16 @@ def display_between_level_page(screen):
     currlvl = lvlf.read()
     printlvl = str(int(currlvl) - 1)
     lvlf.close()
+
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
+    maxlevelread.close()
+
+    if max_level_unlocked == "" or int(max_level_unlocked) < int(printlvl):
+        max_level_unlocked = printlvl
+        w_max = open("MaxUnlocked.txt", "w")
+        w_max.write(str(max_level_unlocked))
+        w_max.close()
 
     currtime = str(round(timer.return_time(), 2))
 
@@ -1066,7 +1127,7 @@ def getInput(player, level):
             if g==0:
                 player.on_ladder=False
                 player.rect.y-=8
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and player.jump_count < 1:
             player.on_ladder=False
             player.jump()
         if keys[pygame.K_s]:
@@ -1122,7 +1183,7 @@ def getInput(player, level):
                             player.rect.x=object.rect.x-15
                             player.move_up(PLAYER_VEL)
 
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and player.jump_count < 1:
             if player.in_air==False:
                 player.jump()
         if keys[pygame.K_a] and not collide_left and not player.on_ladder and not player.chop:
@@ -1160,6 +1221,10 @@ def getInput(player, level):
                 last_pause_time = timer.return_time()
 
             timer.start_timer()
+            
+        if current_character == "Malcolm":
+            if keys[pygame.K_q] and player.jump_count == 1 and player.in_air:
+                player.jump()
 
     vertical_collide = handle_vertical_collision(player, level, player.y_velocity)
     if player.on_ladder:
