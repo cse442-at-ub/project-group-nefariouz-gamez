@@ -7,6 +7,9 @@ GRAVITY=1
 BLACK=(0,0,0)
 ORANGE=(255, 102, 0)
 
+pygame.mixer.init()
+platformBreak = pygame.mixer.Sound("assets/audio/platform-breaking.mp3")
+platformBreak.set_volume(.75)
 
 class Object(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, path=None,name=None):
@@ -341,8 +344,10 @@ class FallPlat(Platform):
         self.falling=False
         self.object_list=oList
         self.copy_list=oList.copy()
+        self.destroyCount = 0
 
     def destroy(self):
+        self.destroyCount += 1
         self.rect.width=0
         self.rect.height=0
         self.surface=pygame.Surface((self.rect.width,self.rect.height))
@@ -363,6 +368,8 @@ class FallPlat(Platform):
             #self.falling=True
             #self.rect.y+=2
             self.destroy()
+            if self.destroyCount == 1:
+                platformBreak.play()
             for object in self.object_list:
                 #object.rect.y+=2
                 object.destroy()
@@ -372,6 +379,7 @@ class FallPlat(Platform):
     def reset(self):
         self.timer=0
         self.falling=False
+        self.destroyCount = 0
         self.rect.x=self.original_x
         self.rect.y=self.original_y
         self.rect.width=self.original_width

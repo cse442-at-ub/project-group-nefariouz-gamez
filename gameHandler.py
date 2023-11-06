@@ -24,6 +24,9 @@ pygame.mixer.music.load("assets/audio/background_music.mp3")   # https://www.you
 pygame.mixer.music.play(loops=-1)   # play and loop music indefinitely
 pygame.mixer.music.set_volume(.75)   # initialize max volume of music
 
+hitTree = pygame.mixer.Sound("assets/audio/hitting-tree.mp3")
+# platformBreak = pygame.mixer.Sound("assets/audio/platform-breaking.mp3")
+
 pygame.display.set_caption("Shrubbery Quest")
 GRAVITY=1#Rate at which objects and players fall
 WIDTH, HEIGHT = 1200, 800 #Exact size of figma levels, 1-1 for design purposes
@@ -178,6 +181,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def end_chop(self):
+        hitTree.play()
         global current_object
         self.chop_count = 0
         self.chop = False
