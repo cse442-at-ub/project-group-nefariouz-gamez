@@ -46,7 +46,7 @@ pygame.mixer.music.play(loops=-1)   # play and loop music indefinitely
 if VOLUME_STATES[2]:   # if previously muted is True
     pygame.mixer.music.pause()
 
-hitTree = pygame.mixer.Sound("assets/audio/hitting-tree.mp3")
+hitTree = pygame.mixer.Sound("assets/audio/hitting-tree.mp3")   # https://pixabay.com/sound-effects/chopping-wood-96709/
 
 pygame.display.set_caption("Shrubbery Quest")
 GRAVITY=1#Rate at which objects and players fall

@@ -8,7 +8,7 @@ BLACK=(0,0,0)
 ORANGE=(255, 102, 0)
 
 pygame.mixer.init()
-platformBreak = pygame.mixer.Sound("assets/audio/platform-breaking.mp3")
+platformBreak = pygame.mixer.Sound("assets/audio/platform-breaking.mp3")   # https://www.fesliyanstudios.com/royalty-free-sound-effects-download/wooden-impact-133
 
 class Object(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, path=None,name=None):
