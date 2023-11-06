@@ -2741,8 +2741,8 @@ lTwenty.append(l20mp4)
 lTwenty.append(endSign(1150,147))
 lTwenty.append(lBorderRight)
 lTwenty.append(lBorderLeft)
-levelTwenty=Level(lTwenty,470,5,"newlvl-20-background.png")
-# levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
+# levelTwenty=Level(lTwenty,470,5,"newlvl-20-background.png")
+levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
 
 
 def loadLevel(window, level):
