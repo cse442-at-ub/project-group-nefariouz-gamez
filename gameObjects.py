@@ -516,7 +516,7 @@ class MovePlatVert(Platform):
                 c=1
             else:
                 for object in self.object_list:
-                    if pygame.sprite.collide_mask(player, object) and c==0:
+                    if pygame.sprite.collide_mask(player.feetBox, object) and c==0:
                         player.rect.y-=2
                         player.reachBox.rect.y-=2
                         player.feetBox.rect.y-=2
@@ -538,7 +538,7 @@ class MovePlatVert(Platform):
                 c=1
             else:
                 for object in self.object_list:
-                    if pygame.sprite.collide_mask(player, object) and c==0:
+                    if pygame.sprite.collide_mask(player.feetBox, object) and c==0:
                         player.rect.y+=2
                         player.reachBox.rect.y+=2
                         player.feetBox.rect.y+=2

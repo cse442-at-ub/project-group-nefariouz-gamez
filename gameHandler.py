@@ -991,13 +991,13 @@ def handle_vertical_collision(player, level, dy):
                     player.landed()
                 else:
                     if player.rect.right>object.rect.right:#Falling off right side
-                        print("PUSHRDOWN")
-                        print("NAME",object.name)
+                        #print("PUSHRDOWN")
+                        #print("NAME",object.name)
                         player.rect.x=object.rect.right#(player.rect.right-object.rect.right)
                         player.rect.x+=1
                     elif player.rect.left<object.rect.left:#Falling of left side
-                            print("PUSHLDOWN")
-                            print("NAME",object.name)
+                            #print("PUSHLDOWN")
+                            #print("NAME",object.name)
                             player.rect.x+=(object.rect.left-player.rect.right)
                             player.rect.x-=1
 
@@ -1007,17 +1007,17 @@ def handle_vertical_collision(player, level, dy):
                         #player.y_velocity=PLAYER_VEL*2
                         #player.hit_head()
                     if player.rect.right>object.rect.right:#Jumping into right side
-                        print("PUSHRUP")
-                        print("NAME",object.name)
+                        #print("PUSHRUP")
+                        #print("NAME",object.name)
                         player.rect.x=object.rect.right#(player.rect.right-object.rect.right)
                         player.rect.x+=1
                     elif player.rect.left<object.rect.left:#Jumping into left side
-                        print("PUSHLUP")
-                        print("NAME",object.name)
+                        #print("PUSHLUP")
+                        #print("NAME",object.name)
                         player.rect.x+=(object.rect.left-player.rect.right)
                         player.rect.x-=1
                 else:
-                    print("BONK")
+                    #print("BONK")
                     player.rect.top = object.rect.bottom
                     #player.rect.y+=2
                     player.y_velocity=-PLAYER_VEL*2
@@ -1562,12 +1562,12 @@ mp07_1 = []
 mp07_1.append(smallShrub(95,363))
 mp07_1.append(ReverseSmallShrub(245,466))
 mp07_1.append(Ladder(145, 414))
-mp7_1 = MovePlat(95, 415, 200, 51, 34, 1126, oList=mp07_1)
+mp7_1 = MovePlat(95, 415, 200, 51, 69, 1091, oList=mp07_1)
 
 mpo7_2 = []
 mpo7_2.append(smallShrub(641,363))
 mpo7_2.append(ReverseSmallShrub(792,466))
-mp7_2 = MovePlat(642, 415, 200, 51, 34, 1126, oList=mpo7_2, aList=[mp7_1])
+mp7_2 = MovePlat(642, 415, 200, 51, 69, 1091, oList=mpo7_2, aList=[mp7_1])##original borders 34, 1126
 mp7_1.set_a([mp7_2])
 
 lSeven.append(mp7_1)
@@ -1579,14 +1579,14 @@ lSeven.extend(mpo7_2)
 mp07_3 = []
 mp07_3.append(smallShrub(330,520))
 mp07_3.append(ReverseSmallShrub(330,623))
-mp7_3 = MovePlat(178, 573, 200, 51, 34, 1126, oList=mp07_3)
+mp7_3 = MovePlat(178, 573, 200, 51, 69, 1091, oList=mp07_3)##original borders 34, 1126
 
 mpo7_4 = []
 mpo7_4.append(smallShrub(624,520))
 mpo7_4.append(ReverseSmallShrub(624,623))
 mpo7_4.append(Ladder(673, 573))
 mpo7_4.append(smallShrub(786,520))
-mp7_4 = MovePlat(634, 573, 200, 51, 34, 1126, oList=mpo7_4, aList=[mp7_3])
+mp7_4 = MovePlat(634, 573, 200, 51, 69, 1091, oList=mpo7_4, aList=[mp7_3])
 mp7_3.set_a([mp7_4])
 
 lSeven.append(mp7_3)
@@ -1598,11 +1598,10 @@ lSeven.extend(mpo7_4)
 mp07_5 = []
 mp07_5.append(smallShrub(320,675))
 mp07_5.append(smallShrub(472,675))
-mp7_5 = MovePlat(320, 727, 200, 51, 34, 1126, oList=mp07_5)
-
+mp7_5 = MovePlat(320, 727, 200, 51, 69, 1091,oList=mp07_5)
 mpo7_6 = []
 mpo7_6.append(smallShrub(786,675))
-mp7_6 =  MovePlat(792, 727, 200, 51, 34, 1126, oList=mpo7_6, aList=[mp7_5])
+mp7_6 =  MovePlat(792, 727, 200, 51, 69, 1091,oList=mpo7_6, aList=[mp7_5])
 mp7_5.set_a([mp7_6])
 
 lSeven.append(mp7_5)
@@ -2619,6 +2618,7 @@ lNineteen.append(mp8plat1)
 mp8plat2 = Platform(1035,662,11,48,ORANGE)
 lNineteen.append(mp8plat2)
 lNineteen.append(MovePlatVert(955,662,11,48,620,740,[mp8plat1, mp8plat2]))
+lNineteen.append(Platform(1190,0,10,591,WHITE))#fixes bug with right level border
 
 lNineteen.append(endSign(1150,716))
 lNineteen.append(lBorderRight)
