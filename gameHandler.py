@@ -19,10 +19,34 @@ from os.path import isfile, join
 
 pygame.init()
 
-VOLUME_STATES = [1, 1, False]   # music slider pos (start at 100%), sfx slider pos (start at 100%), checkbox status (starts unchecked)
+def assignVolume():
+    vol_states = []   # Ex. [1, 1, False] -> music slider pos (start at 100%), sfx slider pos (start at 100%), checkbox status (starts unchecked)
+
+    with open("audioLevels.txt", "r") as audioFile:
+        for line in audioFile:
+            line = line.strip()
+            if line.lower() == "true":
+                vol_states.append(True)
+            elif line.lower() == "false":
+                vol_states.append(False)
+            # If not a boolean, try converting to float
+            else:
+                try:
+                    vol_states.append(float(line))
+                except ValueError:
+                    print(f"Unexpected value (not bool or float): {line}")
+    return vol_states
+
+VOLUME_STATES = assignVolume()
+
+# VOLUME_STATES = [1, 1, False]   # music slider pos (start at 100%), sfx slider pos (start at 100%), checkbox status (starts unchecked)
 pygame.mixer.music.load("assets/audio/background_music.mp3")   # https://www.youtube.com/watch?v=cTDSFCC9rQ4
 pygame.mixer.music.play(loops=-1)   # play and loop music indefinitely
-pygame.mixer.music.set_volume(.75)   # initialize max volume of music
+
+if VOLUME_STATES[2]:   # if previously muted is True
+    pygame.mixer.music.pause()
+
+hitTree = pygame.mixer.Sound("assets/audio/hitting-tree.mp3")
 
 pygame.display.set_caption("Shrubbery Quest")
 GRAVITY=1#Rate at which objects and players fall
@@ -186,6 +210,11 @@ class Player(pygame.sprite.Sprite):
 
 
     def end_chop(self):
+        with open('audioLevels.txt', 'r') as audioFile:
+            lines = audioFile.readlines()
+        if lines[2].strip().lower() == "false":
+            hitTree.set_volume(float(lines[1]))
+            hitTree.play()
         global current_object
         self.chop_count = 0
         self.chop = False
