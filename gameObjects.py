@@ -370,7 +370,7 @@ class FallPlat(Platform):
             if self.destroyCount == 1:
                 with open('audioLevels.txt', 'r') as audioFile:
                     lines = audioFile.readlines()
-                if not lines[2]:
+                if lines[2].strip().lower() == "false":
                     platformBreak.set_volume(float(lines[1]))
                     platformBreak.play()
             for object in self.object_list:

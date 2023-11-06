@@ -204,7 +204,7 @@ class Player(pygame.sprite.Sprite):
     def end_chop(self):
         with open('audioLevels.txt', 'r') as audioFile:
             lines = audioFile.readlines()
-        if not lines[2]:
+        if lines[2].strip().lower() == "false":
             hitTree.set_volume(float(lines[1]))
             hitTree.play()
         global current_object
