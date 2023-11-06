@@ -66,6 +66,7 @@ class smallShrub(Object):
     def __init__(self,x,y):
         super().__init__(x,y,48,52)
         self.name="small shrub"
+        self.broken=False
         self.original_x=x
         self.original_y=y
         self.image=pygame.image.load("assets\Traps\SmallShrub\SmallShrub.png")
@@ -73,9 +74,11 @@ class smallShrub(Object):
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\SmallShrub\SmallShrub.png")
     def destroy(self):
+        self.broken=True
         self.image=pygame.image.load("assets\Traps\Empty\empty.png")
         self.mask=pygame.mask.from_surface(self.image)
     def reset(self):
+        self.broken=False
         self.rect.x=self.original_x
         self.rect.y=self.original_y
         self.image=self.original_image
@@ -105,6 +108,7 @@ class TallShrub(Object):
     def __init__(self,x,y):
         super().__init__(x,y,48,183)
         self.name="tall shrub"
+        self.broken=False
         self.original_x=x#THIS
         self.original_y=y#THIS
         self.image=pygame.image.load("assets\Traps\TallShrub\TallShrub.png")
@@ -115,12 +119,14 @@ class TallShrub(Object):
 
     def destroy(self):
         if self.health==1:
+            self.broken=True
             self.image=pygame.image.load("assets\Traps\Empty\empty.png")
             self.mask=pygame.mask.from_surface(self.image)
         if self.health!=1:
             self.health-=1
 
     def reset(self):
+        self.broken=False
         self.image=self.original_image
         self.mask=self.original_mask
         self.rect.x=self.original_x
@@ -402,7 +408,8 @@ class Ladder(Object):
 
 class MovePlat(Platform):
     def __init__(self, x, y, width, height,lbound,rbound,oList=[],aList=[], path=None,name="move",col=ORANGE,):
-        super().__init__(x, y, width, height, col, path, name)
+        super().__init__(x,y,width,height,col,path,name)
+        #self.name="move"
         self.surface=pygame.Surface((width,height))
         self.right_bound=rbound
         self.left_bound=lbound
@@ -424,15 +431,17 @@ class MovePlat(Platform):
         c=0
         if self.direction:#If moving right
             self.rect.x+=2
-            if pygame.sprite.collide_mask(player.reachBox, self) and player.rect.bottom<self.rect.bottom:# and player.rect.bottom-10<self.rect.top:
+            if pygame.sprite.collide_mask(player.feetBox, self) and player.rect.bottom<self.rect.bottom:# and player.rect.bottom-10<self.rect.top:
                 player.rect.x+=2
                 player.reachBox.rect.x+=2
+                player.feetBox.rect.x+=2
                 c=1
             else:
                 for object in self.object_list:
                     if pygame.sprite.collide_mask(player, object) and c==0:
                         player.rect.x+=2
                         player.reachBox.rect.x+=2
+                        player.feetBox.rect.x+=2
                         c=1
                         break
             if(self.rect.right==self.right_bound or self.rect.right>self.right_bound):#If platform has reached the right bound
@@ -443,19 +452,19 @@ class MovePlat(Platform):
                 object.rect.x+=2
         else:#if moving left
             self.rect.x-=2
-            if pygame.sprite.collide_mask(player.reachBox, self) and player.rect.bottom<self.rect.bottom:# and player.rect.bottom-10<self.rect.top:
-                if not player.in_air:
-                    player.rect.x-=2
-                    player.reachBox.rect.x-=2
-                    c=1
+            if pygame.sprite.collide_mask(player.feetBox, self) and player.rect.bottom<self.rect.bottom:# and player.rect.bottom-10<self.rect.top:
+                player.rect.x-=2
+                player.reachBox.rect.x-=2
+                player.feetBox.rect.x-=2
+                c=1
                 c=1
             else:
                 for object in self.object_list:
                     if pygame.sprite.collide_mask(player, object) and c==0:
-                        if not player.in_air:
-                            player.rect.x-=2
-                            player.reachBox.rect.x-=2
-                            c=1
+                        player.rect.x-=2
+                        player.reachBox.rect.x-=2
+                        player.feetBox.rect.x-=2
+                        c=1
                         break
             if(self.rect.left==self.left_bound or self.rect.left<self.left_bound):
                 self.direction=True#platform is now going right
@@ -478,6 +487,7 @@ class MovePlat(Platform):
 class MovePlatVert(Platform):
     def __init__(self, x, y, width, height,hbound,lbound,oList=[],aList=[], path=None,name="move",col=ORANGE,):
         super().__init__(x, y, width, height, col, path, name)
+        #self.name="move"
         self.surface=pygame.Surface((width,height))
         self.high_bound=hbound
         self.low_bound=lbound
@@ -499,15 +509,17 @@ class MovePlatVert(Platform):
         c=0
         if self.direction:#If moving UP
             self.rect.y-=2
-            if pygame.sprite.collide_mask(player.reachBox, self) and player.rect.bottom<self.rect.bottom:# and player.rect.bottom-10<self.rect.top:
+            if pygame.sprite.collide_mask(player.feetBox, self) and player.rect.bottom<self.rect.bottom:# and player.rect.bottom-10<self.rect.top:
                 player.rect.y-=2
                 player.reachBox.rect.y-=2
+                player.feetBox.rect.y-=2
                 c=1
             else:
                 for object in self.object_list:
                     if pygame.sprite.collide_mask(player, object) and c==0:
                         player.rect.y-=2
                         player.reachBox.rect.y-=2
+                        player.feetBox.rect.y-=2
                         c=1
                         break
             if(self.rect.top==self.high_bound or self.rect.top<self.high_bound):#If platform has reached the high bound
@@ -518,19 +530,19 @@ class MovePlatVert(Platform):
                 object.rect.y-=2
         else:#if moving DOWN
             self.rect.y+=2
-            if pygame.sprite.collide_mask(player.reachBox, self) and player.rect.bottom<self.rect.bottom:#and player.rect.bottom-10<self.rect.top:
-                if not player.in_air:
-                    player.rect.y+=2
-                    player.reachBox.rect.y+=2
-                    c=1
+            if pygame.sprite.collide_mask(player.feetBox, self) and player.rect.bottom<self.rect.bottom:#and player.rect.bottom-10<self.rect.top:
+                player.rect.y+=2
+                player.reachBox.rect.y+=2
+                player.feetBox.rect.y+=2
+                c=1
                 c=1
             else:
                 for object in self.object_list:
                     if pygame.sprite.collide_mask(player, object) and c==0:
-                        if not player.in_air:
-                            player.rect.y+=2
-                            player.reachBox.rect.y+=2
-                            c=1
+                        player.rect.y+=2
+                        player.reachBox.rect.y+=2
+                        player.feetBox.rect.y+=2
+                        c=1
                         break
             if(self.rect.bottom==self.low_bound or self.rect.bottom>self.low_bound):
                 self.direction=True#platform is now going UP
@@ -538,6 +550,7 @@ class MovePlatVert(Platform):
                    plat.direction=True#All platforms change direction together
             for object in self.object_list:
                 object.rect.y+=2
+                
 
     def reset(self):
         self.timer=0
@@ -554,7 +567,7 @@ class MovePlatDiag(Platform):
         super().__init__(x, y, width, height, col, path, name)
         self.surface=pygame.Surface((width,height))
         self.right_bound=rbound
-
+        #self.name="move"
         self.dy=rise#vertical speed
         self.dx=run#horizontal speed
         #By using negative values for rise and/or run, diagonal direction can be changed.
@@ -578,19 +591,23 @@ class MovePlatDiag(Platform):
         if self.direction:#If moving right
             self.rect.x+=self.dx
             self.rect.y-=self.dy
-            if pygame.sprite.collide_mask(player.reachBox, self) and player.rect.bottom<self.rect.bottom:
+            if pygame.sprite.collide_mask(player.feetBox, self) and player.rect.bottom<self.rect.bottom:
                 player.rect.x+=self.dx
                 player.reachBox.rect.x+=self.dx
+                player.feetBox.rect.x+=self.dx
                 player.rect.y-=self.dy
                 player.reachBox.rect.y-=self.dy
+                player.feetBox.rect.y-=self.dy
                 c=1
             else:
                 for object in self.object_list:
                     if pygame.sprite.collide_mask(player, object) and c==0:
                         player.rect.x+=self.dx
                         player.reachBox.rect.x+=self.dx
+                        player.feetBox.rect.x+=self.dx
                         player.rect.y-=self.dy
                         player.reachBox.rect.y-=self.dy
+                        player.feetBox.rect.y-=self.dy
                         c=1
                         break
             if(self.rect.right==self.right_bound or self.rect.right>self.right_bound):#If platform has reached the right bound
@@ -603,23 +620,25 @@ class MovePlatDiag(Platform):
         else:#if moving left
             self.rect.x-=self.dx
             self.rect.y+=self.dy
-            if pygame.sprite.collide_mask(player.reachBox, self) and player.rect.bottom<self.rect.bottom:
-                if not player.in_air:
-                    player.rect.x-=self.dx
-                    player.rect.y+=self.dy
-                    player.reachBox.rect.y+=self.dy
-                    player.reachBox.rect.x-=self.dx
-                    c=1
+            if pygame.sprite.collide_mask(player.feetBox, self) and player.rect.bottom<self.rect.bottom:
+                player.rect.x-=self.dx
+                player.rect.y+=self.dy
+                player.reachBox.rect.y+=self.dy
+                player.reachBox.rect.x-=self.dx
+                player.feetBox.rect.x-=self.dx
+                player.feetBox.rect.y+=self.dy
+                c=1
                 c=1
             else:
                 for object in self.object_list:
                     if pygame.sprite.collide_mask(player, object) and c==0:
-                        if not player.in_air:
-                            player.rect.x-=self.dx
-                            player.reachBox.rect.x-=self.dx
-                            player.rect.y+=self.dy
-                            player.reachBox.rect.y+=self.dy
-                            c=1
+                        player.rect.x-=self.dx
+                        player.reachBox.rect.x-=self.dx
+                        player.feetBox.rect.x-=self.dx
+                        player.rect.y+=self.dy
+                        player.reachBox.rect.y+=self.dy
+                        player.feetBox.rect.y+=self.dy
+                        c=1
                         break
             if(self.rect.left==self.left_bound or self.rect.left<self.left_bound):
                 self.direction=True#platform is now going right
