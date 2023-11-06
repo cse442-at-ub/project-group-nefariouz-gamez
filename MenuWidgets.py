@@ -78,13 +78,18 @@ class Checkbox:
         if event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(pygame.mouse.get_pos()):
             self.checked = not self.checked
             states[2] = self.checked
+
+            with open('audioLevels.txt', 'r') as audioFile:
+                lines = audioFile.readlines()
+            lines[2] = str(states[2])
+            with open('audioLevels.txt', 'w') as audioFile:
+                audioFile.writelines(lines)
+            
             if self.checked:
                 pygame.mixer.music.pause()
-                # mute sfx here
                 print("MUTED")
             else:
                 pygame.mixer.music.unpause()
-                # unmute sfx here
                 print("UNMUTED")
 
 class Slider:
@@ -128,6 +133,12 @@ class Slider:
             states[0] = 1-((self.slider_right-x_val)/300)
         elif self.audio == 'sfx':
             states[1] = 1-((self.slider_right-x_val)/300)
+
+            with open('audioLevels.txt', 'r') as audioFile:
+                lines = audioFile.readlines()
+            lines[1] = str(states[1]) + "\n"
+            with open('audioLevels.txt', 'w') as audioFile:
+                audioFile.writelines(lines)
 
     def handle_event(self, mouse_pos, mouse, states):
         distance = (mouse_pos[0] - self.button_pos[0])**2 + (mouse_pos[1] - self.button_pos[1])**2

@@ -19,10 +19,34 @@ from os.path import isfile, join
 
 pygame.init()
 
-VOLUME_STATES = [1, 1, False]   # music slider pos (start at 100%), sfx slider pos (start at 100%), checkbox status (starts unchecked)
+def assignVolume():
+    vol_states = []   # Ex. [1, 1, False] -> music slider pos (start at 100%), sfx slider pos (start at 100%), checkbox status (starts unchecked)
+
+    with open("audioLevels.txt", "r") as audioFile:
+        for line in audioFile:
+            line = line.strip()
+            if line.lower() == "true":
+                vol_states.append(True)
+            elif line.lower() == "false":
+                vol_states.append(False)
+            # If not a boolean, try converting to float
+            else:
+                try:
+                    vol_states.append(float(line))
+                except ValueError:
+                    print(f"Unexpected value (not bool or float): {line}")
+    return vol_states
+
+VOLUME_STATES = assignVolume()
+
+# VOLUME_STATES = [1, 1, False]   # music slider pos (start at 100%), sfx slider pos (start at 100%), checkbox status (starts unchecked)
 pygame.mixer.music.load("assets/audio/background_music.mp3")   # https://www.youtube.com/watch?v=cTDSFCC9rQ4
 pygame.mixer.music.play(loops=-1)   # play and loop music indefinitely
-pygame.mixer.music.set_volume(.75)   # initialize max volume of music
+
+if VOLUME_STATES[2]:   # if previously muted is True
+    pygame.mixer.music.pause()
+
+hitTree = pygame.mixer.Sound("assets/audio/hitting-tree.mp3")
 
 pygame.display.set_caption("Shrubbery Quest")
 GRAVITY=1#Rate at which objects and players fall
@@ -34,6 +58,7 @@ PURPLE=(128,0,128)
 BEIGE=(200,200,161)
 ORANGE=(255, 102, 0)
 ENDLEVEL = False
+user_name = ''
 
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
 timer = Timer()
@@ -185,6 +210,11 @@ class Player(pygame.sprite.Sprite):
 
 
     def end_chop(self):
+        with open('audioLevels.txt', 'r') as audioFile:
+            lines = audioFile.readlines()
+        if lines[2].strip().lower() == "false":
+            hitTree.set_volume(float(lines[1]))
+            hitTree.play()
         global current_object
         self.chop_count = 0
         self.chop = False
@@ -482,10 +512,12 @@ def choose_character():
 
 def return_main():
     if os.path.exists("competitive.txt"):
+        print(user_name)
         display_competitive_main_menu(window)
     else:
         display_main_menu(window)
     print("RETURN TO MAIN")
+    
 
 def display_settings_page(screen):
     widgets, screen_width, screen_height, background_img = scale_window_settings(screen)
@@ -850,7 +882,7 @@ def scale_window_endgame(screen):
 
     # create widgets based on screen size
     widgets = [
-        Button((screen_width/2, (screen_height/2)+50), (300, 54), "RETURN TO MAIN", return_main)
+        Button((screen_width/2, (screen_height/2)+100), (300, 54), "RETURN TO MAIN", return_main)
     ]
 
     return widgets, screen_width, screen_height, background_img
@@ -867,28 +899,46 @@ def display_endgame_level_page(screen):
 
     currtime = str(round(timer.return_time(), 2))
 
+    global user_name
+    input_rect = pygame.Rect(screen_width/2-100,screen_height/2,200,50)
+    boxcolor = pygame.Color(190,190,190) 
+    keycount = 0
     betweenlvl = True
     while betweenlvl:
         for event in pygame.event.get():
             #event handler
             if event.type == pygame.QUIT:
                 betweenlvl=False
-
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_BACKSPACE and keycount >= 1:
+                    user_name = user_name[:-1]
+                    keycount -= 1
+                elif keycount < 12 and event.key != pygame.K_BACKSPACE and event.key != pygame.K_LSHIFT:
+                    user_name += event.unicode
+                    keycount +=1
             for widget in widgets:
                 if type(widget) == Button or type(widget) == Checkbox:
                     widget.handle_event(event)
                 elif type(widget) == Slider:
                     widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed())
-
+        
+        #message display code
         screen.blit(background_img, (0,0))
-        draw_text("Congratulations!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-190))
-        draw_text("You Have Beaten Shrubbery Quest!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-130))
-        draw_text("Your Time For Level 20 Was: " + currtime + "s", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-80))
-        draw_text("You Can Now Access Challenge Mode!", pygame.font.Font(None, 56),(34, 90, 48), ((screen_width/2), (screen_height/2)-30))
+
+        draw_text("Congratulations!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-240))
+        draw_text("You Have Beaten Shrubbery Quest!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-180))
+        draw_text("Your Time For Level 20 Was: " + currtime + "s", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-130))
+        draw_text("You Can Now Access Challenge Mode!", pygame.font.Font(None, 56),(34, 90, 48), ((screen_width/2), (screen_height/2)-80))
+        draw_text("First, Please Enter A Username And Then Return To Menu", pygame.font.Font(None, 42),(34, 90, 48), ((screen_width/2), (screen_height/2)-30))
 
         for widget in widgets:
             widget.draw(screen)
 
+        #user input box code
+        pygame.draw.rect(screen, boxcolor, input_rect) 
+        namefont = pygame.font.Font(None, 36)
+        text_surface = namefont.render(user_name, True, (34, 90, 48)) 
+        screen.blit(text_surface, (input_rect.x+10, input_rect.y+15))
         pygame.display.flip()
     pygame.quit()
 
@@ -2741,8 +2791,10 @@ lTwenty.append(l20mp4)
 lTwenty.append(endSign(1150,147))
 lTwenty.append(lBorderRight)
 lTwenty.append(lBorderLeft)
+
 # levelTwenty=Level(lTwenty,470,5,"newlvl-20-background.png")
 levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
+
 
 
 def loadLevel(window, level):
