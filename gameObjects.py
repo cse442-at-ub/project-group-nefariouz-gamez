@@ -9,7 +9,6 @@ ORANGE=(255, 102, 0)
 
 pygame.mixer.init()
 platformBreak = pygame.mixer.Sound("assets/audio/platform-breaking.mp3")
-platformBreak.set_volume(.75)
 
 class Object(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, path=None,name=None):
@@ -369,7 +368,11 @@ class FallPlat(Platform):
             #self.rect.y+=2
             self.destroy()
             if self.destroyCount == 1:
-                platformBreak.play()
+                with open('audioLevels.txt', 'r') as audioFile:
+                    lines = audioFile.readlines()
+                if not lines[2]:
+                    platformBreak.set_volume(float(lines[1]))
+                    platformBreak.play()
             for object in self.object_list:
                 #object.rect.y+=2
                 object.destroy()
