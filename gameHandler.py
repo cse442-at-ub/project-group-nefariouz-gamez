@@ -104,7 +104,7 @@ class Player(pygame.sprite.Sprite):
         self.reachBox=Platform(x-15,y-15,width*2.5,height*1.2,WHITE)#Invisible bounding box for interacting with objects
         self.reachBox.surface=pygame.Surface((width*3,height*1.5))
         self.reachBox.mask = pygame.mask.from_surface(self.reachBox.surface)
-        
+
         self.feetBox=Platform(x+13,y+(height-3),width,10,WHITE)
         self.feetBox.surface=pygame.Surface((width,10))
         self.feetBox.mask= pygame.mask.from_surface(self.feetBox.surface)
@@ -885,11 +885,40 @@ def display_endgame_level_page(screen):
         draw_text("You Have Beaten Shrubbery Quest!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-130))
         draw_text("Your Time For Level 20 Was: " + currtime + "s", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-80))
         draw_text("You Can Now Access Challenge Mode!", pygame.font.Font(None, 56),(34, 90, 48), ((screen_width/2), (screen_height/2)-30))
+
         for widget in widgets:
             widget.draw(screen)
 
         pygame.display.flip()
     pygame.quit()
+
+def display_level_twenty_page(screen):
+    screen_width, screen_height = screen.get_size()
+
+    background_img = pygame.image.load("assets\Background\BetlvlBackground.png")
+    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
+
+    widget = Button((screen_width/2, (screen_height/2)+20), (300, 54), "RETURN TO MAIN", return_main)
+
+    currtime = str(round(timer.return_time(), 2))
+
+    betweenlvl = True
+    while betweenlvl:
+        for event in pygame.event.get():
+            #event handler
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+            widget.handle_event(event)
+
+        screen.blit(background_img, (0,0))
+        draw_text("Congratulations!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-190))
+        draw_text("You Beat Level 20!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-130))
+        draw_text("Your Time Was: " + currtime + "s", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-80))
+
+        widget.draw(screen)
+        pygame.display.flip()
+
 
 ##############################################################
 ##############################################################
@@ -1022,8 +1051,11 @@ def collide(player, level, dx):
                 lvlf.close()
                 # THEN OPEN BETWEEN LEVEL MENU
                 if levelnum > 20:
-                    open("competitive.txt", "x").close()
-                    display_endgame_level_page(window)
+                    if not os.path.exists("competitive.txt"):
+                        open("competitive.txt", "x").close()
+                        display_endgame_level_page(window)
+                    else:
+                        display_level_twenty_page(window)
                 else:
                     display_between_level_page(window)
             break
@@ -1713,7 +1745,7 @@ lTen.append(Ladder(462,563))
 lTen.append(Ladder(606,561))
 
 mpShrub10_2 = SmallPinkShrub(715,624)
-lTen.append(MovePlatDiag(715,676,127,33, 1,0.7,715, 1073, oList=[mpShrub10_2]))
+lTen.append(MovePlatDiag(715,676,127,33, 2,1.6,715, 1073, oList=[mpShrub10_2]))
 lTen.append(mpShrub10_2)
 
 lTen.append(Platform(660,388,11,120,WHITE))##made height shorter as to not interfere with ladder and moved right slightly
@@ -2709,8 +2741,8 @@ lTwenty.append(l20mp4)
 lTwenty.append(endSign(1150,147))
 lTwenty.append(lBorderRight)
 lTwenty.append(lBorderLeft)
-# levelTwenty=Level(lTwenty,470,5,"newlvl-20-background.png")
-levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
+levelTwenty=Level(lTwenty,470,5,"newlvl-20-background.png")
+# levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
 
 
 def loadLevel(window, level):
