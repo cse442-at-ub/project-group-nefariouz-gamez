@@ -179,14 +179,6 @@ class Player(pygame.sprite.Sprite):
         self.animation_count = 0
         self.chop = True
 
-
-    def end_chop(self):
-        global current_object
-        self.chop_count = 0
-        self.chop = False
-        current_object.destroy()
-        current_object = None
-
     def update_sprite(self):
         f = open("CurrentCharacter.txt", "r")
         current_character = f.read()
@@ -202,13 +194,15 @@ class Player(pygame.sprite.Sprite):
         character_sprites = load_sprite_sheets("Characters", current_character, 32, 32, True)
 
         keys = pygame.key.get_pressed()
-        if self.cooldown_active == False:
+        if self.powerup_active == False:
             sprite_sheet = "idle"
             # if self.hit:
             #     sprite_sheet = "hit"
             if self.chop:
                 sprite_sheet = "chop"
                 self.chop_count += 1
+                if self.chop_count == 1:
+                    current_object.destroy() 
             elif self.y_velocity < 0:
                 if self.jump_count == 1:
                     if not self.chop:
@@ -220,6 +214,7 @@ class Player(pygame.sprite.Sprite):
                         sprite_sheet = "double_jump" # TODO replace Malcolm and Oscar's animation in files (create 2 new animations)
                     else:
                         sprite_sheet = "chop"
+
             elif self.y_velocity > self.GRAVITY*2:
                 sprite_sheet = "fall"
             elif self.x_velocity != 0:
@@ -229,13 +224,17 @@ class Player(pygame.sprite.Sprite):
                     sprite_sheet = "climb"
                 else:
                     sprite_sheet = "climb_idle"
-        elif self.cooldown_active == True:
+
+
+        elif self.powerup_active == True:
             sprite_sheet = "cooldown_idle"
             # if self.hit:
             #     sprite_sheet = "cooldown_hit"
             if self.chop:
                 sprite_sheet = "cooldown_chop"
                 self.chop_count += 1
+                if self.chop_count == 1:
+                    current_object.destroy()
             elif self.y_velocity < 0:
                 if self.jump_count == 1:
                     if not self.chop:
@@ -247,6 +246,7 @@ class Player(pygame.sprite.Sprite):
                         sprite_sheet = "cooldown_double_jump"
                     else:
                         sprite_sheet = "cooldown_chop"
+
             elif self.y_velocity > self.GRAVITY*2:
                 sprite_sheet = "cooldown_fall"
             elif self.x_velocity != 0:
@@ -269,17 +269,21 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.sprite)
 
     def loop(self, fps):
+        global current_object
+
         # gravity
         if self.e_timer!=0:
             self.e_timer-=1
+
         if not self.on_ladder:#only apply gravity when not on ladder
             self.y_velocity += min(1, (self.fall_count / fps) * self.GRAVITY)
         self.move(self.x_velocity, self.y_velocity)
 
-                # POWER UP AND COOLDOWN TIMERS
+        # POWER UP AND COOLDOWN TIMERS
         if self.powerup_timer != 0:
             self.powerup_active = True
             self.powerup_timer -= 1
+
             if self.powerup_timer == 0:
                 print("powerup timer ran out")
                 self.powerup_active = False
@@ -298,9 +302,11 @@ class Player(pygame.sprite.Sprite):
             self.hit = False
             self.hit_count = 0
         # FIXED NO LOOP YAY!!!!! :D
-        # change to FPS
-        if self.chop_count > fps/20:
-            self.end_chop()
+        
+        if self.chop_count > fps/30:
+            self.chop_count = 0
+            self.chop = False
+            current_object = None
 
         self.fall_count += 1
         self.update_sprite()
@@ -549,9 +555,7 @@ def display_settings_page(screen):
 ##############################################################
 ##############################################################
 
-character_font = pygame.font.Font(None, 32)
-powerup_font = pygame.font.Font(None, 32)
-cooldown_font = pygame.font.Font(None, 32)
+character_select_font = pygame.font.Font(None, 32)
 
 f = open("CurrentCharacter.txt", "r")
 current_character = f.read()
@@ -575,9 +579,12 @@ elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (curren
     f.close()
     f = open("CurrentCharacter.txt", "r")
     powerup_read = "N/A"
-character_text = character_font.render("You are currently playing as " + current_character + "!", False, "Black")
-powerup_text = powerup_font.render(powerup_read, False, "Black")
-cooldown_text = cooldown_font.render(cooldown_read, False, "Black")
+
+selected_text = character_select_font.render("You are currently playing as", False, "Black")
+char_text_color = "black"
+character_text = character_select_font.render(current_character, False, char_text_color)
+powerup_text = character_select_font.render("Power-up: " + str(powerup_read), False, "Black")
+cooldown_text = character_select_font.render(cooldown_read, False, "Black")
 print(current_character)
 clevel = open("currentLevel.txt", "r")
 current_level = clevel.read()
@@ -593,16 +600,19 @@ if max_level_unlocked == "" or int(max_level_unlocked) < int(max_level):
 def click_Celia():
     global current_character
     global character_text
+    global selected_text
     global powerup_read
     global powerup_text
     global cooldown_read
     global cooldown_text
     current_character = "Celia"
-    character_text = character_font.render("You have selected Celia", False, "Black")
+    selected_text = character_select_font.render("You have selected", False, "Black")
+    character_text = character_select_font.render("Celia", False, "darkgreen")
+    
     powerup_read = "N/A"
     cooldown_read = ""
-    powerup_text = powerup_font.render(powerup_read, False, "Black")
-    cooldown_text = cooldown_font.render(cooldown_read, False, "Black")
+    powerup_text = character_select_font.render("Power-up: " + str(powerup_read), False, "Black")
+    cooldown_text = character_select_font.render(cooldown_read, False, "Black")
 
 
     Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png'))
@@ -616,6 +626,7 @@ def click_Celia():
 def click_Malcolm():
     global current_character
     global character_text
+    global selected_text
     global powerup_read
     global powerup_text
     global cooldown_read
@@ -628,9 +639,10 @@ def click_Malcolm():
         current_character = "Malcolm"
         powerup_read = "Double jump in air"
         cooldown_read = ""
-        powerup_text = powerup_font.render(powerup_read, False, "Black")
-        cooldown_text = cooldown_font.render(cooldown_read, False, "Black")
-        character_text = character_font.render("You have selected Malcolm", False, "Black")
+        powerup_text = character_select_font.render("Power-up: " + str(powerup_read), False, "Black")
+        cooldown_text = character_select_font.render(cooldown_read, False, "Black")
+        selected_text = character_select_font.render("You have selected", False, "Black")
+        character_text = character_select_font.render("Malcolm", False, "darkorange4")
         Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Malcolm.png'))
         Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveCelia.png'))
     Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMaia.png'))
@@ -642,21 +654,23 @@ def click_Malcolm():
 def click_Maia():
     global current_character
     global character_text
+    global selected_text
     global powerup_read
     global powerup_text
     global cooldown_read
     global cooldown_text
 
     maxlevelread = open("MaxUnlocked.txt", "r")
-    max_level_unlocked = maxlevelread.read()
+    max_level_unlocked = maxlevelread.read() 
     
     if max_level_unlocked != "" and int(max_level_unlocked) >= 10:
         current_character = "Maia"
-        powerup_read = "Walk through shrubs for 5 seconds"
-        cooldown_read = "15 sec cooldown"
-        powerup_text = powerup_font.render(powerup_read, False, "Black")
-        cooldown_text = cooldown_font.render(cooldown_read, False, "Black")
-        character_text = character_font.render("You have selected Maia", False, "Black")
+        powerup_read = "Walk through shrubs for 5 seconds (15 sec cooldown)"
+        cooldown_read = ""
+        powerup_text = character_select_font.render("Power-up: " + str(powerup_read), False, "Black")
+        cooldown_text = character_select_font.render(cooldown_read, False, "Black")
+        selected_text = character_select_font.render("You have selected", False, "Black")
+        character_text = character_select_font.render("Maia", False, "maroon3")
         Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Maia.png'))
         Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveCelia.png'))
         Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMalcolm.png'))
@@ -668,6 +682,7 @@ def click_Maia():
 def click_Oscar():
     global current_character
     global character_text
+    global selected_text
     global powerup_read
     global powerup_text
     global cooldown_read
@@ -679,11 +694,12 @@ def click_Oscar():
     
     if max_level_unlocked != "" and int(max_level_unlocked) >= 15:
         current_character = "Oscar"
-        powerup_read = "Double jump in air"
-        cooldown_read = "Walk through shrubs, spikes for 5 seconds (30 sec cooldown)"
-        character_text = character_font.render("You have selected Oscar", False, "Black")
-        powerup_text = powerup_font.render(powerup_read, False, "Black")
-        cooldown_text = cooldown_font.render(cooldown_read, False, "Black")
+        powerup_read = "Walk through shrubs and spikes for 5 seconds (30 sec cooldown)"
+        cooldown_read = "Can also double jump in air"
+        selected_text = character_select_font.render("You have selected", False, "Black")
+        character_text = character_select_font.render("Oscar", False, "indigo")
+        powerup_text = character_select_font.render("Power-up: " + str(powerup_read), False, "Black")
+        cooldown_text = character_select_font.render(cooldown_read, False, "Black")
         Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Oscar.png'))
         Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveCelia.png'))
         Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMalcolm.png'))
@@ -695,7 +711,6 @@ def click_Oscar():
 # confirms player's selected choice, writes character's name to "CurrentCharacter.txt"
 def click_OK():
     global current_character
-    global character_text
     f = open("CurrentCharacter.txt", "w")
     f.write(current_character)
     f.close()
@@ -729,8 +744,10 @@ Oscar = ClickableSprite(pygame.image.load(os.path.join('assets', 'CharacterProfi
 def check_update():
     global current_character
     global character_text
+    global selected_text
     global powerup_text
     global cooldown_text
+    global char_text_color
 
     check_unlocked_level()
 
@@ -755,19 +772,24 @@ def check_update():
         f = open("CurrentCharacter.txt", "r")
         click_Celia()
     elif current_character == "Celia":
+        char_text_color = "darkgreen"
         click_Celia()
     elif current_character == "Malcolm":
+        char_text_color = "darkorange4"
         click_Malcolm()
     elif current_character == "Maia":
+        char_text_color = "maroon3"
         click_Maia()
     elif current_character == "Oscar":
+        char_text_color = "indigo"
         click_Oscar()
     f = open("CurrentCharacter.txt", "r")
-    character_text = character_font.render("You are currently playing as " + f.read() + "!", False, "Black")
-    powerup_text = powerup_font.render(powerup_read, False, "Black")    
-    cooldown_text = cooldown_font.render(cooldown_read, False, "Black")
+    selected_text = character_select_font.render("You are currently playing as", False, "Black")
+    character_text = character_select_font.render(current_character, False, char_text_color)
+    powerup_text = character_select_font.render("Power-up: " + str(powerup_read), False, "Black")    
+    cooldown_text = character_select_font.render(cooldown_read, False, "Black")
     print(current_character)
-
+    
 
 def check_unlocked_level():
     global current_character
@@ -819,8 +841,7 @@ def display_choose_character(window):
 
         x, y = size[0]/6, size[1]/2
 
-        # changing y values higher to allot for powerup text, was 220
-        const_size_1 = 250
+        const_size_1 = 220
         Celia.rect.x, Celia.rect.y = x, y - const_size_1
         Malcolm.rect.x, Malcolm.rect.y = x * 2, y - const_size_1
         Maia.rect.x, Maia.rect.y = x * 3, y - const_size_1
@@ -833,28 +854,20 @@ def display_choose_character(window):
         spriteGroup.update(events)
         spriteGroup.draw(window)
 
+        selectedTextRect = selected_text.get_rect()
+        selectedTextRect.center = (screen_width // 2, 45)
+        window.blit(selected_text, selectedTextRect)
+
         characterTextRect = character_text.get_rect()
-        characterTextRect.center = (screen_width // 2, 50)
+        characterTextRect.center = (screen_width // 2, 75)
         window.blit(character_text, characterTextRect)
 
         powerupTextRect = powerup_text.get_rect()
-        const_size_2, const_size_3 = 80, 130
-        if current_character == "Celia" or current_character == "":
-            powerupTextRect.center = Celia.rect.x + const_size_3, Celia.rect.y + (const_size_1 + const_size_2)
-        elif current_character == "Malcolm":
-            powerupTextRect.center = Malcolm.rect.x + const_size_3, Malcolm.rect.y + (const_size_1 + const_size_2)
-        elif current_character == "Maia":
-            powerupTextRect.center = Maia.rect.x + const_size_3, Maia.rect.y + (const_size_1 + const_size_2)
-        elif current_character == "Oscar":
-            powerupTextRect.center = Oscar.rect.x + const_size_3, Oscar.rect.y + (const_size_1 + const_size_2)
+        powerupTextRect.center = (screen_width // 2, 120)
         window.blit(powerup_text, powerupTextRect)
 
         cooldownTextRect = cooldown_text.get_rect()
-        const_size_5 = 105
-        if current_character == "Maia":
-            cooldownTextRect.center = Maia.rect.x + const_size_3, Maia.rect.y + (const_size_1 + const_size_5)
-        elif current_character == "Oscar":
-            cooldownTextRect.center = Oscar.rect.x + const_size_3, Oscar.rect.y + (const_size_1 + const_size_5)
+        cooldownTextRect.center = (screen_width // 2, 150)
         window.blit(cooldown_text, cooldownTextRect)
 
         for widget in widgets:
