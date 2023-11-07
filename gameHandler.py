@@ -580,6 +580,17 @@ elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (curren
     f = open("CurrentCharacter.txt", "r")
     powerup_read = "N/A"
 
+char_text_color = "black"
+
+if current_character == "Celia" or current_character == "":
+    char_text_color = "darkgreen"
+elif current_character == "Malcolm":
+    char_text_color = "darkorange4"
+elif current_character == "Maia":
+    char_text_color = "maroon3"
+elif current_character == "Oscar":
+    char_text_color = "indigo"
+
 selected_text = character_select_font.render("You are currently playing as", False, "Black")
 char_text_color = "black"
 character_text = character_select_font.render(current_character, False, char_text_color)
