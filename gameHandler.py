@@ -1129,6 +1129,10 @@ def handle_vertical_collision(player, level, dy):
                 print("hit a spike in vert")
                 player.x_velocity=0
                 player.y_velocity=0#Helps 0 out if gravity is huge
+                player.powerup_timer = 0
+                player.cooldown_timer = 0
+                player.powerup_active = False
+                player.cooldown_active = False
                 player.reset(level)
                 continue
             
@@ -1187,6 +1191,10 @@ def collide(player, level, dx):
                 player.x_velocity=0
                 player.y_velocity=0
                 print("hit a spike in collide")
+                player.powerup_timer = 0
+                player.cooldown_timer = 0
+                player.powerup_active = False
+                player.cooldown_active = False
                 player.reset(level)
             elif(object.name == "end sign"):
                 # collided_object = object
@@ -1214,7 +1222,7 @@ def collide(player, level, dx):
     player.update()
     return collided_object
 
-def checkOverlap(player,level):
+def checkOverlap(player, level):
     validLadder=False
     for object in level.object_list:
         if pygame.sprite.collide_mask(player.reachBox,object):
@@ -1238,11 +1246,6 @@ def getOverlap(player, reachBox, level):
                 player.do_chop()
                 # object.destroy()
                 return
-
-def destroy_it(object):
-    global current_object
-    object.destroy()
-    current_object = None
 
 def getInput(player, level):
     keys=pygame.key.get_pressed()
@@ -1349,6 +1352,7 @@ def getInput(player, level):
             if player.e_timer==0:
                 player.e_timer=15
                 getOverlap(player,player.reachBox,level)
+
         if keys[pygame.K_ESCAPE]:
             timer.stop_timer()
 
@@ -1356,15 +1360,18 @@ def getInput(player, level):
             time_since_last = timer.return_time() - last_pause_time
             if time_since_last > 0.40:
                 if show_pause_menu(window, VOLUME_STATES):
-                    display_main_menu(window)
+                    if os.path.exists("competitive.txt"):
+                        display_competitive_main_menu(window)
+                    else:
+                        display_main_menu(window)
                 last_pause_time = timer.return_time()
 
             timer.start_timer()
             
         if current_character == "Malcolm":
             if keys[pygame.K_q] and player.jump_count == 1 and player.in_air:
-                player.jump
-                
+                player.jump()
+
         elif current_character == "Maia":
             if keys[pygame.K_q] and player.cooldown_active == False: 
                 if player.powerup_timer == 0 and player.powerup_active == False  and player.cooldown_active == False:
