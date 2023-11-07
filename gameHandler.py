@@ -592,7 +592,6 @@ elif current_character == "Oscar":
     char_text_color = "indigo"
 
 selected_text = character_select_font.render("You are currently playing as", False, "Black")
-char_text_color = "black"
 character_text = character_select_font.render(current_character, False, char_text_color)
 powerup_text = character_select_font.render("Power-up: " + str(powerup_read), False, "Black")
 cooldown_text = character_select_font.render(cooldown_read, False, "Black")
