@@ -436,6 +436,14 @@ def load_level():
             loadLevel(window, levelNineteen)
         case "20":
             loadLevel(window, levelTwenty)
+        case "21":
+            lvlf = open("currentLevel.txt", "r")
+            levelnum = int(lvlf.read())
+            levelnum -= 1
+            lvlf = open("currentLevel.txt", "w")
+            lvlf.write(str(levelnum))
+            lvlf.close()
+            loadLevel(window, levelTwenty)
 
     print("LOAD LEVEL " + currlvl)
 
@@ -575,9 +583,16 @@ def choose_character():
     print("CHOOSE CHARACTER")
 
 def return_main():
-    if os.path.exists("competitive.txt"):
-        print(user_name)
-        display_competitive_main_menu(window)
+    lvlfile = open("currentLevel.txt", "r")
+    currlvl = lvlfile.read()
+    lvlint = int(currlvl)
+    if lvlint > 20:
+        if user_name != '':
+            if os.path.exists("competitive.txt"):
+                print(user_name)
+                display_competitive_main_menu(window)
+            else:
+                open("competitive.txt", "x").close()
     else:
         display_main_menu(window)
     print("RETURN TO MAIN")
@@ -1335,10 +1350,7 @@ def collide(player, level, dx):
                 lvlf.close()
                 # THEN OPEN BETWEEN LEVEL MENU
                 if levelnum > 20:
-                    open("competitive.txt", "x").close()
-                    display_endgame_level_page(window)
                     if not os.path.exists("competitive.txt"):
-                        open("competitive.txt", "x").close()
                         display_endgame_level_page(window)
                     else:
                         display_level_twenty_page(window)
@@ -3046,7 +3058,7 @@ lTwenty.append(endSign(1150,147))
 lTwenty.append(lBorderRight)
 lTwenty.append(lBorderLeft)
 
-# levelTwenty=Level(lTwenty,470,5,"newlvl-20-background.png")
+#levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
 levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
 
 
