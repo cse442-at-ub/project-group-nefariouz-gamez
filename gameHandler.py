@@ -42,6 +42,7 @@ VOLUME_STATES = assignVolume()
 # VOLUME_STATES = [1, 1, False]   # music slider pos (start at 100%), sfx slider pos (start at 100%), checkbox status (starts unchecked)
 pygame.mixer.music.load("assets/audio/background_music.mp3")   # https://www.youtube.com/watch?v=cTDSFCC9rQ4
 pygame.mixer.music.play(loops=-1)   # play and loop music indefinitely
+pygame.mixer.music.set_volume(VOLUME_STATES[0])   # initialize max volume of music from audioLevels.txt
 
 if VOLUME_STATES[2]:   # if previously muted is True
     pygame.mixer.music.pause()

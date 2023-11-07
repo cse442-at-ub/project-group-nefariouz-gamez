@@ -131,6 +131,12 @@ class Slider:
         self.button_pos = (int(x_val), int(self.pos[1]))
         if self.audio == 'music':
             states[0] = 1-((self.slider_right-x_val)/300)
+            with open('audioLevels.txt', 'r') as audioFile:
+                lines = audioFile.readlines()
+            lines[0] = str(states[0]) + "\n"
+            with open('audioLevels.txt', 'w') as audioFile:
+                audioFile.writelines(lines)
+
         elif self.audio == 'sfx':
             states[1] = 1-((self.slider_right-x_val)/300)
 
@@ -149,9 +155,6 @@ class Slider:
             self.move_slider(mouse_pos, states)
             if self.audio == 'music':
                 pygame.mixer.music.set_volume(self.get_value()/100)
-            elif self.audio == 'sfx':
-                # update sfx sounds here
-                pass
 
         if not mouse[0]:
             self.dragging = False
