@@ -23,7 +23,7 @@ class Object(pygame.sprite.Sprite):
     def draw(self, window, offset_x):
         window.blit(self.image, (self.rect.x+offset_x, self.rect.y))
         #self.rect.x=self.original_x+offset_x
-        
+
 
 
     def reset(self):
@@ -324,13 +324,13 @@ class SideSpike(Spike):
         self.original_image=pygame.image.load("assets\Traps\Spikes\Lvl3SidewaysSpike.png")
 
 class Water(Platform):
-    def __init__(self, x, y, width, height, col, path=None, name="water"):
+    def __init__(self, x, y, width, height, col, path=None, name="spike"):
         super().__init__(x, y, width, height, col, path, name)
     def reset(self):
         x=0#water has nothing that would really need to be reset
 
 class Void(Platform):
-    def __init__(self, x, y, width, height, col=BLACK, path=None, name="void"):
+    def __init__(self, x, y, width, height, col=BLACK, path=None, name="spike"):
         super().__init__(x, y, width, height, col, path, name)
     def reset(self):
         x=0#water has nothing that would really need to be reset
@@ -561,7 +561,7 @@ class MovePlatVert(Platform):
                    plat.direction=True#All platforms change direction together
             for object in self.object_list:
                 object.rect.y+=2
-                
+
 
     def reset(self):
         self.timer=0
