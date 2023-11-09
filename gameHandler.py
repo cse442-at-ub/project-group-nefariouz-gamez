@@ -1256,7 +1256,7 @@ def handle_vertical_collision(player, level, dy):
             elif object.name == "spike" and current_character == "Oscar" and player.powerup_active == True:
                 print("Oscar is ignoring spikes")
 
-            elif(object.name == "spike"):
+            elif(object.name == "spike" or object.name=="void" or object.name == "water"):
                 print("hit a spike in vert")
                 player.x_velocity=0
                 player.y_velocity=0#Helps 0 out if gravity is huge
@@ -1326,7 +1326,7 @@ def collide(player, level, dx):
                     collided_object = None
             elif object.name == "spike" and current_character == "Oscar" and player.powerup_active == True:
                 print("Oscar is ignoring spikes")
-            elif(object.name=="spike"):
+            elif(object.name=="spike" or object.name=="void" or object.name == "water"):
                 # collided_object = object
                 player.x_velocity=0
                 player.y_velocity=0
@@ -1536,9 +1536,9 @@ def getInput(player, level):
 
 
 BLACK=(0,0,0)
-fullScreenLeft=Platform(-2000,0,2000,2000,BLACK,None,"spike")
-fullScreenRight=Platform(1201,0,2000,2000,BLACK,None,"spike")
-fullScreenBottom=Platform(-2000,801,5200,2000,BLACK,None,"spike")
+fullScreenLeft=Platform(-2000,0,2000,2000,BLACK,None,"void")
+fullScreenRight=Platform(1201,0,2000,2000,BLACK,None,"void")
+fullScreenBottom=Platform(-2000,801,5200,2000,BLACK,None,"void")
 
 
 ##############################################################
@@ -2443,7 +2443,7 @@ l16mp1shrub = SmallPinkShrub(685,71)
 l16mp1spike = GreenSpike(570,90)
 lSixteen.append(l16mp1shrub)
 lSixteen.append(l16mp1spike)
-l16mp1 = MovePlat(522,123,195,22,494,750,[l16mp1spike,l16mp1shrub],[])
+l16mp1 = MovePlat(522,118,195,10,494,750,[l16mp1spike,l16mp1shrub],[])#original height 22, original y 123
 lSixteen.append(l16mp1)
 
 l16mp2shrub1 = SmallPinkShrub(958,131)
