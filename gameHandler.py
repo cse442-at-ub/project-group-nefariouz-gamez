@@ -1350,8 +1350,6 @@ def collide(player, level, dx):
                 lvlf.close()
                 # THEN OPEN BETWEEN LEVEL MENU
                 if levelnum > 20:
-                    open("competitive.txt", "x").close()
-                    display_endgame_level_page(window)
                     if not os.path.exists("competitive.txt"):
                         display_endgame_level_page(window)
                     else:
