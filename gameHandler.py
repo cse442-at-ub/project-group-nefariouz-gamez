@@ -581,18 +581,18 @@ def tutorial():
 def choose_character():
     display_choose_character(window)
     print("CHOOSE CHARACTER")
-
+    
 def return_main():
     lvlfile = open("currentLevel.txt", "r")
     currlvl = lvlfile.read()
     lvlint = int(currlvl)
-    if lvlint > 20:
+    if os.path.exists("competitive.txt"):
+        display_competitive_main_menu(window)
+    elif lvlint > 20:
         if user_name != '':
-            if os.path.exists("competitive.txt"):
-                print(user_name)
-                display_competitive_main_menu(window)
-            else:
-                open("competitive.txt", "x").close()
+            open("competitive.txt", "x").close()
+            print(user_name)
+            display_competitive_main_menu(window)
     else:
         display_main_menu(window)
     print("RETURN TO MAIN")
