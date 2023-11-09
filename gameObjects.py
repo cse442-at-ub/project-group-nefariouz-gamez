@@ -324,13 +324,13 @@ class SideSpike(Spike):
         self.original_image=pygame.image.load("assets\Traps\Spikes\Lvl3SidewaysSpike.png")
 
 class Water(Platform):
-    def __init__(self, x, y, width, height, col, path=None, name="spike"):
+    def __init__(self, x, y, width, height, col, path=None, name="water"):
         super().__init__(x, y, width, height, col, path, name)
     def reset(self):
         x=0#water has nothing that would really need to be reset
 
 class Void(Platform):
-    def __init__(self, x, y, width, height, col=BLACK, path=None, name="spike"):
+    def __init__(self, x, y, width, height, col=BLACK, path=None, name="void"):
         super().__init__(x, y, width, height, col, path, name)
     def reset(self):
         x=0#water has nothing that would really need to be reset
