@@ -5,6 +5,8 @@ import random
 import math
 import pygame
 import sys
+import tkinter
+from tkinter import messagebox
 
 from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
 from MenuWidgets import *
@@ -588,11 +590,14 @@ def return_main():
     lvlint = int(currlvl)
     if lvlint > 20:
         if user_name != '':
-            if os.path.exists("competitive.txt"):
-                print(user_name)
-                display_competitive_main_menu(window)
-            else:
-                open("competitive.txt", "x").close()
+            open("competitive.txt", "x").close()
+            print(user_name)
+            wlvlfile = open("currentLevel.txt", "w")
+            wlvlfile.write("1")
+            wlvlfile.close()
+            display_competitive_main_menu(window)
+        else:
+            tkinter.messagebox.showwarning("Warning","Please Enter a Name Before Returning to Menu")
     else:
         display_main_menu(window)
     print("RETURN TO MAIN")
