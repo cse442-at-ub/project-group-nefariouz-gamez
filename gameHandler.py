@@ -1266,6 +1266,16 @@ def handle_vertical_collision(player, level, dy):
                 player.cooldown_active = False
                 player.reset(level)
                 continue
+            elif(object.name == "void" or object.name=="water"):
+                print("hit a void/water in vert")
+                player.x_velocity=0
+                player.y_velocity=0#Helps 0 out if gravity is huge
+                player.powerup_timer = 0
+                player.cooldown_timer = 0
+                player.powerup_active = False
+                player.cooldown_active = False
+                player.reset(level)
+                continue
 
             #keep from reseting Y
             elif dy > 0 and object.name!="ladder" and not player.on_ladder:
@@ -1336,6 +1346,17 @@ def collide(player, level, dx):
                 player.powerup_active = False
                 player.cooldown_active = False
                 player.reset(level)
+            elif(object.name == "void" or object.name=="water"):
+                print("hit water/void in collide")
+                player.x_velocity=0
+                player.y_velocity=0#Helps 0 out if gravity is huge
+                player.powerup_timer = 0
+                player.cooldown_timer = 0
+                player.powerup_active = False
+                player.cooldown_active = False
+                player.reset(level)
+                continue
+
             elif(object.name == "end sign"):
                 # collided_object = object
                 #PLAYER HAS REACHED END OF LEVEL
@@ -1536,9 +1557,9 @@ def getInput(player, level):
 
 
 BLACK=(0,0,0)
-fullScreenLeft=Platform(-2000,0,2000,2000,BLACK,None,"spike")
-fullScreenRight=Platform(1201,0,2000,2000,BLACK,None,"spike")
-fullScreenBottom=Platform(-2000,801,5200,2000,BLACK,None,"spike")
+fullScreenLeft=Void(-2000,0,2000,2000,BLACK,None)
+fullScreenRight=Void(1201,0,2000,2000,BLACK,None)
+fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
 
 
 ##############################################################
