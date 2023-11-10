@@ -250,7 +250,7 @@ class Player(pygame.sprite.Sprite):
                 sprite_sheet = "chop"
                 self.chop_count += 1
                 if self.chop_count == 1:
-                    current_object.destroy() 
+                    current_object.destroy()
             elif self.y_velocity < 0:
                 if self.jump_count == 1:
                     if not self.chop:
@@ -336,7 +336,7 @@ class Player(pygame.sprite.Sprite):
                 print("powerup timer ran out")
                 self.powerup_active = False
                 self.cooldown_active = True
-        
+
         if self.cooldown_active:
             self.cooldown_timer -= 1
             if self.cooldown_timer == 0:
@@ -349,7 +349,7 @@ class Player(pygame.sprite.Sprite):
             self.hit = False
             self.hit_count = 0
         # FIXED NO LOOP YAY!!!!! :D
-        
+
         if self.chop_count > fps/30:
             self.chop_count = 0
             self.chop = False
@@ -603,7 +603,7 @@ def return_main():
     else:
         display_main_menu(window)
     print("RETURN TO MAIN")
-    
+
 
 def display_settings_page(screen):
     widgets, screen_width, screen_height, background_img = scale_window_settings(screen)
@@ -709,7 +709,7 @@ def click_Celia():
     current_character = "Celia"
     selected_text = character_select_font.render("You have selected", False, "Black")
     character_text = character_select_font.render("Celia", False, "darkgreen")
-    
+
     powerup_read = "N/A"
     cooldown_read = ""
     powerup_text = character_select_font.render("Power-up: " + str(powerup_read), False, "Black")
@@ -735,7 +735,7 @@ def click_Malcolm():
 
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
-    
+
     if max_level_unlocked != "" and int(max_level_unlocked) >= 5:
         current_character = "Malcolm"
         powerup_read = "Double jump in air"
@@ -762,8 +762,8 @@ def click_Maia():
     global cooldown_text
 
     maxlevelread = open("MaxUnlocked.txt", "r")
-    max_level_unlocked = maxlevelread.read() 
-    
+    max_level_unlocked = maxlevelread.read()
+
     if max_level_unlocked != "" and int(max_level_unlocked) >= 10:
         current_character = "Maia"
         powerup_read = "Walk through shrubs for 5 seconds (15 sec cooldown)"
@@ -776,7 +776,7 @@ def click_Maia():
         Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveCelia.png'))
         Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveMalcolm.png'))
     Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'DeactiveOscar.png'))
-    
+
     check_unlocked_level()
 
 
@@ -788,11 +788,11 @@ def click_Oscar():
     global powerup_text
     global cooldown_read
     global cooldown_text
-    
+
 
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
-    
+
     if max_level_unlocked != "" and int(max_level_unlocked) >= 15:
         current_character = "Oscar"
         powerup_read = "Walk through shrubs and spikes for 5 seconds (30 sec cooldown)"
@@ -857,7 +857,7 @@ def check_update():
     print(current_character)
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
-    
+
     if current_character == "" or max_level_unlocked == "" or int(max_level_unlocked) < 5:
         f.close()
         f = open("CurrentCharacter.txt", "w")
@@ -887,10 +887,10 @@ def check_update():
     f = open("CurrentCharacter.txt", "r")
     selected_text = character_select_font.render("You are currently playing as", False, "Black")
     character_text = character_select_font.render(current_character, False, char_text_color)
-    powerup_text = character_select_font.render("Power-up: " + str(powerup_read), False, "Black")    
+    powerup_text = character_select_font.render("Power-up: " + str(powerup_read), False, "Black")
     cooldown_text = character_select_font.render(cooldown_read, False, "Black")
     print(current_character)
-    
+
 
 def check_unlocked_level():
     global current_character
@@ -920,7 +920,7 @@ def display_choose_character(window):
     screen_width, screen_height = size[0], size[1]
     background = pygame.transform.scale(background, size)
     widgets = [Button((screen_width/2, (screen_height/2) + 160), (300, 54), "OK", click_OK)]
-    
+
     check_update()
     check_unlocked_level()
 
@@ -1055,7 +1055,7 @@ def display_between_level_page(screen):
     currlvl = lvlf.read()
     printlvl = str(int(currlvl) - 1)
     lvlf.close()
-    
+
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
     maxlevelread.close()
@@ -1126,7 +1126,7 @@ def display_endgame_level_page(screen):
 
     global user_name
     input_rect = pygame.Rect(screen_width/2-100,screen_height/2,200,50)
-    boxcolor = pygame.Color(190,190,190) 
+    boxcolor = pygame.Color(190,190,190)
     keycount = 0
     betweenlvl = True
     while betweenlvl:
@@ -1146,7 +1146,7 @@ def display_endgame_level_page(screen):
                     widget.handle_event(event)
                 elif type(widget) == Slider:
                     widget.handle_event(pygame.mouse.get_pos(), pygame.mouse.get_pressed())
-        
+
         #message display code
         screen.blit(background_img, (0,0))
 
@@ -1160,9 +1160,9 @@ def display_endgame_level_page(screen):
             widget.draw(screen)
 
         #user input box code
-        pygame.draw.rect(screen, boxcolor, input_rect) 
+        pygame.draw.rect(screen, boxcolor, input_rect)
         namefont = pygame.font.Font(None, 36)
-        text_surface = namefont.render(user_name, True, (34, 90, 48)) 
+        text_surface = namefont.render(user_name, True, (34, 90, 48))
         screen.blit(text_surface, (input_rect.x+10, input_rect.y+15))
         pygame.display.flip()
     pygame.quit()
@@ -1273,7 +1273,17 @@ def handle_vertical_collision(player, level, dy):
                 player.cooldown_active = False
                 player.reset(level)
                 continue
-            
+            elif(object.name == "void" or object.name=="water"):
+                print("hit a void/water in vert")
+                player.x_velocity=0
+                player.y_velocity=0#Helps 0 out if gravity is huge
+                player.powerup_timer = 0
+                player.cooldown_timer = 0
+                player.powerup_active = False
+                player.cooldown_active = False
+                player.reset(level)
+                continue
+
             #keep from reseting Y
             elif dy > 0 and object.name!="ladder" and not player.on_ladder:
                 if not (player.rect.bottom-2*player.y_velocity)>object.rect.top or object.name=="angle":#if the players bottom is not within 12 pixels of the object's top
@@ -1343,6 +1353,17 @@ def collide(player, level, dx):
                 player.powerup_active = False
                 player.cooldown_active = False
                 player.reset(level)
+            elif(object.name == "void" or object.name=="water"):
+                print("hit water/void in collide")
+                player.x_velocity=0
+                player.y_velocity=0#Helps 0 out if gravity is huge
+                player.powerup_timer = 0
+                player.cooldown_timer = 0
+                player.powerup_active = False
+                player.cooldown_active = False
+                player.reset(level)
+                continue
+
             elif(object.name == "end sign"):
                 # collided_object = object
                 #PLAYER HAS REACHED END OF LEVEL
@@ -1516,13 +1537,13 @@ def getInput(player, level):
                 last_pause_time = timer.return_time()
 
             timer.start_timer()
-            
+
         if current_character == "Malcolm":
             if keys[pygame.K_q] and player.jump_count == 1 and player.in_air:
                 player.jump()
 
         elif current_character == "Maia":
-            if keys[pygame.K_q] and player.cooldown_active == False: 
+            if keys[pygame.K_q] and player.cooldown_active == False:
                 if player.powerup_timer == 0 and player.powerup_active == False  and player.cooldown_active == False:
                     player.powerup_timer = FPS*4 # about 5 seconds
                     player.cooldown_timer = FPS*12 # about 15 seconds, not exactly?
@@ -1543,9 +1564,9 @@ def getInput(player, level):
 
 
 BLACK=(0,0,0)
-fullScreenLeft=Platform(-2000,0,2000,2000,BLACK,None,"spike")
-fullScreenRight=Platform(1201,0,2000,2000,BLACK,None,"spike")
-fullScreenBottom=Platform(-2000,801,5200,2000,BLACK,None,"spike")
+fullScreenLeft=Void(-2000,0,2000,2000,BLACK,None)
+fullScreenRight=Void(1201,0,2000,2000,BLACK,None)
+fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
 
 
 ##############################################################
@@ -1877,8 +1898,8 @@ lSeven.append(Ladder(1070,194))
 lSeven.append(Platform(926,295,200,51,WHITE))##Start
 lSeven.append(Platform(0,0,890,105,GRAY))
 lSeven.append(Platform(0,0,34,800,GRAY))
-lSeven.append(Platform(1126,0,74,624,GRAY))
-lSeven.append(Platform(1126,727,74,100,GRAY))
+lSeven.append(Platform(1126,0,74,631,GRAY))
+lSeven.append(Platform(1126,747,74,100,GRAY))
 
 # Moving platform line 1
 mp07_1 = []
@@ -1900,16 +1921,16 @@ lSeven.extend(mpo7_2)
 
 # Moving platform line 2
 mp07_3 = []
-mp07_3.append(smallShrub(330,520))
-mp07_3.append(ReverseSmallShrub(330,623))
-mp7_3 = MovePlat(178, 573, 200, 51, 69, 1091, oList=mp07_3)##original borders 34, 1126
+mp07_3.append(smallShrub(330,528))
+mp07_3.append(ReverseSmallShrub(330,631))
+mp7_3 = MovePlat(178, 580, 200, 51, 69, 1091, oList=mp07_3)##original borders 34, 1126
 
 mpo7_4 = []
-mpo7_4.append(smallShrub(624,520))
-mpo7_4.append(ReverseSmallShrub(624,623))
-mpo7_4.append(Ladder(673, 573))
-mpo7_4.append(smallShrub(786,520))
-mp7_4 = MovePlat(634, 573, 200, 51, 69, 1091, oList=mpo7_4, aList=[mp7_3])
+mpo7_4.append(smallShrub(624,528))
+mpo7_4.append(ReverseSmallShrub(624,631))
+mpo7_4.append(Ladder(673, 580))
+mpo7_4.append(smallShrub(786,528))
+mp7_4 = MovePlat(634, 580, 200, 51, 69, 1091, oList=mpo7_4, aList=[mp7_3])
 mp7_3.set_a([mp7_4])
 
 lSeven.append(mp7_3)
@@ -1918,13 +1939,15 @@ lSeven.append(mp7_4)
 lSeven.extend(mpo7_4)
 
 # Moving platform line 3
+mpl3_y = 747
+mpls3_y = 695
 mp07_5 = []
-mp07_5.append(smallShrub(320,675))
-mp07_5.append(smallShrub(472,675))
-mp7_5 = MovePlat(320, 727, 200, 51, 69, 1091,oList=mp07_5)
+mp07_5.append(smallShrub(320,mpls3_y))
+mp07_5.append(smallShrub(472,mpls3_y))
+mp7_5 = MovePlat(320, mpl3_y, 200, 51, 69, 1091,oList=mp07_5)
 mpo7_6 = []
-mpo7_6.append(smallShrub(786,675))
-mp7_6 =  MovePlat(792, 727, 200, 51, 69, 1091,oList=mpo7_6, aList=[mp7_5])
+mpo7_6.append(smallShrub(786,mpls3_y))
+mp7_6 =  MovePlat(792, mpl3_y, 200, 51, 69, 1091,oList=mpo7_6, aList=[mp7_5])
 mp7_5.set_a([mp7_6])
 
 lSeven.append(mp7_5)
@@ -1936,7 +1959,7 @@ lSeven.extend(mpo7_6)
 lSeven.append(lBorderLeft)
 lSeven.append(lBorderRight)
 
-lSeven.append(endSign(1160,663+24))
+lSeven.append(endSign(1160,mpl3_y-40))
 levelSeven=Level(lSeven,1040,225,"CaveBackground1.png")
 
 ##############################################################
@@ -2450,7 +2473,7 @@ l16mp1shrub = SmallPinkShrub(685,71)
 l16mp1spike = GreenSpike(570,90)
 lSixteen.append(l16mp1shrub)
 lSixteen.append(l16mp1spike)
-l16mp1 = MovePlat(522,123,195,22,494,750,[l16mp1spike,l16mp1shrub],[])
+l16mp1 = MovePlat(522,118,195,10,494,750,[l16mp1spike,l16mp1shrub],[])
 lSixteen.append(l16mp1)
 
 l16mp2shrub1 = SmallPinkShrub(958,131)
