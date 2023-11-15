@@ -1574,8 +1574,8 @@ def getInput(player, level):
 
 
 BLACK=(0,0,0)
-fullScreenLeft=Void(-2000,0,2000,2000,BLACK,None)
-fullScreenRight=Void(1201,0,2000,2000,BLACK,None)
+fullScreenLeft=Void(-2000,0,1990,2000,BLACK,None)
+fullScreenRight=Void(1210,0,2000,2000,BLACK,None)
 fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
 
 
@@ -1583,8 +1583,8 @@ fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
 ######################## LEVEL 01 ############################
 ##############################################################
 lOne=[]
-lBorderLeft=Platform(-1,0,1,800,WHITE)
-lBorderRight=Platform(1201,0,1,800,WHITE)
+lBorderLeft=Platform(-10,0,10,800,BLACK)
+lBorderRight=Platform(1201,0,10,800,BLACK)
 #Player starting position (1100, 644)
 #background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
 start=Platform(890,670,152,75,WHITE)
@@ -1921,7 +1921,7 @@ mp7_1 = MovePlat(95, 415, 200, 51, 69, 1091, oList=mp07_1)
 mpo7_2 = []
 mpo7_2.append(smallShrub(641,363))
 mpo7_2.append(ReverseSmallShrub(792,466))
-mp7_2 = MovePlat(642, 415, 200, 51, 69, 1091, oList=mpo7_2, aList=[mp7_1])##original borders 34, 1126
+mp7_2 = MovePlat(642, 415, 200, 51, 69, 1091, oList=mpo7_2, aList=[mp7_1])##original as 34, 1126
 mp7_1.set_a([mp7_2])
 
 lSeven.append(mp7_1)
