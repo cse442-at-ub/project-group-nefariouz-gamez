@@ -491,6 +491,7 @@ def display_competitive_main_menu(screen):
             case "LOAD":
                 load_level()
             case"CHALLENGE MODE":
+                timer.reset_timer()#Reset timer before starting competitive mode
                 loadLevel(screen,cOne)#Load Competitive Level One
             case "LEADERBOARD":
                 pass
@@ -1372,7 +1373,11 @@ def collide(player, level, dx):
                 # ADD ONE TO COMPLETED LEVELS
                 #ENDLEVEL = True
                 if level.is_comp:
-                    loadLevel(window,level.next_level)#Move to the next competitive level
+                    timer.stop_timer()
+                    if level.next_level!=None:
+                        loadLevel(window,level.next_level)#Move to the next competitive level
+                    else:
+                        x=0##HANDLE BEHAVIOR FOR BEATING LEVEL 20 IN COMP MODE HERE
                 else:
                     timer.stop_timer()
                     lvlf = open("currentLevel.txt", "r")
