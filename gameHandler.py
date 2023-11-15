@@ -491,7 +491,7 @@ def display_competitive_main_menu(screen):
             case "LOAD":
                 load_level()
             case"CHALLENGE MODE":
-                pass
+                loadLevel(screen,cOne)#Load Competitive Level One
             case "LEADERBOARD":
                 pass
             case "SETTINGS":
@@ -1220,6 +1220,8 @@ class Level():
         self.init_x=starting_x
         self.init_y=starting_y
         self.copied=objects.copy()
+        self.is_comp=False
+        self.next_level=None
     def reset(self):
         for object in self.object_list:
             object.reset()
@@ -1369,22 +1371,25 @@ def collide(player, level, dx):
                 #PLAYER HAS REACHED END OF LEVEL
                 # ADD ONE TO COMPLETED LEVELS
                 #ENDLEVEL = True
-                timer.stop_timer()
-                lvlf = open("currentLevel.txt", "r")
-                levelnum = int(lvlf.read())
-                levelnum += 1
-                lvlf = open("currentLevel.txt", "w")
-                lvlf.write(str(levelnum))
-                lvlf.close()
-                # THEN OPEN BETWEEN LEVEL MENU
-                if levelnum > 20:
-                    if not os.path.exists("competitive.txt"):
-                        display_endgame_level_page(window)
-                    else:
-                        display_level_twenty_page(window)
+                if level.is_comp:
+                    loadLevel(window,level.next_level)#Move to the next competitive level
                 else:
-                    display_between_level_page(window)
-            break
+                    timer.stop_timer()
+                    lvlf = open("currentLevel.txt", "r")
+                    levelnum = int(lvlf.read())
+                    levelnum += 1
+                    lvlf = open("currentLevel.txt", "w")
+                    lvlf.write(str(levelnum))
+                    lvlf.close()
+                    # THEN OPEN BETWEEN LEVEL MENU
+                    if levelnum > 20:
+                        if not os.path.exists("competitive.txt"):
+                            display_endgame_level_page(window)
+                        else:
+                            display_level_twenty_page(window)
+                    else:   
+                        display_between_level_page(window)
+                break
 
     player.move(-dx, 0)
 
@@ -3111,6 +3116,47 @@ cSeventeen=Level(lSeventeen,1120,650,"newlvl-13-16-background.png")
 cEighteen=Level(lEighteen,1130,185,"newlvl-17-18-background.png")
 cNineteen=Level(lNineteen,35,65,"newlvl-19-background.png")
 cTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")
+cOne.is_comp=True
+cOne.next_level=cTwo
+cTwo.is_comp=True
+cTwo.next_level=cThree
+cThree.is_comp=True
+cThree.next_level=cFour
+cFour.is_comp=True
+cFour.next_level=cFive
+cFive.is_comp=True
+cFive.next_level=cSix
+cSix.is_comp=True
+cSix.next_level=cSeven
+cSeven.is_comp=True
+cSeven.next_level=cEight
+cEight.is_comp=True
+cEight.next_level=cNine
+cNine.is_comp=True
+cNine.next_level=cTen
+cTen.is_comp=True
+cTen.next_level=cEleven
+cEleven.is_comp=True
+cEleven.next_level=cTwelve
+cTwelve.is_comp=True
+cTwelve.next_level=cThirteen
+cThirteen.is_comp=True
+cThirteen.next_level=cFourteen
+cFourteen.is_comp=True
+cFourteen.next_level=cFifteen
+cFifteen.is_comp=True
+cFifteen.next_level=cSixteen
+cSixteen.is_comp=True
+cSixteen.next_level=cSeventeen
+cSeventeen.is_comp=True
+cSeventeen.next_level=cEighteen
+cEighteen.is_comp=True
+cEighteen.next_level=cNineteen
+cNineteen.is_comp=True
+cNineteen.next_level=cTwenty
+cTwenty.is_comp=True
+
+
 
 
 def loadLevel(window, level):
@@ -3123,7 +3169,8 @@ def loadLevel(window, level):
     bg_image=level.bg_image
     playerOne=Player(level.init_x,level.init_y,30,64)
     check_size=(1200,800)
-    timer.reset_timer()
+    if not level.is_comp:
+        timer.reset_timer()
     timer.start_timer()
     offset=0
     global last_pause_time
