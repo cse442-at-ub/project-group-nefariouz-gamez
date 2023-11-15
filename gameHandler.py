@@ -3091,6 +3091,26 @@ lTwenty.append(lBorderLeft)
 #levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
 levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
 
+cOne=Level(lOne,1135,639,"Level 1 to 3 bkgrnd.png")#Comp Level One, uses same object list(Changed background path to remove tutorial)
+cTwo=Level(lTwo,1135,538,"Level 1 to 3 bkgrnd.png")
+cThree=Level(lThree,1100,470,"Level 1 to 3 bkgrnd.png")
+cFour=Level(lFour,1100,635,"CaveBackground1.png")
+cFive=Level(lFive,50,625,"CaveBackground1.png")
+cSix=Level(lSix,25,50,"CaveBackground1.png")
+cSeven=Level(lSeven,1040,225,"CaveBackground1.png")
+cEight=Level(lEight,70,590,"mysticalBackground.png")
+cNine=Level(lNine,872,645,"mysticalBackground.png")
+cTen=Level(lTen,60,630,"mysticalBackground.png")
+cEleven=Level(lEleven,1125,80,"newlvl-11-12-background.png")
+cTwelve=Level(lTwelve,1125,536,"newlvl-11-12-background.png")
+cThirteen=Level(lthirteen,1130,93,"newlvl-13-16-background.png")
+cFourteen=Level(lFourteen,1125,174,"newlvl-13-16-background.png")
+cFifteen=Level(lFifteen,1135,58,"newlvl-13-16-background.png")
+cSixteen=Level(lSixteen,0,0,"newlvl-13-16-background.png")
+cSeventeen=Level(lSeventeen,1120,650,"newlvl-13-16-background.png")
+cEighteen=Level(lEighteen,1130,185,"newlvl-17-18-background.png")
+cNineteen=Level(lNineteen,35,65,"newlvl-19-background.png")
+cTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")
 
 
 def loadLevel(window, level):
