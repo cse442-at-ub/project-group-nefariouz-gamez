@@ -584,7 +584,7 @@ def tutorial():
 def choose_character():
     display_choose_character(window)
     print("CHOOSE CHARACTER")
-    
+
 def return_main():
     lvlfile = open("currentLevel.txt", "r")
     currlvl = lvlfile.read()
@@ -1195,6 +1195,36 @@ def display_level_twenty_page(screen):
         widget.draw(screen)
         pygame.display.flip()
 
+def beat_competitive_page(screen):
+    screen_width, screen_height = screen.get_size()
+
+    background_img = pygame.image.load("assets\Background\BetlvlBackground.png")
+    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
+
+    widget = Button((screen_width/2, (screen_height/2)+20), (300, 54), "RETURN TO MAIN", return_main)
+
+    currtime = timer.return_time()
+    # THIS IS WHERE TIME CAN BE SENT TO DATABASE
+    minutes = math.floor(currtime / 60)
+    seconds = round(currtime  - (minutes * 60), 2)
+
+    betweenlvl = True
+    while betweenlvl:
+        for event in pygame.event.get():
+            #event handler
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+            widget.handle_event(event)
+
+        screen.blit(background_img, (0,0))
+        draw_text("Congratulations!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-190))
+        draw_text("You Finished Competitive Mode in:", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-130))
+        draw_text(str(minutes) + " minutes and " + str(seconds) + " seconds!", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-80))
+
+        widget.draw(screen)
+        pygame.display.flip()
+
 
 ##############################################################
 ##############################################################
@@ -1377,7 +1407,7 @@ def collide(player, level, dx):
                     if level.next_level!=None:
                         loadLevel(window,level.next_level)#Move to the next competitive level
                     else:
-                        x=0##HANDLE BEHAVIOR FOR BEATING LEVEL 20 IN COMP MODE HERE
+                       beat_competitive_page(window)
                 else:
                     timer.stop_timer()
                     lvlf = open("currentLevel.txt", "r")
@@ -1392,7 +1422,7 @@ def collide(player, level, dx):
                             display_endgame_level_page(window)
                         else:
                             display_level_twenty_page(window)
-                    else:   
+                    else:
                         display_between_level_page(window)
                 break
 
