@@ -15,7 +15,8 @@
 
     function insertData($username, $time, $character) {
         global $conn;
-        $sql = "INSERT INTO 'Leaderboard' VALUES ('$username', '$time', '$character')";
+        $sql = "INSERT INTO Leaderboard VALUES ('$username', '$time', '$character')";
+	echo "inserted";
         if ($conn->query($sql) === TRUE) {
             return "New record created successfully";
         } else {
@@ -52,11 +53,11 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST["username"];
         $time = $_POST["time"];
-        $character = $_POST["character"]
+	$character = $_POST["character"];
         echo insertData($username, $time, $character);
     } elseif ($_SERVER["REQUEST_METHOD"] == "GET") {
-        retrieveData();
+        $result = retrieveData();
+        echo json_encode($result);
     }
-
     $conn -> close();
 ?>
