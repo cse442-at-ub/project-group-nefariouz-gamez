@@ -7,6 +7,7 @@ import pygame
 import sys
 import tkinter
 from tkinter import messagebox
+import requests
 
 from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
 from MenuWidgets import *
@@ -493,9 +494,54 @@ def display_competitive_main_menu(screen):
             case"CHALLENGE MODE":
                 pass
             case "LEADERBOARD":
-                pass
+                retrieve_data_php()
+                #insert_data_php('jdquinn2', '23434.12', 'Celia')
             case "SETTINGS":
                 settings()
+
+
+# Function to insert data into the database via PHP endpoint
+def insert_data_php(username, time, character):
+    url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
+    payload = {'username': username, 'time': time, 'character': character}
+    response = requests.post(url, data=payload)
+    print(response.text)
+
+# Function to retrieve data from the database via PHP endpoint
+def retrieve_data_php():
+    url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
+    response = requests.get(url)
+    #data = response.json()
+    #print(data)
+
+
+
+""" def execute_php_script():
+    php_script_path = 'leaderboarddb.php'  #
+    php_executable = 'php'  # Assuming PHP is in the system path
+
+    '''# Example: executing PHP script to insert data
+    insert_command = [php_executable, php_script_path]
+    insert_command.extend(['--name', 'John Doe', '--email', 'john@example.com'])
+    subprocess.run(insert_command, check=True)'''
+    
+    retrieve_command = [php_executable, php_script_path]
+    retrieve_command.extend(['--get'])
+    result = subprocess.run(retrieve_command, capture_output=True, text=True, check=True)
+    print(result.stdout)
+     """
+    
+""" def insert_data_php(name, email):
+    url = 'http://localhost/path/to/database_operations.php'  # Replace with your PHP script URL
+    payload = {'name': name, 'email': email}
+    response = requests.post(url, data=payload)
+    print(response.text)
+    
+def retrieve_data_php():
+    url = 'http://localhost/path/to/database_operations.php'  # Replace with your PHP script URL
+    response = requests.get(url)
+    data = response.json()
+    print(data) """
 
 
 ##############################################################
@@ -593,6 +639,9 @@ def return_main():
     elif lvlint > 20:
         if user_name != '':
             open("competitive.txt", "x").close()
+            writeName = open("competitive.txt", "w")
+            writeName.write(user_name)
+            writeName.close()
             print(user_name)
             wlvlfile = open("currentLevel.txt", "w")
             wlvlfile.write("1")
@@ -3088,8 +3137,8 @@ lTwenty.append(endSign(1150,147))
 lTwenty.append(lBorderRight)
 lTwenty.append(lBorderLeft)
 
-#levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
-levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
+levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
+#levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
 
 
 
