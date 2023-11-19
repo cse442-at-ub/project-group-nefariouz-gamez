@@ -18,6 +18,8 @@ from level_timer import *
 from os import listdir
 from os.path import isfile, join
 #from pygame.sprite import _Group
+from time import gmtime, strftime
+
 
 pygame.init()
 
@@ -453,6 +455,10 @@ def settings():
     display_settings_page(window)
     print("SETTINGS")
 
+def leaderboard():
+    display_leaderboard(window)
+    print("LEADERBOARD")
+
 def quit_game():
     pygame.quit()
     sys.exit()
@@ -493,7 +499,7 @@ def display_competitive_main_menu(screen):
             case"CHALLENGE MODE":
                 pass
             case "LEADERBOARD":
-                pass
+                leaderboard()
             case "SETTINGS":
                 settings()
 
@@ -632,6 +638,173 @@ def display_settings_page(screen):
 
         for widget in widgets:
             widget.draw(screen)
+
+        pygame.display.flip()
+
+    pygame.quit()
+
+
+##############################################################
+##############################################################
+#################### LEADERBOARD SCREEN ######################
+##############################################################
+##############################################################
+
+class LeaderboardSlot:
+    def __init__(self, pos: tuple, size: tuple, text: str, action=None):
+        self.pos = pos
+        self.size = size
+        self.rect = pygame.Rect(self.pos[0] - (self.size[0] / 2), self.pos[1] - (self.size[1] / 2), self.size[0],
+                                self.size[1])
+        self.text = text
+        self.action = action
+        self.color = (190, 190, 190)
+
+    def draw(self, screen):
+        button_surface = pygame.Surface((self.size[0], self.size[1]), pygame.SRCALPHA)
+        button_surface.set_alpha(210)
+        pygame.draw.rect(button_surface, self.color, (0, 0, self.size[0], self.size[1]), border_radius=7)
+
+        font = pygame.font.Font(None, 36)
+        text_surface = font.render(self.text, True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=(self.size[0] / 2, self.size[1] / 2))
+        button_surface.blit(text_surface, text_rect)
+        button_rect = button_surface.get_rect(center=(self.pos[0], self.pos[1]))
+
+        screen.blit(button_surface, button_rect)
+
+TEST_LB_ARRAY = [["sqPro", "30.06", "Maia"], ["craig??", "36.95", "Celia"], ["egg", "43.22", "Maia"], ["duckarmy77", "47.82", "Oscar"], ["themilkman", "49.02", "Malcolm"], ["soup", "58.91", "Celia"], ["snail", "60.53", "Celia"], ["shrubdestroyer", "69.78", "Oscar"], ["maiamainftw", "70.02", "Maia"], ["top10lol", "77.32", "Maia"]]
+YOU = TEST_LB_ARRAY[2]
+
+find_top_10 = [20, 10, 5, 15, 1000, 200, 30, 55.5, 69, 33, 84, 2000, 101, 10000, 800, 2]
+
+def sortTop10(arr):
+    return(sorted(arr)[:10])
+
+print(sortTop10(find_top_10))
+
+def dummyReturn():
+    return
+
+def display_leaderboard(screen):
+    positions = []
+    screen_width, screen_height = screen.get_size()
+    background_img = pygame.image.load("assets/Background/BetlvlBackground.png")
+    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
+    widgets = [
+        LeaderboardSlot((screen_width/2, (screen_height*.185)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.255)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.325)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.395)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.465)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.535)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.605)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.685)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.755)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.825)), (screen_width*.7, 45), "", dummyReturn),
+
+        LeaderboardSlot((screen_width/2, (screen_height*.935)), (screen_width*.7, 45), "", dummyReturn),
+
+        Button((screen_width * .08, (screen_height * .06)), (150, 54), "MENU", return_main)
+    ]
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.VIDEORESIZE:
+                screen_width, screen_height = screen.get_size()
+                widgets = [
+                    LeaderboardSlot((screen_width/2, (screen_height*.185)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.255)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.325)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.395)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.465)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.535)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.605)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.685)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.755)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.825)), (screen_width*.7, 45), "", dummyReturn),
+
+                    LeaderboardSlot((screen_width/2, (screen_height*.935)), (screen_width*.7, 45), "", dummyReturn),
+
+                    Button((screen_width * .08, (screen_height * .06)), (150, 54), "MENU", return_main)
+                ]
+                background_img = pygame.image.load("assets/Background/BetlvlBackground.png")
+                background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
+
+            for widget in widgets:
+                if type(widget) == Button:
+                    widget.handle_event(event)
+            
+            count = 0
+            for widget in widgets:
+                positions.append(widget.pos)
+                count += 1
+                if count == 10:
+                    count = 0
+                    break
+
+        # render background and widgets
+        screen.blit(background_img, (0, 0))
+
+        draw_text("TOP 10 LEADERBOARD", pygame.font.Font(None, 50), (0, 0, 0), ((screen_width/2, (screen_height * .065))))
+        draw_text("NAME", pygame.font.Font(None, 36), (0, 0, 0), ((screen_width * .18, (screen_height * .135))))
+        draw_text("TIME", pygame.font.Font(None, 36), (0, 0, 0), ((screen_width * .5, (screen_height * .135))))
+        draw_text("CHARACTER", pygame.font.Font(None, 36), (0, 0, 0), ((screen_width * .78, (screen_height * .135))))
+
+        for widget in widgets:
+            widget.draw(screen)
+
+        leaderboard_entry_font = pygame.font.Font(None, 36)
+        for i in zip(TEST_LB_ARRAY, positions):
+            user, user_time, character, height = i[0][0], i[0][1], i[0][2], i[1][1]
+            
+            userText = leaderboard_entry_font.render(user, False, (34, 90, 48))
+            userTextRect = userText.get_rect()
+            userTextRect.left, userTextRect.centery = screen_width * .16, height
+
+            characterText = leaderboard_entry_font.render(character, False, (34, 90, 48))
+            characterTextRect = characterText.get_rect()
+            characterTextRect.right, characterTextRect.centery = screen_width * .84, height
+
+            screen.blit(userText, userTextRect)
+            correct_time = strftime("%M:%S", gmtime(float(user_time)))
+            draw_text(correct_time, pygame.font.Font(None, 36), (34, 90, 48), (screen_width * .5, height))
+            screen.blit(characterText, characterTextRect)
+
+        first, second, third = pygame.image.load("assets/leaderboard/first.png"), pygame.image.load("assets/leaderboard/second.png"), pygame.image.load("assets/leaderboard/third.png")
+        firstRect, secondRect, thirdRect = first.get_rect(), second.get_rect(), third.get_rect()
+        firstRect.left, firstRect.centery = widgets[0].pos[0] * .21, widgets[0].pos[1]
+        secondRect.left, secondRect.centery = widgets[1].pos[0] * .21, widgets[1].pos[1]
+        thirdRect.left, thirdRect.centery = widgets[2].pos[0] * .21, widgets[2].pos[1]
+
+        screen.blit(first, firstRect)
+        screen.blit(second, secondRect)
+        screen.blit(third, thirdRect)
+
+        for i in range(3, 10):
+            height = widgets[i].pos[1]
+            draw_text("#" + str(i + 1), pygame.font.Font(None, 40), (0, 0, 0), ((screen_width * .125, (height))))
+
+        
+        user, time, character, height = YOU[0], YOU[1], YOU[2], widgets[10].pos[1]
+
+        draw_text("#" + str(TEST_LB_ARRAY.index(YOU) + 1), pygame.font.Font(None, 40), (0, 0, 0), ((screen_width * .125, (height))))
+        
+        userText = leaderboard_entry_font.render(user, False, (34, 90, 48))
+        userTextRect = userText.get_rect()
+        userTextRect.left, userTextRect.centery = screen_width * .16, height
+
+        characterText = leaderboard_entry_font.render(character, False, (34, 90, 48))
+        characterTextRect = characterText.get_rect()
+        characterTextRect.right, characterTextRect.centery = screen_width * .84, height
+
+        screen.blit(userText, userTextRect)
+        correct_time = strftime("%M:%S", gmtime(float(time)))
+        draw_text(correct_time, pygame.font.Font(None, 36), (34, 90, 48), (screen_width * .5, height))
+        screen.blit(characterText, characterTextRect)
 
         pygame.display.flip()
 
