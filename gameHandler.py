@@ -492,6 +492,10 @@ def display_competitive_main_menu(screen):
             case "LOAD":
                 load_level()
             case"CHALLENGE MODE":
+                try:
+                    requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/", timeout=5)
+                except requests.ConnectionError:
+                    tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, any progress made will not be saved to the leaderboard")
                 timer.reset_timer()#Reset timer before starting competitive mode
                 loadLevel(screen,cOne)#Load Competitive Level One
             case "LEADERBOARD":
@@ -525,19 +529,19 @@ def retrieve_data_php():
     insert_command = [php_executable, php_script_path]
     insert_command.extend(['--name', 'John Doe', '--email', 'john@example.com'])
     subprocess.run(insert_command, check=True)'''
-    
+
     retrieve_command = [php_executable, php_script_path]
     retrieve_command.extend(['--get'])
     result = subprocess.run(retrieve_command, capture_output=True, text=True, check=True)
     print(result.stdout)
      """
-    
+
 """ def insert_data_php(name, email):
     url = 'http://localhost/path/to/database_operations.php'  # Replace with your PHP script URL
     payload = {'name': name, 'email': email}
     response = requests.post(url, data=payload)
     print(response.text)
-    
+
 def retrieve_data_php():
     url = 'http://localhost/path/to/database_operations.php'  # Replace with your PHP script URL
     response = requests.get(url)
@@ -630,7 +634,7 @@ def tutorial():
 def choose_character():
     display_choose_character(window)
     print("CHOOSE CHARACTER")
-    
+
 def return_main():
     lvlfile = open("currentLevel.txt", "r")
     currlvl = lvlfile.read()
@@ -1441,7 +1445,7 @@ def collide(player, level, dx):
                             display_endgame_level_page(window)
                         else:
                             display_level_twenty_page(window)
-                    else:   
+                    else:
                         display_between_level_page(window)
                 break
 
