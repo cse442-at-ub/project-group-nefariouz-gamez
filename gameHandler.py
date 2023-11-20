@@ -501,7 +501,6 @@ def display_competitive_main_menu(screen):
                 loadLevel(screen,cOne)#Load Competitive Level One
             case "LEADERBOARD":
                 retrieve_data_php()
-                #insert_data_php('jdquinn2', '23434.12', 'Celia')
             case "SETTINGS":
                 settings()
 
@@ -512,7 +511,6 @@ def insert_data_php(username, time, character):
         url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
         payload = {'username': username, 'time': time, 'character': character}
         response = requests.post(url, data=payload)
-        print(response.text)
     except requests.ConnectionError:
         tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, your data has not been saved to the leaderboard")
 
@@ -524,38 +522,16 @@ def retrieve_data_php():
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
-            print(data)
+            ret = []
+            for lists in data:
+                add = []
+                for vals in lists.values():
+                    add.append(vals)
+                ret.append(add)
+            print(ret)
+            return ret
     except requests.ConnectionError:
         tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, leaderboard cannot be updated")
-
-
-
-""" def execute_php_script():
-    php_script_path = 'leaderboarddb.php'  #
-    php_executable = 'php'  # Assuming PHP is in the system path
-
-    '''# Example: executing PHP script to insert data
-    insert_command = [php_executable, php_script_path]
-    insert_command.extend(['--name', 'John Doe', '--email', 'john@example.com'])
-    subprocess.run(insert_command, check=True)'''
-
-    retrieve_command = [php_executable, php_script_path]
-    retrieve_command.extend(['--get'])
-    result = subprocess.run(retrieve_command, capture_output=True, text=True, check=True)
-    print(result.stdout)
-     """
-
-""" def insert_data_php(name, email):
-    url = 'http://localhost/path/to/database_operations.php'  # Replace with your PHP script URL
-    payload = {'name': name, 'email': email}
-    response = requests.post(url, data=payload)
-    print(response.text)
-
-def retrieve_data_php():
-    url = 'http://localhost/path/to/database_operations.php'  # Replace with your PHP script URL
-    response = requests.get(url)
-    data = response.json()
-    print(data) """
 
 
 ##############################################################
@@ -656,7 +632,6 @@ def return_main():
             writeName = open("competitive.txt", "w")
             writeName.write(user_name)
             writeName.close()
-            print(user_name)
             wlvlfile = open("currentLevel.txt", "w")
             wlvlfile.write("1")
             wlvlfile.close()
@@ -1439,7 +1414,16 @@ def collide(player, level, dx):
                     if level.next_level!=None:
                         loadLevel(window,level.next_level)#Move to the next competitive level
                     else:
-                        x=0##HANDLE BEHAVIOR FOR BEATING LEVEL 20 IN COMP MODE HERE
+                        namef = open("competitive.txt", "r")
+                        username = namef.read()
+                        namef.close()
+                        timef = open("levelTime.txt", "r")
+                        timeval = timef.read()
+                        timef.close()
+                        characterf = open("CurrentCharacter.txt", "r")
+                        character = characterf.read()
+                        characterf.close()
+                        insert_data_php(username, timeval, character)
                 else:
                     timer.stop_timer()
                     lvlf = open("currentLevel.txt", "r")
