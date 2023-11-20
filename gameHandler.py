@@ -495,7 +495,7 @@ def display_competitive_main_menu(screen):
                 try:
                     requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/", timeout=5)
                 except requests.ConnectionError:
-                    tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, any progress made will not be saved to the leaderboard")
+                    tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, any progress made will not be saved to the leaderboard.")
                 timer.reset_timer()#Reset timer before starting competitive mode
                 loadLevel(screen,cOne)#Load Competitive Level One
             case "LEADERBOARD":
@@ -507,17 +507,24 @@ def display_competitive_main_menu(screen):
 
 # Function to insert data into the database via PHP endpoint
 def insert_data_php(username, time, character):
-    url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
-    payload = {'username': username, 'time': time, 'character': character}
-    response = requests.post(url, data=payload)
-    print(response.text)
+    try:
+        url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
+        payload = {'username': username, 'time': time, 'character': character}
+        response = requests.post(url, data=payload)
+        print(response.text)
+    except requests.ConnectionError:
+        tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, your data has not been saved to the leaderboard")
+
 
 # Function to retrieve data from the database via PHP endpoint
 def retrieve_data_php():
-    url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
-    response = requests.get(url)
-    #data = response.json()
-    #print(data)
+    try:
+        url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
+        response = requests.get(url)
+        #data = response.json()
+        #print(data)
+    except requests.ConnectionError:
+        tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, leaderboard cannot be updated")
 
 
 
