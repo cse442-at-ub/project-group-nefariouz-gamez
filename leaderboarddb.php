@@ -10,8 +10,7 @@
     // Check connection
     if (!$conn) {
       die("Connection failed: " . mysqli_connect_error());
-    }
-    echo "Connected successfully<br>\n";
+    };
 
     function insertData($username, $time, $character) {
         global $conn;
@@ -42,12 +41,8 @@
         }
         else {
 	    foreach ($data as $value) {
-	        echo "new<br>\n";
 	        foreach ($value as $value2){
-		    echo $value2,"<br>\n";
-
 	        }
-	        echo "<br>\n";
 	    }
         }
         return $data;

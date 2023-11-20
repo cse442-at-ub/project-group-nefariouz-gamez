@@ -6,6 +6,7 @@ import math
 import pygame
 import sys
 import tkinter
+import json
 from tkinter import messagebox
 import requests
 
@@ -521,8 +522,9 @@ def retrieve_data_php():
     try:
         url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
         response = requests.get(url)
-        #data = response.json()
-        #print(data)
+        if response.status_code == 200:
+            data = response.json()
+            print(data)
     except requests.ConnectionError:
         tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, leaderboard cannot be updated")
 
