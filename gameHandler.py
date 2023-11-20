@@ -1207,6 +1207,8 @@ def beat_competitive_page(screen):
     # THIS IS WHERE TIME CAN BE SENT TO DATABASE
     minutes = math.floor(currtime / 60)
     seconds = round(currtime  - (minutes * 60), 2)
+    hours = math.floor(minutes / 60)
+    minutes = minutes  - (hours * 60)
 
     betweenlvl = True
     while betweenlvl:
@@ -1220,7 +1222,13 @@ def beat_competitive_page(screen):
         screen.blit(background_img, (0,0))
         draw_text("Congratulations!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-190))
         draw_text("You Finished Competitive Mode in:", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-130))
-        draw_text(str(minutes) + " minutes and " + str(seconds) + " seconds!", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-80))
+        if hours < 1:
+            draw_text(str(minutes) + " minutes and " + str(seconds) + " seconds!", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-80))
+        else:
+            if hours > 99:
+                draw_text("99 hours 99 minutes and 99.99 seconds!", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-80))
+            else:
+                draw_text(str(hours) + " hours " + str(minutes) + " minutes and " + str(seconds) + " seconds!", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-80))
 
         widget.draw(screen)
         pygame.display.flip()
@@ -3145,7 +3153,7 @@ lTwenty.append(endSign(1150,147))
 lTwenty.append(lBorderRight)
 lTwenty.append(lBorderLeft)
 
-#levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
+# levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
 levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
 
 # takes level list and replaces sign location with new (x,y)
@@ -3216,8 +3224,6 @@ cEighteen.next_level=cNineteen
 cNineteen.is_comp=True
 cNineteen.next_level=cTwenty
 cTwenty.is_comp=True
-
-
 
 
 def loadLevel(window, level):
