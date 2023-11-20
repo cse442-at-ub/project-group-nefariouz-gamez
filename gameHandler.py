@@ -1847,7 +1847,7 @@ levelFive=Level(lFive,50,625,"CaveBackground1.png")
 ######################## LEVEL 06 ############################
 ##############################################################
 lSix=[]
-lSix.append(Void(0,800,1115,15))
+lSix.append(Void(0,800,1050,15))
 lSix.append(Platform(0,114,103,58,WHITE))##Start
 lSix.append(Platform(0,0,1200,13,GRAY))
 lSix.append(Platform(0,172,34,628,GRAY))
@@ -1920,6 +1920,7 @@ lSix.append(Platform(884,457,85,30,WHITE))
 lSix.append(Platform(1081,566,85,30,WHITE))
 lSix.append(Platform(884,665,85,30,WHITE))
 lSix.append(Platform(1081,770,85,30,WHITE))
+lSix.append(Ladder(1078,770))
 lSix.append(lBorderLeft)
 lSix.append(lBorderRight)
 # End Level 6
@@ -3155,7 +3156,26 @@ def moveSigns(levelList, x, y):
             levelList[i] = endSign(x, y)
     return levelList
 
-lOne = moveSigns(lOne, -40, 584)
+lOne = moveSigns(lOne, -40,584)
+lTwo = moveSigns(lTwo, -40,509)
+lThree = moveSigns(lThree, 145,-40)
+lFour = moveSigns(lFour, 20,-40)
+lFive = moveSigns(lFive, 1200,74)
+lSix = moveSigns(lSix, 1086,800)
+lSeven = moveSigns(lSeven, 1200,mpl3_y-40)
+lEight = moveSigns(lEight, 945,-40)
+lNine = moveSigns(lNine, 22,-75)
+lTen = moveSigns(lTen, -40,107)
+lEleven = moveSigns(lEleven, -40,564)
+lTwelve = moveSigns(lTwelve, -40,133)
+lthirteen = moveSigns(lthirteen, -40,201)
+lFourteen = moveSigns(lFourteen, -40,88)
+# lFifteen = moveSigns(lFifteen, 3,802)
+lSixteen = moveSigns(lSixteen, -40,700)
+lSeventeen = moveSigns(lSeventeen, -40,190)
+lEighteen = moveSigns(lEighteen, -40,726)
+lNineteen = moveSigns(lNineteen, 1200,716)
+lTwenty = moveSigns(lTwenty, 1200,147)
 
 cOne=Level(lOne,1135,639,"Level 1 to 3 bkgrnd.png")#Comp Level One, uses same object list(Changed background path to remove tutorial)
 cTwo=Level(lTwo,1135,538,"Level 1 to 3 bkgrnd.png")
