@@ -3148,6 +3148,15 @@ lTwenty.append(lBorderLeft)
 #levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
 levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
 
+# takes level list and replaces sign location with new (x,y)
+def moveSigns(levelList, x, y):
+    for i in range(len(levelList)):
+        if type(levelList[i]) == endSign:
+            levelList[i] = endSign(x, y)
+    return levelList
+
+lOne = moveSigns(lOne, -40, 584)
+
 cOne=Level(lOne,1135,639,"Level 1 to 3 bkgrnd.png")#Comp Level One, uses same object list(Changed background path to remove tutorial)
 cTwo=Level(lTwo,1135,538,"Level 1 to 3 bkgrnd.png")
 cThree=Level(lThree,1100,470,"Level 1 to 3 bkgrnd.png")
