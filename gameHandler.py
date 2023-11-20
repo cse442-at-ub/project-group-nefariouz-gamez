@@ -8,7 +8,7 @@ import sys
 import tkinter
 from tkinter import messagebox
 
-from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
+from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,SmallSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
 from MenuWidgets import *
 from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
@@ -2826,8 +2826,8 @@ lNineteen.append(GreenRSpike(0,210))
 lNineteen.append(GreenRSpike(0,244))
 
 lNineteen.append(FallPlat(0,300,85,15,BEIGE))
-lNineteen.append(FallPlat(121,269,25,17,BEIGE))
-lNineteen.append(smallShrub(115,217))
+lNineteen.append(FallPlat(116,269,25,17,BEIGE))#moved left from x 121
+lNineteen.append(smallShrub(110,217))#moved left from x 115
 
 lNineteen.append(FallPlat(191,289,25,17,BEIGE))
 lNineteen.append(FallPlat(262,230,25,17,BEIGE))
@@ -2986,24 +2986,41 @@ mp5plat1 = Platform(1102,444,73,23,ORANGE)
 lNineteen.append(mp5plat1)
 lNineteen.append(MovePlatVert(1123,330,30,23,172,331,[mp5plat1]))
 
+sSpike=SmallSpike(352,710)
+lNineteen.append(sSpike)
+sSpike2=SmallSpike(503,710)
+lNineteen.append(sSpike2)
+sSpike9=SmallSpike(423,710)
+lNineteen.append(sSpike9)
 mp6plat1 = Platform(352,662,11,48,ORANGE)
 lNineteen.append(mp6plat1)
 mp6plat2 = Platform(503,662,11,48,ORANGE)
 lNineteen.append(mp6plat2)
-lNineteen.append(MovePlatVert(423,662,11,48,620,740,[mp6plat1, mp6plat2]))
+lNineteen.append(MovePlatVert(423,662,11,48,620,740,[mp6plat1, mp6plat2,sSpike,sSpike2,sSpike9]))
 
-
+sSpike3=SmallSpike(583,710)
+lNineteen.append(sSpike3)
+sSpike4=SmallSpike(731,710)
+lNineteen.append(sSpike4)
+sSpike8=SmallSpike(657,710)
+lNineteen.append(sSpike8)
 mp7plat1 = Platform(583,662,11,48,ORANGE)
 lNineteen.append(mp7plat1)
 mp7plat2 = Platform(731,662,11,48,ORANGE)
 lNineteen.append(mp7plat2)
-lNineteen.append(MovePlatVert(657,662,11,48,620,740,[mp7plat1, mp7plat2]))
+lNineteen.append(MovePlatVert(657,662,11,48,620,740,[mp7plat1, mp7plat2,sSpike3,sSpike4,sSpike8]))
 
+sSpike5=SmallSpike(884,710)
+lNineteen.append(sSpike5)
+sSpike6=SmallSpike(1035,710)
+lNineteen.append(sSpike6)
+sSpike7=SmallSpike(955,710)
+lNineteen.append(sSpike7)
 mp8plat1 = Platform(884,662,11,48,ORANGE)
 lNineteen.append(mp8plat1)
 mp8plat2 = Platform(1035,662,11,48,ORANGE)
 lNineteen.append(mp8plat2)
-lNineteen.append(MovePlatVert(955,662,11,48,620,740,[mp8plat1, mp8plat2]))
+lNineteen.append(MovePlatVert(955,662,11,48,620,740,[mp8plat1, mp8plat2,sSpike5,sSpike6,sSpike7]))
 lNineteen.append(Platform(1190,0,10,591,WHITE))#fixes bug with right level border
 
 lNineteen.append(endSign(1150,716))
