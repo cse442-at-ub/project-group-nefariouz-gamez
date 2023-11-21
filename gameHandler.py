@@ -456,6 +456,7 @@ def settings():
     print("SETTINGS")
 
 def leaderboard():
+    display_leaderboard(window)
     print("LEADERBOARD")
 
 def quit_game():
@@ -498,7 +499,6 @@ def display_competitive_main_menu(screen):
             case"CHALLENGE MODE":
                 pass
             case "LEADERBOARD":
-                leaderboard()
             case "SETTINGS":
                 settings()
 
