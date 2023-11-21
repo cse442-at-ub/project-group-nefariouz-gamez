@@ -456,7 +456,6 @@ def settings():
     print("SETTINGS")
 
 def leaderboard():
-    display_leaderboard(window)
     print("LEADERBOARD")
 
 def quit_game():
