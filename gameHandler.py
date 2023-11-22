@@ -2343,7 +2343,7 @@ levelFourteen=Level(lFourteen,1125,174,"newlvl-13-16-background.png")
 ######################## LEVEL 15 ############################
 ##############################################################
 lFifteen = []
-lFifteen.append(Water(0,800,1200,1,BLACK))
+lFifteen.append(Water(60,800,1200,1,BLACK))
 lFifteen.append(Platform(1124,128,76,33,WHITE))
 lFifteen.append(Platform(662,142,82,19,WHITE))
 lFifteen.append(Platform(634,250,142,33,WHITE))
@@ -3178,7 +3178,7 @@ lEleven = moveSigns(lEleven, -40,564)
 lTwelve = moveSigns(lTwelve, -40,133)
 lthirteen = moveSigns(lthirteen, -40,201)
 lFourteen = moveSigns(lFourteen, -40,88)
-# lFifteen = moveSigns(lFifteen, 3,802)
+lFifteen = moveSigns(lFifteen, -30,800)
 lSixteen = moveSigns(lSixteen, -40,700)
 lSeventeen = moveSigns(lSeventeen, -40,190)
 lEighteen = moveSigns(lEighteen, -40,726)
