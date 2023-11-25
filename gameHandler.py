@@ -6,7 +6,9 @@ import math
 import pygame
 import sys
 import tkinter
+import json
 from tkinter import messagebox
+import requests
 
 from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
 from MenuWidgets import *
@@ -497,10 +499,45 @@ def display_competitive_main_menu(screen):
             case "LOAD":
                 load_level()
             case"CHALLENGE MODE":
-                pass
+                try:
+                    requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/", timeout=5)
+                except requests.ConnectionError:
+                    tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, any progress made will not be saved to the leaderboard.")
+                timer.reset_timer()#Reset timer before starting competitive mode
+                loadLevel(screen,cOne)#Load Competitive Level One
             case "LEADERBOARD":
+                retrieve_data_php()
             case "SETTINGS":
                 settings()
+
+
+# Function to insert data into the database via PHP endpoint
+def insert_data_php(username, time, character):
+    try:
+        url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
+        payload = {'username': username, 'time': time, 'character': character}
+        response = requests.post(url, data=payload)
+    except requests.ConnectionError:
+        tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, your data has not been saved to the leaderboard")
+
+
+# Function to retrieve data from the database via PHP endpoint
+def retrieve_data_php():
+    try:
+        url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            ret = []
+            for lists in data:
+                add = []
+                for vals in lists.values():
+                    add.append(vals)
+                ret.append(add)
+            print(ret)
+            return ret
+    except requests.ConnectionError:
+        tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, leaderboard cannot be updated")
 
 
 ##############################################################
@@ -588,7 +625,7 @@ def tutorial():
 def choose_character():
     display_choose_character(window)
     print("CHOOSE CHARACTER")
-    
+
 def return_main():
     lvlfile = open("currentLevel.txt", "r")
     currlvl = lvlfile.read()
@@ -598,7 +635,9 @@ def return_main():
     elif lvlint > 20:
         if user_name != '':
             open("competitive.txt", "x").close()
-            print(user_name)
+            writeName = open("competitive.txt", "w")
+            writeName.write(user_name)
+            writeName.close()
             wlvlfile = open("currentLevel.txt", "w")
             wlvlfile.write("1")
             wlvlfile.close()
@@ -1392,6 +1431,8 @@ class Level():
         self.init_x=starting_x
         self.init_y=starting_y
         self.copied=objects.copy()
+        self.is_comp=False
+        self.next_level=None
     def reset(self):
         for object in self.object_list:
             object.reset()
@@ -1541,22 +1582,38 @@ def collide(player, level, dx):
                 #PLAYER HAS REACHED END OF LEVEL
                 # ADD ONE TO COMPLETED LEVELS
                 #ENDLEVEL = True
-                timer.stop_timer()
-                lvlf = open("currentLevel.txt", "r")
-                levelnum = int(lvlf.read())
-                levelnum += 1
-                lvlf = open("currentLevel.txt", "w")
-                lvlf.write(str(levelnum))
-                lvlf.close()
-                # THEN OPEN BETWEEN LEVEL MENU
-                if levelnum > 20:
-                    if not os.path.exists("competitive.txt"):
-                        display_endgame_level_page(window)
+                if level.is_comp:
+                    timer.stop_timer()
+                    if level.next_level!=None:
+                        loadLevel(window,level.next_level)#Move to the next competitive level
                     else:
-                        display_level_twenty_page(window)
+                        namef = open("competitive.txt", "r")
+                        username = namef.read()
+                        namef.close()
+                        timef = open("levelTime.txt", "r")
+                        timeval = timef.read()
+                        timef.close()
+                        characterf = open("CurrentCharacter.txt", "r")
+                        character = characterf.read()
+                        characterf.close()
+                        insert_data_php(username, timeval, character)
                 else:
-                    display_between_level_page(window)
-            break
+                    timer.stop_timer()
+                    lvlf = open("currentLevel.txt", "r")
+                    levelnum = int(lvlf.read())
+                    levelnum += 1
+                    lvlf = open("currentLevel.txt", "w")
+                    lvlf.write(str(levelnum))
+                    lvlf.close()
+                    # THEN OPEN BETWEEN LEVEL MENU
+                    if levelnum > 20:
+                        if not os.path.exists("competitive.txt"):
+                            display_endgame_level_page(window)
+                        else:
+                            display_level_twenty_page(window)
+                    else:
+                        display_between_level_page(window)
+                break
 
     player.move(-dx, 0)
 
@@ -1736,8 +1793,8 @@ def getInput(player, level):
 
 
 BLACK=(0,0,0)
-fullScreenLeft=Void(-2000,0,2000,2000,BLACK,None)
-fullScreenRight=Void(1201,0,2000,2000,BLACK,None)
+fullScreenLeft=Void(-2000,0,1990,2000,BLACK,None)
+fullScreenRight=Void(1210,0,2000,2000,BLACK,None)
 fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
 
 
@@ -1745,8 +1802,8 @@ fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
 ######################## LEVEL 01 ############################
 ##############################################################
 lOne=[]
-lBorderLeft=Platform(-1,0,1,800,WHITE)
-lBorderRight=Platform(1201,0,1,800,WHITE)
+lBorderLeft=Platform(-10,0,10,800,BLACK)
+lBorderRight=Platform(1201,0,10,800,BLACK)
 #Player starting position (1100, 644)
 #background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
 start=Platform(890,670,152,75,WHITE)
@@ -2083,7 +2140,7 @@ mp7_1 = MovePlat(95, 415, 200, 51, 69, 1091, oList=mp07_1)
 mpo7_2 = []
 mpo7_2.append(smallShrub(641,363))
 mpo7_2.append(ReverseSmallShrub(792,466))
-mp7_2 = MovePlat(642, 415, 200, 51, 69, 1091, oList=mpo7_2, aList=[mp7_1])##original borders 34, 1126
+mp7_2 = MovePlat(642, 415, 200, 51, 69, 1091, oList=mpo7_2, aList=[mp7_1])##original as 34, 1126
 mp7_1.set_a([mp7_2])
 
 lSeven.append(mp7_1)
@@ -3260,8 +3317,69 @@ lTwenty.append(endSign(1150,147))
 lTwenty.append(lBorderRight)
 lTwenty.append(lBorderLeft)
 
-#levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
-levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
+levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
+#levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
+
+cOne=Level(lOne,1135,639,"Level 1 to 3 bkgrnd.png")#Comp Level One, uses same object list(Changed background path to remove tutorial)
+cTwo=Level(lTwo,1135,538,"Level 1 to 3 bkgrnd.png")
+cThree=Level(lThree,1100,470,"Level 1 to 3 bkgrnd.png")
+cFour=Level(lFour,1100,635,"CaveBackground1.png")
+cFive=Level(lFive,50,625,"CaveBackground1.png")
+cSix=Level(lSix,25,50,"CaveBackground1.png")
+cSeven=Level(lSeven,1040,225,"CaveBackground1.png")
+cEight=Level(lEight,70,590,"mysticalBackground.png")
+cNine=Level(lNine,872,645,"mysticalBackground.png")
+cTen=Level(lTen,60,630,"mysticalBackground.png")
+cEleven=Level(lEleven,1125,80,"newlvl-11-12-background.png")
+cTwelve=Level(lTwelve,1125,536,"newlvl-11-12-background.png")
+cThirteen=Level(lthirteen,1130,93,"newlvl-13-16-background.png")
+cFourteen=Level(lFourteen,1125,174,"newlvl-13-16-background.png")
+cFifteen=Level(lFifteen,1135,58,"newlvl-13-16-background.png")
+cSixteen=Level(lSixteen,0,0,"newlvl-13-16-background.png")
+cSeventeen=Level(lSeventeen,1120,650,"newlvl-13-16-background.png")
+cEighteen=Level(lEighteen,1130,185,"newlvl-17-18-background.png")
+cNineteen=Level(lNineteen,35,65,"newlvl-19-background.png")
+cTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")
+cOne.is_comp=True
+cOne.next_level=cTwo
+cTwo.is_comp=True
+cTwo.next_level=cThree
+cThree.is_comp=True
+cThree.next_level=cFour
+cFour.is_comp=True
+cFour.next_level=cFive
+cFive.is_comp=True
+cFive.next_level=cSix
+cSix.is_comp=True
+cSix.next_level=cSeven
+cSeven.is_comp=True
+cSeven.next_level=cEight
+cEight.is_comp=True
+cEight.next_level=cNine
+cNine.is_comp=True
+cNine.next_level=cTen
+cTen.is_comp=True
+cTen.next_level=cEleven
+cEleven.is_comp=True
+cEleven.next_level=cTwelve
+cTwelve.is_comp=True
+cTwelve.next_level=cThirteen
+cThirteen.is_comp=True
+cThirteen.next_level=cFourteen
+cFourteen.is_comp=True
+cFourteen.next_level=cFifteen
+cFifteen.is_comp=True
+cFifteen.next_level=cSixteen
+cSixteen.is_comp=True
+cSixteen.next_level=cSeventeen
+cSeventeen.is_comp=True
+cSeventeen.next_level=cEighteen
+cEighteen.is_comp=True
+cEighteen.next_level=cNineteen
+cNineteen.is_comp=True
+cNineteen.next_level=cTwenty
+cTwenty.is_comp=True
+
 
 
 
@@ -3275,7 +3393,8 @@ def loadLevel(window, level):
     bg_image=level.bg_image
     playerOne=Player(level.init_x,level.init_y,30,64)
     check_size=(1200,800)
-    timer.reset_timer()
+    if not level.is_comp:
+        timer.reset_timer()
     timer.start_timer()
     offset=0
     global last_pause_time
