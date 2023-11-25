@@ -506,7 +506,8 @@ def display_competitive_main_menu(screen):
                 timer.reset_timer()#Reset timer before starting competitive mode
                 loadLevel(screen,cOne)#Load Competitive Level One
             case "LEADERBOARD":
-                retrieve_data_php()
+                info = retrieve_data_php()
+                display_leaderboard(window, info)
             case "SETTINGS":
                 settings()
 
@@ -711,20 +712,23 @@ class LeaderboardSlot:
 
         screen.blit(button_surface, button_rect)
 
-TEST_LB_ARRAY = [["sqPro", "30.06", "Maia"], ["craig??", "36.95", "Celia"], ["egg", "43.22", "Maia"], ["duckarmy77", "47.82", "Oscar"], ["themilkman", "49.02", "Malcolm"], ["soup", "58.91", "Celia"], ["snail", "60.53", "Celia"], ["shrubdestroyer", "69.78", "Oscar"], ["maiamainftw", "70.02", "Maia"], ["top10lol", "77.32", "Maia"]]
-YOU = TEST_LB_ARRAY[2]
-
-find_top_10 = [20, 10, 5, 15, 1000, 200, 30, 55.5, 69, 33, 84, 2000, 101, 10000, 800, 2]
-
-def sortTop10(arr):
-    return(sorted(arr)[:10])
-
-print(sortTop10(find_top_10))
-
 def dummyReturn():
     return
 
-def display_leaderboard(screen):
+def display_leaderboard(screen, data):
+    sorted_entries = sorted(data, key=lambda x: int(x[1]))
+    top_10 = sorted_entries[:10]
+    print(top_10)
+
+    readName = open("competitive.txt", "r")
+    current_user = readName.read()
+    current_user_time, current_user_character, current_user_position = "N/A", "N/A", "N/A"
+    readName.close()
+
+    for entry in sorted_entries:
+        if current_user in entry:
+            current_user_time, current_user_character, current_user_position = entry[1], entry[2], sorted_entries.index(entry) + 1
+
     positions = []
     screen_width, screen_height = screen.get_size()
     background_img = pygame.image.load("assets/Background/BetlvlBackground.png")
@@ -796,7 +800,7 @@ def display_leaderboard(screen):
             widget.draw(screen)
 
         leaderboard_entry_font = pygame.font.Font(None, 36)
-        for i in zip(TEST_LB_ARRAY, positions):
+        for i in zip(top_10, positions):
             user, user_time, character, height = i[0][0], i[0][1], i[0][2], i[1][1]
             
             userText = leaderboard_entry_font.render(user, False, (34, 90, 48))
@@ -827,21 +831,27 @@ def display_leaderboard(screen):
             draw_text("#" + str(i + 1), pygame.font.Font(None, 40), (0, 0, 0), ((screen_width * .125, (height))))
 
         
-        user, time, character, height = YOU[0], YOU[1], YOU[2], widgets[10].pos[1]
+        height = widgets[10].pos[1]
 
-        draw_text("#" + str(TEST_LB_ARRAY.index(YOU) + 1), pygame.font.Font(None, 40), (0, 0, 0), ((screen_width * .125, (height))))
+        if current_user_position != "N/A":
+            draw_text("#" + str(current_user_position), pygame.font.Font(None, 40), (0, 0, 0), ((screen_width * .125, (height))))
         
-        userText = leaderboard_entry_font.render(user, False, (34, 90, 48))
+        userText = leaderboard_entry_font.render(current_user, False, (34, 90, 48))
         userTextRect = userText.get_rect()
         userTextRect.left, userTextRect.centery = screen_width * .16, height
 
-        characterText = leaderboard_entry_font.render(character, False, (34, 90, 48))
+        characterText = leaderboard_entry_font.render(current_user_character, False, (34, 90, 48))
         characterTextRect = characterText.get_rect()
         characterTextRect.right, characterTextRect.centery = screen_width * .84, height
 
         screen.blit(userText, userTextRect)
-        correct_time = strftime("%M:%S", gmtime(float(time)))
-        draw_text(correct_time, pygame.font.Font(None, 36), (34, 90, 48), (screen_width * .5, height))
+
+        if current_user_time == "N/A":
+            draw_text(current_user_time, pygame.font.Font(None, 36), (34, 90, 48), (screen_width * .5, height))
+        else:
+            correct_time = strftime("%M:%S", gmtime(float(current_user_time)))
+            draw_text(correct_time, pygame.font.Font(None, 36), (34, 90, 48), (screen_width * .5, height))
+
         screen.blit(characterText, characterTextRect)
 
         pygame.display.flip()
