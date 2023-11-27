@@ -1481,7 +1481,7 @@ def getInput(player, level):
                     if object.name=="ladder":
                         player.on_ladder=True
                         player.in_air=False
-                        player.rect.x=object.rect.x-15#set x value to Ladder x Valued
+                        player.rect.x=object.rect.x-15#set x value to Ladder x Valued  object.rect.x-object.rect.width/2?
                         #player.rect.y=player.rect.y+1
                         g=1
             if g==0:
@@ -1879,7 +1879,12 @@ lSix.extend(mpo6_1)
 lSix.append(mp6_2)
 lSix.extend(mpo6_2)
 
-lSix.append(MovePlat(281, 405, 200, 51, 34, 860))
+lSix.append(MovePlat(281, 405, 200, 51, 34, 825))#right bound changed from 860
+
+
+fixSpike=BlackLSpike(830,410)
+lSix.append(fixSpike)
+
 
 # Spikes at bottom
 lSix.append(BlackSpike(35,662))
