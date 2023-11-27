@@ -506,6 +506,7 @@ def display_competitive_main_menu(screen):
                 timer.reset_timer()#Reset timer before starting competitive mode
                 loadLevel(screen,cOne)#Load Competitive Level One
             case "LEADERBOARD":
+                retrieve_data_php()
                 leaderboard()
             case "SETTINGS":
                 settings()
@@ -718,6 +719,8 @@ class LeaderboardSlot:
 
 TEST_LB_ARRAY = [["sqPro", "30.06", "Maia"], ["craig??", "36.95", "Celia"], ["egg", "43.22", "Maia"], ["duckarmy77", "47.82", "Oscar"], ["themilkman", "49.02", "Malcolm"], ["soup", "58.91", "Celia"], ["snail", "60.53", "Celia"], ["shrubdestroyer", "69.78", "Oscar"], ["maiamainftw", "70.02", "Maia"], ["top10lol", "77.32", "Maia"]]
 YOU = TEST_LB_ARRAY[2]
+
+# this uses the databases information
 TEST_LB_ARRAY2 = retrieve_data_php()
 YOU = TEST_LB_ARRAY2[1]
 
@@ -1591,6 +1594,9 @@ def collide(player, level, dx):
                 #ENDLEVEL = True
                 if level.is_comp:
                     timer.stop_timer()
+                    timef = open("levelTime.txt", "w")
+                    timef.write(str(timer.return_time()))
+                    timef.close()
                     if level.next_level!=None:
                         loadLevel(window,level.next_level)#Move to the next competitive level
                     else:
@@ -1604,6 +1610,7 @@ def collide(player, level, dx):
                         character = characterf.read()
                         characterf.close()
                         insert_data_php(username, timeval, character)
+                        display_level_twenty_page(window)
                 else:
                     timer.stop_timer()
                     lvlf = open("currentLevel.txt", "r")
@@ -3346,9 +3353,9 @@ cSixteen=Level(lSixteen,0,0,"newlvl-13-16-background.png")
 cSeventeen=Level(lSeventeen,1120,650,"newlvl-13-16-background.png")
 cEighteen=Level(lEighteen,1130,185,"newlvl-17-18-background.png")
 cNineteen=Level(lNineteen,35,65,"newlvl-19-background.png")
-cTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")
+cTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
 cOne.is_comp=True
-cOne.next_level=cTwo
+cOne.next_level=cTwenty
 cTwo.is_comp=True
 cTwo.next_level=cThree
 cThree.is_comp=True
