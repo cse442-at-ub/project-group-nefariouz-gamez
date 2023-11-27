@@ -514,9 +514,14 @@ def display_competitive_main_menu(screen):
 
 # Function to insert data into the database via PHP endpoint
 def insert_data_php(username, time, character):
+    mode = 1
+    data = retrieve_data_php()
+    for lists in data:
+        if username in lists and character in lists:
+            mode = 2
     try:
         url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
-        payload = {'username': username, 'time': time, 'character': character}
+        payload = {'username': username, 'time': time, 'character': character, 'mode': mode}
         response = requests.post(url, data=payload)
     except requests.ConnectionError:
         tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, your data has not been saved to the leaderboard")
@@ -714,6 +719,7 @@ class LeaderboardSlot:
 
 def dummyReturn():
     return
+
 
 def display_leaderboard(screen, data):
     sorted_entries = sorted(data, key=lambda x: float(x[1]))
@@ -1601,6 +1607,9 @@ def collide(player, level, dx):
                 #ENDLEVEL = True
                 if level.is_comp:
                     timer.stop_timer()
+                    timef = open("levelTime.txt", "w")
+                    timef.write(str(timer.return_time()))
+                    timef.close()
                     if level.next_level!=None:
                         loadLevel(window,level.next_level)#Move to the next competitive level
                     else:
@@ -1614,6 +1623,7 @@ def collide(player, level, dx):
                         character = characterf.read()
                         characterf.close()
                         insert_data_php(username, timeval, character)
+                        display_level_twenty_page(window)
                 else:
                     timer.stop_timer()
                     lvlf = open("currentLevel.txt", "r")
