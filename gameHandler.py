@@ -717,17 +717,24 @@ def dummyReturn():
 
 def display_leaderboard(screen, data):
     sorted_entries = sorted(data, key=lambda x: int(x[1]))
-    top_10 = sorted_entries[:10]
-    print(top_10)
+    
+    no_duplicates, logged = [], []
+    for entry in sorted_entries:
+        username = entry[0]
+        if username not in logged:
+            logged.append(username)
+            no_duplicates.append(entry)
+
+    top_10 = no_duplicates[:10]
 
     readName = open("competitive.txt", "r")
     current_user = readName.read()
     current_user_time, current_user_character, current_user_position = "N/A", "N/A", "N/A"
     readName.close()
 
-    for entry in sorted_entries:
+    for entry in no_duplicates:
         if current_user in entry:
-            current_user_time, current_user_character, current_user_position = entry[1], entry[2], sorted_entries.index(entry) + 1
+            current_user_time, current_user_character, current_user_position = entry[1], entry[2], no_duplicates.index(entry) + 1
 
     positions = []
     screen_width, screen_height = screen.get_size()
