@@ -7,6 +7,7 @@ import pygame
 import sys
 import tkinter
 from tkinter import messagebox
+import requests
 
 from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,SmallSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
 from MenuWidgets import *
@@ -64,7 +65,7 @@ ENDLEVEL = False
 user_name = ''
 
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
-timer = Timer()
+global timer
 global last_pause_time
 
 
@@ -387,6 +388,9 @@ def scale_window_main(screen):
     return widgets, background_img
 
 def start_game():
+    global timer
+    timer = Timer()
+
     # Always Loads Level 1
     lvlf = open("currentLevel.txt", "w")
     lvlf.write("1")
@@ -395,6 +399,9 @@ def start_game():
     display_tut(window)
 
 def load_level():
+    global timer
+    timer = Timer()
+
     # Loads level based on what current level you're on in
     lvlfile = open("currentLevel.txt", "r")
     currlvl = lvlfile.read()
@@ -491,10 +498,20 @@ def display_competitive_main_menu(screen):
             case "LOAD":
                 load_level()
             case"CHALLENGE MODE":
-                timer.reset_timer()#Reset timer before starting competitive mode
-                loadLevel(screen,cOne)#Load Competitive Level One
+                try:
+                    requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/", timeout=5)
+                    global timer
+                    timer = CompetitiveTimer() # Switch Timers
+                except:
+                    tkinter.messagebox.showerror("Error", "Please connect to the Internet to play competitive mode.")
+                    continue
+                timer.start_timer()
+                loadLevel(screen,cOne) # Load Competitive Level One
             case "LEADERBOARD":
-                pass
+                try:
+                    requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/", timeout=5)
+                except:
+                    tkinter.messagebox.showerror("Error", "Unable to connect to leaderboard. Please connect to the Internet.")
             case "SETTINGS":
                 settings()
 
@@ -1204,7 +1221,11 @@ def beat_competitive_page(screen):
     widget = Button((screen_width/2, (screen_height/2)+20), (300, 54), "RETURN TO MAIN", return_main)
 
     currtime = timer.return_time()
-    # THIS IS WHERE TIME CAN BE SENT TO DATABASE
+    try:
+        requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/")
+        # THIS IS WHERE ITEMS CAN BE SENT TO DATABASE @JOSH
+    except:
+        tkinter.messagebox.showerror("Error","You are unable to connect to the database, your data has not been saved to the leaderboard")
     minutes = math.floor(currtime / 60)
     seconds = round(currtime  - (minutes * 60), 2)
     hours = math.floor(minutes / 60)
@@ -1411,10 +1432,15 @@ def collide(player, level, dx):
                 # ADD ONE TO COMPLETED LEVELS
                 #ENDLEVEL = True
                 if level.is_comp:
-                    timer.stop_timer()
+                    try:
+                        requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/")
+                    except:
+                        tkinter.messagebox.showerror("Error", "Lost Internet connection. Please reconnect to the Internet to play competitive mode.")
+                        display_competitive_main_menu(window)
                     if level.next_level!=None:
                         loadLevel(window,level.next_level)#Move to the next competitive level
                     else:
+                       timer.stop_timer()
                        beat_competitive_page(window)
                 else:
                     timer.stop_timer()
@@ -1572,7 +1598,12 @@ def getInput(player, level):
                 getOverlap(player,player.reachBox,level)
 
         if keys[pygame.K_ESCAPE]:
-            timer.stop_timer()
+            if timer.stop_timer() == False:
+                tkinter.messagebox.showerror("Error", "Lost Internet connection. Please reconnect to the Internet to play competitive mode.")
+                if os.path.exists("competitive.txt"):
+                        display_competitive_main_menu(window)
+                else:
+                    display_main_menu(window)
 
             global last_pause_time
             time_since_last = timer.return_time() - last_pause_time
@@ -1584,7 +1615,12 @@ def getInput(player, level):
                         display_main_menu(window)
                 last_pause_time = timer.return_time()
 
-            timer.start_timer()
+            if timer.start_timer() == False:
+                tkinter.messagebox.showerror("Error", "Lost Internet connection. Please reconnect to the Internet to play competitive mode.")
+                if os.path.exists("competitive.txt"):
+                        display_competitive_main_menu(window)
+                else:
+                    display_main_menu(window)
 
         if current_character == "Malcolm":
             if keys[pygame.K_q] and player.jump_count == 1 and player.in_air:
@@ -3211,7 +3247,7 @@ cSixteen=Level(lSixteen,0,0,"newlvl-13-16-background.png")
 cSeventeen=Level(lSeventeen,1120,650,"newlvl-13-16-background.png")
 cEighteen=Level(lEighteen,1130,185,"newlvl-17-18-background.png")
 cNineteen=Level(lNineteen,35,65,"newlvl-19-background.png")
-cTwenty=Level(lTwenty,5,690,"newlvl-20-background.png")
+cTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")
 cOne.is_comp=True
 cOne.next_level=cTwo
 cTwo.is_comp=True
@@ -3265,7 +3301,7 @@ def loadLevel(window, level):
     check_size=(1200,800)
     if not level.is_comp:
         timer.reset_timer()
-    timer.start_timer()
+        timer.start_timer()
     offset=0
     global last_pause_time
     last_pause_time = 0
