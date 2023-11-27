@@ -716,7 +716,7 @@ def dummyReturn():
     return
 
 def display_leaderboard(screen, data):
-    sorted_entries = sorted(data, key=lambda x: int(x[1]))
+    sorted_entries = sorted(data, key=lambda x: float(x[1]))
     
     no_duplicates, logged = [], []
     for entry in sorted_entries:
