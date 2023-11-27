@@ -506,16 +506,21 @@ def display_competitive_main_menu(screen):
                 timer.reset_timer()#Reset timer before starting competitive mode
                 loadLevel(screen,cOne)#Load Competitive Level One
             case "LEADERBOARD":
-                retrieve_data_php()
+                leaderboard()
             case "SETTINGS":
                 settings()
 
 
 # Function to insert data into the database via PHP endpoint
 def insert_data_php(username, time, character):
+    mode = 1
+    data = retrieve_data_php()
+    for lists in data:
+        if username in lists and character in lists:
+            mode = 2
     try:
         url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
-        payload = {'username': username, 'time': time, 'character': character}
+        payload = {'username': username, 'time': time, 'character': character, 'mode': mode}
         response = requests.post(url, data=payload)
     except requests.ConnectionError:
         tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, your data has not been saved to the leaderboard")
@@ -713,6 +718,8 @@ class LeaderboardSlot:
 
 TEST_LB_ARRAY = [["sqPro", "30.06", "Maia"], ["craig??", "36.95", "Celia"], ["egg", "43.22", "Maia"], ["duckarmy77", "47.82", "Oscar"], ["themilkman", "49.02", "Malcolm"], ["soup", "58.91", "Celia"], ["snail", "60.53", "Celia"], ["shrubdestroyer", "69.78", "Oscar"], ["maiamainftw", "70.02", "Maia"], ["top10lol", "77.32", "Maia"]]
 YOU = TEST_LB_ARRAY[2]
+TEST_LB_ARRAY2 = retrieve_data_php()
+YOU = TEST_LB_ARRAY2[1]
 
 find_top_10 = [20, 10, 5, 15, 1000, 200, 30, 55.5, 69, 33, 84, 2000, 101, 10000, 800, 2]
 
@@ -796,7 +803,7 @@ def display_leaderboard(screen):
             widget.draw(screen)
 
         leaderboard_entry_font = pygame.font.Font(None, 36)
-        for i in zip(TEST_LB_ARRAY, positions):
+        for i in zip(TEST_LB_ARRAY2, positions):
             user, user_time, character, height = i[0][0], i[0][1], i[0][2], i[1][1]
             
             userText = leaderboard_entry_font.render(user, False, (34, 90, 48))
@@ -829,7 +836,7 @@ def display_leaderboard(screen):
         
         user, time, character, height = YOU[0], YOU[1], YOU[2], widgets[10].pos[1]
 
-        draw_text("#" + str(TEST_LB_ARRAY.index(YOU) + 1), pygame.font.Font(None, 40), (0, 0, 0), ((screen_width * .125, (height))))
+        draw_text("#" + str(TEST_LB_ARRAY2.index(YOU) + 1), pygame.font.Font(None, 40), (0, 0, 0), ((screen_width * .125, (height))))
         
         userText = leaderboard_entry_font.render(user, False, (34, 90, 48))
         userTextRect = userText.get_rect()
