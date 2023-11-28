@@ -1298,10 +1298,11 @@ class Level():
 
 
 def draw(window, background, bg_image,player,level,offset):
-    for tile in background:
-        offtile=(tile.__getitem__(0)+offset,tile.__getitem__(1))
-        window.blit(bg_image, offtile)
-
+    #for tile in background:
+    #    offtile=(tile.__getitem__(0)+offset,tile.__getitem__(1))
+    #    window.blit(bg_image, offtile)
+    window.blit(bg_image, (offset,0))
+    
     for object in level.object_list:
         object.draw(window,offset)
 
