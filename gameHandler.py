@@ -9,7 +9,7 @@ import tkinter
 from tkinter import messagebox
 import requests
 
-from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,SmallSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
+from gameObjects import Object, goldShears, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,SmallSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
 from MenuWidgets import *
 from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
@@ -3192,7 +3192,7 @@ lTwenty.append(l20mp4sp2)
 l20mp4 = MovePlatVert(402,179,37,29,131,250,[l20mp4sp1,l20mp4sp2])
 lTwenty.append(l20mp4)
 
-lTwenty.append(endSign(1150,147))
+lTwenty.append(goldShears(1150,147))
 lTwenty.append(lBorderRight)
 lTwenty.append(lBorderLeft)
 
