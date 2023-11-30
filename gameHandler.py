@@ -640,14 +640,24 @@ def return_main():
         display_competitive_main_menu(window)
     elif lvlint > 20:
         if user_name != '':
-            open("competitive.txt", "x").close()
-            writeName = open("competitive.txt", "w")
-            writeName.write(user_name)
-            writeName.close()
-            wlvlfile = open("currentLevel.txt", "w")
-            wlvlfile.write("1")
-            wlvlfile.close()
-            display_competitive_main_menu(window)
+            nametaken = 0
+            checkForName = retrieve_data_php()
+            for lists in checkForName:
+                if user_name in lists:
+                    nametaken = 1
+            if nametaken == 1:
+                tkinter.messagebox.showwarning("Warning","Sorry, the username you've entered is already in use, please try another name.")
+            else:
+                #name available, so need to add blank entry to db
+                insert_data_php(user_name, '999999', 'nameholder')
+                open("competitive.txt", "x").close()
+                writeName = open("competitive.txt", "w")
+                writeName.write(user_name)
+                writeName.close()
+                wlvlfile = open("currentLevel.txt", "w")
+                wlvlfile.write("1")
+                wlvlfile.close()
+                display_competitive_main_menu(window)
         else:
             tkinter.messagebox.showwarning("Warning","Please Enter a Name Before Returning to Menu")
     else:
@@ -3345,7 +3355,7 @@ lTwenty.append(lBorderRight)
 lTwenty.append(lBorderLeft)
 
 levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
-#levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
+#levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")
 
 cOne=Level(lOne,1135,639,"Level 1 to 3 bkgrnd.png")#Comp Level One, uses same object list(Changed background path to remove tutorial)
 cTwo=Level(lTwo,1135,538,"Level 1 to 3 bkgrnd.png")
