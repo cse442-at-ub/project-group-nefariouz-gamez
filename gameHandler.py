@@ -15,6 +15,7 @@ from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
 from competitiveMainMenu import show_competitive_main_menu
 from level_timer import *
+import ntplib
 
 from os import listdir
 from os.path import isfile, join
@@ -499,7 +500,7 @@ def display_competitive_main_menu(screen):
                 load_level()
             case"CHALLENGE MODE":
                 try:
-                    requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/", timeout=5)
+                    ntplib.NTPClient().request('time.nist.gov')
                     global timer
                     timer = CompetitiveTimer() # Switch Timers
                 except:
@@ -509,7 +510,7 @@ def display_competitive_main_menu(screen):
                 loadLevel(screen,cOne) # Load Competitive Level One
             case "LEADERBOARD":
                 try:
-                    requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/", timeout=5)
+                    ntplib.NTPClient().request('time.nist.gov')
                 except:
                     tkinter.messagebox.showerror("Error", "Unable to connect to leaderboard. Please connect to the Internet.")
             case "SETTINGS":
@@ -1222,7 +1223,7 @@ def beat_competitive_page(screen):
 
     currtime = timer.return_time()
     try:
-        requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/")
+        ntplib.NTPClient().request('time.nist.gov')
         # THIS IS WHERE ITEMS CAN BE SENT TO DATABASE @JOSH
     except:
         tkinter.messagebox.showerror("Error","You are unable to connect to the database, your data has not been saved to the leaderboard")
@@ -1302,7 +1303,7 @@ def draw(window, background, bg_image,player,level,offset):
     #    offtile=(tile.__getitem__(0)+offset,tile.__getitem__(1))
     #    window.blit(bg_image, offtile)
     window.blit(bg_image, (offset,0))
-    
+
     for object in level.object_list:
         object.draw(window,offset)
 
@@ -1434,7 +1435,7 @@ def collide(player, level, dx):
                 #ENDLEVEL = True
                 if level.is_comp:
                     try:
-                        requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/")
+                        ntplib.NTPClient().request('time.nist.gov')
                     except:
                         tkinter.messagebox.showerror("Error", "Lost Internet connection. Please reconnect to the Internet to play competitive mode.")
                         display_competitive_main_menu(window)
