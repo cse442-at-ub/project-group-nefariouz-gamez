@@ -67,7 +67,7 @@ user_name = ''
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
 global timer
 global last_pause_time
-
+global hertz_ee
 
 ##############################################################
 ##############################################################
@@ -375,15 +375,23 @@ def scale_window_main(screen):
     screen_width, screen_height = screen.get_size()   # find screen dimensions
 
     background_img = pygame.image.load("assets/Background/TitleNoShear.png")
+
     background_img = pygame.transform.scale(background_img, (screen_width, screen_height))   # scale background to resolution
 
     # creates widgets based on screen size
     widgets = [
-        Button((screen_width/2, (screen_height/2)-120), (300, 54), "BEGIN YOUR QUEST", start_game),
-        Button((screen_width/2, (screen_height/2)-40), (300, 54), "LOAD LEVEL", load_level),
-        Button((screen_width/2, (screen_height/2)+40), (300, 54), "SETTINGS", settings),
-        Button((screen_width/2, (screen_height/2)+120), (300, 54), "QUIT", quit_game)
+        ColorfulButton((screen_width/2, (screen_height/2)-120), (300, 54), "BEGIN YOUR QUEST", start_game),
+        ColorfulButton((screen_width/2, (screen_height/2)-40), (300, 54), "LOAD LEVEL", load_level),
+        ColorfulButton((screen_width/2, (screen_height/2)+40), (300, 54), "SETTINGS", settings),
+        ColorfulButton((screen_width/2, (screen_height/2)+120), (300, 54), "QUIT", quit_game)
     ]
+
+    global hertz_ee
+    if hertz_ee:
+        background_img = pygame.image.load("assets/Background/hertz_passion.png")
+        for widget in widgets:
+            widget.default_color = (137, 148, 153)
+            widget.hover_color = (169, 169, 169)
 
     return widgets, background_img
 
@@ -466,6 +474,8 @@ def quit_game():
 
 def display_main_menu(screen):
     widgets, background_img = scale_window_main(screen)
+    secret_code = [pygame.K_h, pygame.K_e, pygame.K_r, pygame.K_t, pygame.K_z]
+    buffer = []
 
     running = True
     while running:
@@ -474,6 +484,17 @@ def display_main_menu(screen):
                 running = False
             elif event.type == pygame.VIDEORESIZE:
                 widgets, background_img = scale_window_main(screen)   # rescales visuals for new resolution
+            elif event.type == pygame.KEYDOWN:
+                if len(buffer) == 0 or buffer[-1] != event.key:
+                    buffer.append(event.key)
+
+                    if len(buffer) > 5:
+                        buffer.pop(0)
+
+                    if buffer == secret_code:
+                        global hertz_ee
+                        hertz_ee = not hertz_ee
+                        widgets, background_img = scale_window_main(screen)
 
             # checks for buttons clicked
             for widget in widgets:
@@ -492,7 +513,9 @@ def display_main_menu(screen):
 
 def display_competitive_main_menu(screen):
     while True:
-        match show_competitive_main_menu(screen):
+        global hertz_ee
+        return_to, hertz_ee = show_competitive_main_menu(screen, hertz_ee)
+        match return_to:
             case "START":
                 start_game()
             case "LOAD":
@@ -1302,7 +1325,7 @@ def draw(window, background, bg_image,player,level,offset):
     #    offtile=(tile.__getitem__(0)+offset,tile.__getitem__(1))
     #    window.blit(bg_image, offtile)
     window.blit(bg_image, (offset,0))
-    
+
     for object in level.object_list:
         object.draw(window,offset)
 
@@ -3340,6 +3363,7 @@ def loadLevel(window, level):
     quit()
 
 if __name__ == "__main__":
+    hertz_ee = False
     if os.path.exists("competitive.txt"):
         display_competitive_main_menu(window)
     else:
