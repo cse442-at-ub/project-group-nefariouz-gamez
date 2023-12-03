@@ -750,7 +750,8 @@ def display_leaderboard(screen, data):
 
     for entry in no_duplicates:
         if current_user in entry:
-            current_user_time, current_user_character, current_user_position = entry[1], entry[2], no_duplicates.index(entry) + 1
+            if entry[1] != 999999 and entry[2] != "nameholder":
+                current_user_time, current_user_character, current_user_position = entry[1], entry[2], no_duplicates.index(entry) + 1
 
     positions = []
     screen_width, screen_height = screen.get_size()
