@@ -472,13 +472,22 @@ def quit_game():
     pygame.quit()
     sys.exit()
 
+konami = False
 def display_main_menu(screen):
+    global konami
     widgets, background_img = scale_window_main(screen)
     secret_code = [pygame.K_h, pygame.K_e, pygame.K_r, pygame.K_t, pygame.K_z]
     buffer = []
 
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
+
+    KONAMI = [pygame.K_UP, pygame.K_UP, pygame.K_DOWN, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_b, pygame.K_a]
+    code, index = [], 0
+
     running = True
     while running:
+        key = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -495,6 +504,23 @@ def display_main_menu(screen):
                         global hertz_ee
                         hertz_ee = not hertz_ee
                         widgets, background_img = scale_window_main(screen)
+                if konami == False:
+                    if event.key == KONAMI[index]:
+                        code.append(event.key)
+                        index += 1
+                        if code == KONAMI:
+                            index = 0
+                            if int(max_level_unlocked) < 15:
+                                tkinter.messagebox.showinfo("A secret?","Check the character selection screen...")
+                                print('KONAMI!')
+                                konami = True
+                            else:
+                                tkinter.messagebox.showinfo("You did it!","You have already unlocked all 4 characters so the easter egg won't do anything, but good job finding it! :)")
+                    else:
+                        code = []
+                        index = 0
+
+                    
 
             # checks for buttons clicked
             for widget in widgets:
@@ -740,6 +766,7 @@ if max_level_unlocked == "" or int(max_level_unlocked) < int(max_level):
 
 # onClick events for each character and the OK button
 def click_Celia():
+    global konami
     global current_character
     global character_text
     global selected_text
@@ -766,6 +793,7 @@ def click_Celia():
 
 
 def click_Malcolm():
+    global konami
     global current_character
     global character_text
     global selected_text
@@ -777,7 +805,7 @@ def click_Malcolm():
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if max_level_unlocked != "" and int(max_level_unlocked) >= 5:
+    if max_level_unlocked != "" and int(max_level_unlocked) >= 5 or konami == True:
         current_character = "Malcolm"
         powerup_read = "Double jump in air"
         cooldown_read = ""
@@ -801,11 +829,12 @@ def click_Maia():
     global powerup_text
     global cooldown_read
     global cooldown_text
+    global konami
 
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if max_level_unlocked != "" and int(max_level_unlocked) >= 10:
+    if max_level_unlocked != "" and int(max_level_unlocked) >= 10 or konami == True:
         current_character = "Maia"
         powerup_read = "Walk through shrubs for 5 seconds (15 sec cooldown)"
         cooldown_read = ""
@@ -829,12 +858,12 @@ def click_Oscar():
     global powerup_text
     global cooldown_read
     global cooldown_text
-
+    global konami
 
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if max_level_unlocked != "" and int(max_level_unlocked) >= 15:
+    if max_level_unlocked != "" and int(max_level_unlocked) >= 15 or konami == True:
         current_character = "Oscar"
         powerup_read = "Walk through shrubs and spikes for 5 seconds (30 sec cooldown)"
         cooldown_read = "Can also double jump in air"
@@ -890,6 +919,7 @@ def check_update():
     global powerup_text
     global cooldown_text
     global char_text_color
+    global konami
 
     check_unlocked_level()
 
@@ -899,32 +929,54 @@ def check_update():
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if current_character == "" or max_level_unlocked == "" or int(max_level_unlocked) < 5:
+    if current_character == "":
         f.close()
         f = open("CurrentCharacter.txt", "w")
         f.write("Celia")
         f.close()
         f = open("CurrentCharacter.txt", "r")
         click_Celia()
-    elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (current_character == "Maia" and int(max_level_unlocked) < 10) or (current_character == "Oscar" and int(max_level_unlocked) < 15):
-        f.close()
-        f = open("CurrentCharacter.txt", "w")
-        f.write("Celia")
-        f.close()
-        f = open("CurrentCharacter.txt", "r")
-        click_Celia()
-    elif current_character == "Celia":
-        char_text_color = "darkgreen"
-        click_Celia()
-    elif current_character == "Malcolm":
-        char_text_color = "darkorange4"
-        click_Malcolm()
-    elif current_character == "Maia":
-        char_text_color = "maroon3"
-        click_Maia()
-    elif current_character == "Oscar":
-        char_text_color = "indigo"
-        click_Oscar()
+
+    if konami == False:
+        if max_level_unlocked == "" or int(max_level_unlocked) < 5:
+            f.close()
+            f = open("CurrentCharacter.txt", "w")
+            f.write("Celia")
+            f.close()
+            f = open("CurrentCharacter.txt", "r")
+            click_Celia()
+        elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (current_character == "Maia" and int(max_level_unlocked) < 10) or (current_character == "Oscar" and int(max_level_unlocked) < 15):
+            f.close()
+            f = open("CurrentCharacter.txt", "w")
+            f.write("Celia")
+            f.close()
+            f = open("CurrentCharacter.txt", "r")
+            click_Celia()
+        elif current_character == "Celia":
+            char_text_color = "darkgreen"
+            click_Celia()
+        elif current_character == "Malcolm":
+            char_text_color = "darkorange4"
+            click_Malcolm()
+        elif current_character == "Maia":
+            char_text_color = "maroon3"
+            click_Maia()
+        elif current_character == "Oscar":
+            char_text_color = "indigo"
+            click_Oscar()
+    elif konami == True:
+        if current_character == "Celia":
+            char_text_color = "darkgreen"
+            click_Celia()
+        elif current_character == "Malcolm":
+            char_text_color = "darkorange4"
+            click_Malcolm()
+        elif current_character == "Maia":
+            char_text_color = "maroon3"
+            click_Maia()
+        elif current_character == "Oscar":
+            char_text_color = "indigo"
+            click_Oscar()
     f = open("CurrentCharacter.txt", "r")
     selected_text = character_select_font.render("You are currently playing as", False, "Black")
     character_text = character_select_font.render(current_character, False, char_text_color)
@@ -935,27 +987,36 @@ def check_update():
 
 def check_unlocked_level():
     global current_character
+    global konami
 
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if max_level_unlocked == "" or int(max_level_unlocked) < 5:
-        current_character = "Celia"
-        f = open("CurrentCharacter.txt", "w")
-        f.write("Celia")
-        f.close()
-        Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png'))
-        Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMalcolm.png'))
-        Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
-        Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
-    elif int(max_level_unlocked) < 10:
-        Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
-        Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
-    elif int(max_level_unlocked) < 15:
-        Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+    if konami == False:
+        if max_level_unlocked == "" or int(max_level_unlocked) < 5:
+            current_character = "Celia"
+            f = open("CurrentCharacter.txt", "w")
+            f.write("Celia")
+            f.close()
+            Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png'))
+            Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMalcolm.png'))
+            Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
+            Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+        elif int(max_level_unlocked) < 10:
+            Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
+            Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+        elif int(max_level_unlocked) < 15:
+            Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+
+    # if konami == True:
+    #     Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png'))
+    #     Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Malcolm.png'))
+    #     Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Maia.png'))
+    #     Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Oscar.png'))
 
 
 def display_choose_character(window):
+    global konami
     background = pygame.image.load("assets/Background/BetLvlBackground.png")
     size = pygame.display.get_window_size()
     screen_width, screen_height = size[0], size[1]
@@ -965,6 +1026,7 @@ def display_choose_character(window):
     check_update()
     check_unlocked_level()
 
+    print(konami, "Konami!")
 
     running = True
     while running:
