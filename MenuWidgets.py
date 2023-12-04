@@ -84,7 +84,7 @@ class Checkbox:
             lines[2] = str(states[2])
             with open('audioLevels.txt', 'w') as audioFile:
                 audioFile.writelines(lines)
-            
+
             if self.checked:
                 pygame.mixer.music.pause()
                 print("MUTED")
@@ -103,7 +103,7 @@ class Slider:
     def __init__(self, pos: tuple, size: int, audio: str, states: list):
         if audio not in ["music", "sfx"]:
             raise ValueError("Audio must be 'music' or 'sfx' for Slider() class initialization")
-        
+
         self.audio = audio
         self.pos = pos
         self.size = size
@@ -169,3 +169,51 @@ class Slider:
             return 0.0
         else:
             return value
+
+class ColorfulButton:
+    """
+    Args:
+        pos (tuple): take (x, y) position on screen, centered from middle of box
+        size (tuple): takes (width, height) of rectangle
+        text (str): places text on button
+        action: performs function when clicked
+    """
+
+    def __init__(self, pos: tuple, size: tuple, text: str, action=None):
+        self.pos = pos
+        self.size = size
+        self.rect = pygame.Rect(self.pos[0] - (self.size[0] / 2), self.pos[1] - (self.size[1] / 2), self.size[0],
+                                self.size[1])
+        self.text = text
+        self.action = action
+        self.default_color = (190, 190, 190)
+        self.color = (190, 190, 190)
+        self.hover_color = (210, 210, 210)
+        self.hovered = False
+
+    def draw(self, screen):
+        self.handle_hover()
+
+        button_surface = pygame.Surface((self.size[0], self.size[1]), pygame.SRCALPHA)
+        pygame.draw.rect(button_surface, self.color, (0, 0, self.size[0], self.size[1]), border_radius=7)
+
+        font = pygame.font.Font(None, 36)
+        text_surface = font.render(self.text, True, (34, 90, 48))
+        text_rect = text_surface.get_rect(center=(self.size[0] / 2, self.size[1] / 2))
+        button_surface.blit(text_surface, text_rect)
+        button_rect = button_surface.get_rect(center=(self.pos[0], self.pos[1]))
+
+        screen.blit(button_surface, button_rect)
+
+    def handle_hover(self):
+        if self.rect.collidepoint(pygame.mouse.get_pos()):
+            self.hovered = True
+            self.color = self.hover_color
+        else:
+            self.hovered = False
+            self.color = self.default_color
+
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and self.hovered:
+            if self.action:
+                self.action()
