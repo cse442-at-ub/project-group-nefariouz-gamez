@@ -68,6 +68,8 @@ user_name = ''
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
 global timer
 global last_pause_time
+global servers
+servers = ['time.nist.gov', 'time.google.com', 'time.windows.com', 'pool.ntp.org', 'north-america.pool.ntp.org']
 
 
 ##############################################################
@@ -499,19 +501,18 @@ def display_competitive_main_menu(screen):
             case "LOAD":
                 load_level()
             case"CHALLENGE MODE":
-                try:
-                    ntplib.NTPClient().request('time.nist.gov')
+                if testConnection():
                     global timer
-                    timer = CompetitiveTimer() # Switch Timers
-                except:
+                    timer = CompetitiveTimer()
+                    timer.start_timer()
+                    loadLevel(screen,cOne)
+                else:
                     tkinter.messagebox.showerror("Error", "Please connect to the Internet to play competitive mode.")
-                    continue
-                timer.start_timer()
-                loadLevel(screen,cOne) # Load Competitive Level One
             case "LEADERBOARD":
-                try:
-                    ntplib.NTPClient().request('time.nist.gov')
-                except:
+                if testConnection():
+                    pass
+                    # GO TO LEADERBOARD HERE
+                else:
                     tkinter.messagebox.showerror("Error", "Unable to connect to leaderboard. Please connect to the Internet.")
             case "SETTINGS":
                 settings()
@@ -1222,11 +1223,12 @@ def beat_competitive_page(screen):
     widget = Button((screen_width/2, (screen_height/2)+20), (300, 54), "RETURN TO MAIN", return_main)
 
     currtime = timer.return_time()
-    try:
-        ntplib.NTPClient().request('time.nist.gov')
+    if testConnection():
         # THIS IS WHERE ITEMS CAN BE SENT TO DATABASE @JOSH
-    except:
+        pass
+    else:
         tkinter.messagebox.showerror("Error","You are unable to connect to the database, your data has not been saved to the leaderboard")
+
     minutes = math.floor(currtime / 60)
     seconds = round(currtime  - (minutes * 60), 2)
     hours = math.floor(minutes / 60)
@@ -1434,16 +1436,15 @@ def collide(player, level, dx):
                 # ADD ONE TO COMPLETED LEVELS
                 #ENDLEVEL = True
                 if level.is_comp:
-                    try:
-                        ntplib.NTPClient().request('time.nist.gov')
-                    except:
+                    if testConnection():
+                        if level.next_level!=None:
+                            loadLevel(window,level.next_level)#Move to the next competitive level
+                        else:
+                            timer.stop_timer()
+                            beat_competitive_page(window)
+                    else:
                         tkinter.messagebox.showerror("Error", "Lost Internet connection. Please reconnect to the Internet to play competitive mode.")
                         display_competitive_main_menu(window)
-                    if level.next_level!=None:
-                        loadLevel(window,level.next_level)#Move to the next competitive level
-                    else:
-                       timer.stop_timer()
-                       beat_competitive_page(window)
                 else:
                     timer.stop_timer()
                     lvlf = open("currentLevel.txt", "r")
@@ -3381,6 +3382,22 @@ def loadLevel(window, level):
 
     pygame.quit()
     quit()
+
+def testConnection():
+    global servers
+    if len(servers) == 0:
+        servers = ['time.nist.gov', 'time.google.com', 'time.windows.com', 'pool.ntp.org', 'north-america.pool.ntp.org']
+    server_copy = servers.copy()
+    
+    for server in servers:
+        try:
+            ntplib.NTPClient().request(server)
+            servers = server_copy
+            print(servers)
+            return True
+        except:
+            server_copy.remove(server)
+    return False
 
 if __name__ == "__main__":
     if os.path.exists("competitive.txt"):
