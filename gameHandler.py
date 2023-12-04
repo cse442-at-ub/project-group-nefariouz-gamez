@@ -6,7 +6,9 @@ import math
 import pygame
 import sys
 import tkinter
+import json
 from tkinter import messagebox
+import requests
 
 from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
 from MenuWidgets import *
@@ -18,6 +20,8 @@ from level_timer import *
 from os import listdir
 from os.path import isfile, join
 #from pygame.sprite import _Group
+from time import gmtime, strftime
+
 
 pygame.init()
 
@@ -453,6 +457,10 @@ def settings():
     display_settings_page(window)
     print("SETTINGS")
 
+def leaderboard():
+    display_leaderboard(window)
+    print("LEADERBOARD")
+
 def quit_game():
     pygame.quit()
     sys.exit()
@@ -491,11 +499,51 @@ def display_competitive_main_menu(screen):
             case "LOAD":
                 load_level()
             case"CHALLENGE MODE":
-                pass
+                try:
+                    requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/", timeout=5)
+                except requests.ConnectionError:
+                    tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, any progress made will not be saved to the leaderboard.")
+                timer.reset_timer()#Reset timer before starting competitive mode
+                loadLevel(screen,cOne)#Load Competitive Level One
             case "LEADERBOARD":
-                pass
+                info = retrieve_data_php()
+                display_leaderboard(window, info)
             case "SETTINGS":
                 settings()
+
+
+# Function to insert data into the database via PHP endpoint
+def insert_data_php(username, time, character):
+    mode = 1
+    data = retrieve_data_php()
+    for lists in data:
+        if username in lists and character in lists:
+            mode = 2
+    try:
+        url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
+        payload = {'username': username, 'time': time, 'character': character, 'mode': mode}
+        response = requests.post(url, data=payload)
+    except requests.ConnectionError:
+        tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, your data has not been saved to the leaderboard")
+
+
+# Function to retrieve data from the database via PHP endpoint
+def retrieve_data_php():
+    try:
+        url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            ret = []
+            for lists in data:
+                add = []
+                for vals in lists.values():
+                    add.append(vals)
+                ret.append(add)
+            print(ret)
+            return ret
+    except requests.ConnectionError:
+        tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, leaderboard cannot be updated")
 
 
 ##############################################################
@@ -583,7 +631,7 @@ def tutorial():
 def choose_character():
     display_choose_character(window)
     print("CHOOSE CHARACTER")
-    
+
 def return_main():
     lvlfile = open("currentLevel.txt", "r")
     currlvl = lvlfile.read()
@@ -592,12 +640,24 @@ def return_main():
         display_competitive_main_menu(window)
     elif lvlint > 20:
         if user_name != '':
-            open("competitive.txt", "x").close()
-            print(user_name)
-            wlvlfile = open("currentLevel.txt", "w")
-            wlvlfile.write("1")
-            wlvlfile.close()
-            display_competitive_main_menu(window)
+            nametaken = 0
+            checkForName = retrieve_data_php()
+            for lists in checkForName:
+                if user_name in lists:
+                    nametaken = 1
+            if nametaken == 1:
+                tkinter.messagebox.showwarning("Warning","Sorry, the username you've entered is already in use, please try another name.")
+            else:
+                #name available, so need to add blank entry to db
+                insert_data_php(user_name, '999999', 'nameholder')
+                open("competitive.txt", "x").close()
+                writeName = open("competitive.txt", "w")
+                writeName.write(user_name)
+                writeName.close()
+                wlvlfile = open("currentLevel.txt", "w")
+                wlvlfile.write("1")
+                wlvlfile.close()
+                display_competitive_main_menu(window)
         else:
             tkinter.messagebox.showwarning("Warning","Please Enter a Name Before Returning to Menu")
     else:
@@ -632,6 +692,191 @@ def display_settings_page(screen):
 
         for widget in widgets:
             widget.draw(screen)
+
+        pygame.display.flip()
+
+    pygame.quit()
+
+
+##############################################################
+##############################################################
+#################### LEADERBOARD SCREEN ######################
+##############################################################
+##############################################################
+
+class LeaderboardSlot:
+    def __init__(self, pos: tuple, size: tuple, text: str, action=None):
+        self.pos = pos
+        self.size = size
+        self.rect = pygame.Rect(self.pos[0] - (self.size[0] / 2), self.pos[1] - (self.size[1] / 2), self.size[0],
+                                self.size[1])
+        self.text = text
+        self.action = action
+        self.color = (190, 190, 190)
+
+    def draw(self, screen):
+        button_surface = pygame.Surface((self.size[0], self.size[1]), pygame.SRCALPHA)
+        button_surface.set_alpha(210)
+        pygame.draw.rect(button_surface, self.color, (0, 0, self.size[0], self.size[1]), border_radius=7)
+
+        font = pygame.font.Font(None, 36)
+        text_surface = font.render(self.text, True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=(self.size[0] / 2, self.size[1] / 2))
+        button_surface.blit(text_surface, text_rect)
+        button_rect = button_surface.get_rect(center=(self.pos[0], self.pos[1]))
+
+        screen.blit(button_surface, button_rect)
+
+def dummyReturn():
+    return
+
+
+def display_leaderboard(screen, data):
+    sorted_entries = sorted(data, key=lambda x: float(x[1]))
+    
+    no_duplicates, logged = [], []
+    for entry in sorted_entries:
+        username = entry[0]
+        if username not in logged:
+            logged.append(username)
+            no_duplicates.append(entry)
+
+    top_10 = no_duplicates[:10]
+
+    readName = open("competitive.txt", "r")
+    current_user = readName.read()
+    current_user_time, current_user_character, current_user_position = "N/A", "N/A", "N/A"
+    readName.close()
+
+    for entry in no_duplicates:
+        if current_user in entry:
+            if entry[1] != 999999 and entry[2] != "nameholder":
+                current_user_time, current_user_character, current_user_position = entry[1], entry[2], no_duplicates.index(entry) + 1
+
+    positions = []
+    screen_width, screen_height = screen.get_size()
+    background_img = pygame.image.load("assets/Background/BetlvlBackground.png")
+    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
+    widgets = [
+        LeaderboardSlot((screen_width/2, (screen_height*.185)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.255)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.325)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.395)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.465)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.535)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.605)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.685)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.755)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.825)), (screen_width*.7, 45), "", dummyReturn),
+
+        LeaderboardSlot((screen_width/2, (screen_height*.935)), (screen_width*.7, 45), "", dummyReturn),
+
+        Button((screen_width * .08, (screen_height * .06)), (150, 54), "MENU", return_main)
+    ]
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.VIDEORESIZE:
+                screen_width, screen_height = screen.get_size()
+                widgets = [
+                    LeaderboardSlot((screen_width/2, (screen_height*.185)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.255)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.325)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.395)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.465)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.535)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.605)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.685)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.755)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.825)), (screen_width*.7, 45), "", dummyReturn),
+
+                    LeaderboardSlot((screen_width/2, (screen_height*.935)), (screen_width*.7, 45), "", dummyReturn),
+
+                    Button((screen_width * .08, (screen_height * .06)), (150, 54), "MENU", return_main)
+                ]
+                background_img = pygame.image.load("assets/Background/BetlvlBackground.png")
+                background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
+
+            for widget in widgets:
+                if type(widget) == Button:
+                    widget.handle_event(event)
+            
+            count = 0
+            for widget in widgets:
+                positions.append(widget.pos)
+                count += 1
+                if count == 10:
+                    count = 0
+                    break
+
+        # render background and widgets
+        screen.blit(background_img, (0, 0))
+
+        draw_text("TOP 10 LEADERBOARD", pygame.font.Font(None, 50), (0, 0, 0), ((screen_width/2, (screen_height * .065))))
+        draw_text("NAME", pygame.font.Font(None, 36), (0, 0, 0), ((screen_width * .18, (screen_height * .135))))
+        draw_text("TIME", pygame.font.Font(None, 36), (0, 0, 0), ((screen_width * .5, (screen_height * .135))))
+        draw_text("CHARACTER", pygame.font.Font(None, 36), (0, 0, 0), ((screen_width * .78, (screen_height * .135))))
+
+        for widget in widgets:
+            widget.draw(screen)
+
+        leaderboard_entry_font = pygame.font.Font(None, 36)
+        for i in zip(top_10, positions):
+            user, user_time, character, height = i[0][0], i[0][1], i[0][2], i[1][1]
+            
+            userText = leaderboard_entry_font.render(user, False, (34, 90, 48))
+            userTextRect = userText.get_rect()
+            userTextRect.left, userTextRect.centery = screen_width * .16, height
+
+            characterText = leaderboard_entry_font.render(character, False, (34, 90, 48))
+            characterTextRect = characterText.get_rect()
+            characterTextRect.right, characterTextRect.centery = screen_width * .84, height
+
+            screen.blit(userText, userTextRect)
+            correct_time = strftime("%M:%S", gmtime(float(user_time)))
+            draw_text(correct_time, pygame.font.Font(None, 36), (34, 90, 48), (screen_width * .5, height))
+            screen.blit(characterText, characterTextRect)
+
+        first, second, third = pygame.image.load("assets/leaderboard/first.png"), pygame.image.load("assets/leaderboard/second.png"), pygame.image.load("assets/leaderboard/third.png")
+        firstRect, secondRect, thirdRect = first.get_rect(), second.get_rect(), third.get_rect()
+        firstRect.left, firstRect.centery = widgets[0].pos[0] * .21, widgets[0].pos[1]
+        secondRect.left, secondRect.centery = widgets[1].pos[0] * .21, widgets[1].pos[1]
+        thirdRect.left, thirdRect.centery = widgets[2].pos[0] * .21, widgets[2].pos[1]
+
+        screen.blit(first, firstRect)
+        screen.blit(second, secondRect)
+        screen.blit(third, thirdRect)
+
+        for i in range(3, 10):
+            height = widgets[i].pos[1]
+            draw_text("#" + str(i + 1), pygame.font.Font(None, 40), (0, 0, 0), ((screen_width * .125, (height))))
+
+        
+        height = widgets[10].pos[1]
+
+        if current_user_position != "N/A":
+            draw_text("#" + str(current_user_position), pygame.font.Font(None, 40), (0, 0, 0), ((screen_width * .125, (height))))
+        
+        userText = leaderboard_entry_font.render(current_user, False, (34, 90, 48))
+        userTextRect = userText.get_rect()
+        userTextRect.left, userTextRect.centery = screen_width * .16, height
+
+        characterText = leaderboard_entry_font.render(current_user_character, False, (34, 90, 48))
+        characterTextRect = characterText.get_rect()
+        characterTextRect.right, characterTextRect.centery = screen_width * .84, height
+
+        screen.blit(userText, userTextRect)
+
+        if current_user_time == "N/A":
+            draw_text(current_user_time, pygame.font.Font(None, 36), (34, 90, 48), (screen_width * .5, height))
+        else:
+            correct_time = strftime("%M:%S", gmtime(float(current_user_time)))
+            draw_text(correct_time, pygame.font.Font(None, 36), (34, 90, 48), (screen_width * .5, height))
+
+        screen.blit(characterText, characterTextRect)
 
         pygame.display.flip()
 
@@ -1220,6 +1465,8 @@ class Level():
         self.init_x=starting_x
         self.init_y=starting_y
         self.copied=objects.copy()
+        self.is_comp=False
+        self.next_level=None
     def reset(self):
         for object in self.object_list:
             object.reset()
@@ -1369,22 +1616,42 @@ def collide(player, level, dx):
                 #PLAYER HAS REACHED END OF LEVEL
                 # ADD ONE TO COMPLETED LEVELS
                 #ENDLEVEL = True
-                timer.stop_timer()
-                lvlf = open("currentLevel.txt", "r")
-                levelnum = int(lvlf.read())
-                levelnum += 1
-                lvlf = open("currentLevel.txt", "w")
-                lvlf.write(str(levelnum))
-                lvlf.close()
-                # THEN OPEN BETWEEN LEVEL MENU
-                if levelnum > 20:
-                    if not os.path.exists("competitive.txt"):
-                        display_endgame_level_page(window)
+                if level.is_comp:
+                    timer.stop_timer()
+                    timef = open("levelTime.txt", "w")
+                    timef.write(str(timer.return_time()))
+                    timef.close()
+                    if level.next_level!=None:
+                        loadLevel(window,level.next_level)#Move to the next competitive level
                     else:
+                        namef = open("competitive.txt", "r")
+                        username = namef.read()
+                        namef.close()
+                        timef = open("levelTime.txt", "r")
+                        timeval = timef.read()
+                        timef.close()
+                        characterf = open("CurrentCharacter.txt", "r")
+                        character = characterf.read()
+                        characterf.close()
+                        insert_data_php(username, timeval, character)
                         display_level_twenty_page(window)
                 else:
-                    display_between_level_page(window)
-            break
+                    timer.stop_timer()
+                    lvlf = open("currentLevel.txt", "r")
+                    levelnum = int(lvlf.read())
+                    levelnum += 1
+                    lvlf = open("currentLevel.txt", "w")
+                    lvlf.write(str(levelnum))
+                    lvlf.close()
+                    # THEN OPEN BETWEEN LEVEL MENU
+                    if levelnum > 20:
+                        if not os.path.exists("competitive.txt"):
+                            display_endgame_level_page(window)
+                        else:
+                            display_level_twenty_page(window)
+                    else:
+                        display_between_level_page(window)
+                break
 
     player.move(-dx, 0)
 
@@ -1564,8 +1831,8 @@ def getInput(player, level):
 
 
 BLACK=(0,0,0)
-fullScreenLeft=Void(-2000,0,2000,2000,BLACK,None)
-fullScreenRight=Void(1201,0,2000,2000,BLACK,None)
+fullScreenLeft=Void(-2000,0,1990,2000,BLACK,None)
+fullScreenRight=Void(1210,0,2000,2000,BLACK,None)
 fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
 
 
@@ -1573,8 +1840,8 @@ fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
 ######################## LEVEL 01 ############################
 ##############################################################
 lOne=[]
-lBorderLeft=Platform(-1,0,1,800,WHITE)
-lBorderRight=Platform(1201,0,1,800,WHITE)
+lBorderLeft=Platform(-10,0,10,800,BLACK)
+lBorderRight=Platform(1201,0,10,800,BLACK)
 #Player starting position (1100, 644)
 #background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
 start=Platform(890,670,152,75,WHITE)
@@ -1911,7 +2178,7 @@ mp7_1 = MovePlat(95, 415, 200, 51, 69, 1091, oList=mp07_1)
 mpo7_2 = []
 mpo7_2.append(smallShrub(641,363))
 mpo7_2.append(ReverseSmallShrub(792,466))
-mp7_2 = MovePlat(642, 415, 200, 51, 69, 1091, oList=mpo7_2, aList=[mp7_1])##original borders 34, 1126
+mp7_2 = MovePlat(642, 415, 200, 51, 69, 1091, oList=mpo7_2, aList=[mp7_1])##original as 34, 1126
 mp7_1.set_a([mp7_2])
 
 lSeven.append(mp7_1)
@@ -3088,8 +3355,69 @@ lTwenty.append(endSign(1150,147))
 lTwenty.append(lBorderRight)
 lTwenty.append(lBorderLeft)
 
-#levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
-levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
+levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
+#levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")
+
+cOne=Level(lOne,1135,639,"Level 1 to 3 bkgrnd.png")#Comp Level One, uses same object list(Changed background path to remove tutorial)
+cTwo=Level(lTwo,1135,538,"Level 1 to 3 bkgrnd.png")
+cThree=Level(lThree,1100,470,"Level 1 to 3 bkgrnd.png")
+cFour=Level(lFour,1100,635,"CaveBackground1.png")
+cFive=Level(lFive,50,625,"CaveBackground1.png")
+cSix=Level(lSix,25,50,"CaveBackground1.png")
+cSeven=Level(lSeven,1040,225,"CaveBackground1.png")
+cEight=Level(lEight,70,590,"mysticalBackground.png")
+cNine=Level(lNine,872,645,"mysticalBackground.png")
+cTen=Level(lTen,60,630,"mysticalBackground.png")
+cEleven=Level(lEleven,1125,80,"newlvl-11-12-background.png")
+cTwelve=Level(lTwelve,1125,536,"newlvl-11-12-background.png")
+cThirteen=Level(lthirteen,1130,93,"newlvl-13-16-background.png")
+cFourteen=Level(lFourteen,1125,174,"newlvl-13-16-background.png")
+cFifteen=Level(lFifteen,1135,58,"newlvl-13-16-background.png")
+cSixteen=Level(lSixteen,0,0,"newlvl-13-16-background.png")
+cSeventeen=Level(lSeventeen,1120,650,"newlvl-13-16-background.png")
+cEighteen=Level(lEighteen,1130,185,"newlvl-17-18-background.png")
+cNineteen=Level(lNineteen,35,65,"newlvl-19-background.png")
+cTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")
+cOne.is_comp=True
+cOne.next_level=cTwo
+cTwo.is_comp=True
+cTwo.next_level=cThree
+cThree.is_comp=True
+cThree.next_level=cFour
+cFour.is_comp=True
+cFour.next_level=cFive
+cFive.is_comp=True
+cFive.next_level=cSix
+cSix.is_comp=True
+cSix.next_level=cSeven
+cSeven.is_comp=True
+cSeven.next_level=cEight
+cEight.is_comp=True
+cEight.next_level=cNine
+cNine.is_comp=True
+cNine.next_level=cTen
+cTen.is_comp=True
+cTen.next_level=cEleven
+cEleven.is_comp=True
+cEleven.next_level=cTwelve
+cTwelve.is_comp=True
+cTwelve.next_level=cThirteen
+cThirteen.is_comp=True
+cThirteen.next_level=cFourteen
+cFourteen.is_comp=True
+cFourteen.next_level=cFifteen
+cFifteen.is_comp=True
+cFifteen.next_level=cSixteen
+cSixteen.is_comp=True
+cSixteen.next_level=cSeventeen
+cSeventeen.is_comp=True
+cSeventeen.next_level=cEighteen
+cEighteen.is_comp=True
+cEighteen.next_level=cNineteen
+cNineteen.is_comp=True
+cNineteen.next_level=cTwenty
+cTwenty.is_comp=True
+
 
 
 
@@ -3103,7 +3431,8 @@ def loadLevel(window, level):
     bg_image=level.bg_image
     playerOne=Player(level.init_x,level.init_y,30,64)
     check_size=(1200,800)
-    timer.reset_timer()
+    if not level.is_comp:
+        timer.reset_timer()
     timer.start_timer()
     offset=0
     global last_pause_time
