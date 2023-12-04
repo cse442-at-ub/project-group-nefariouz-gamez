@@ -10,12 +10,13 @@ import json
 from tkinter import messagebox
 import requests
 
-from gameObjects import Object, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
+from gameObjects import Object, goldShears, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,SmallSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
 from MenuWidgets import *
 from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
 from competitiveMainMenu import show_competitive_main_menu
 from level_timer import *
+import ntplib
 
 from os import listdir
 from os.path import isfile, join
@@ -68,9 +69,11 @@ ENDLEVEL = False
 user_name = ''
 
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
-timer = Timer()
+global timer
 global last_pause_time
-
+global hertz_ee
+global servers
+servers = ['time.nist.gov', 'time.google.com', 'time.windows.com', 'pool.ntp.org', 'north-america.pool.ntp.org']
 
 ##############################################################
 ##############################################################
@@ -378,19 +381,30 @@ def scale_window_main(screen):
     screen_width, screen_height = screen.get_size()   # find screen dimensions
 
     background_img = pygame.image.load("assets/Background/TitleNoShear.png")
+
     background_img = pygame.transform.scale(background_img, (screen_width, screen_height))   # scale background to resolution
 
     # creates widgets based on screen size
     widgets = [
-        Button((screen_width/2, (screen_height/2)-120), (300, 54), "BEGIN YOUR QUEST", start_game),
-        Button((screen_width/2, (screen_height/2)-40), (300, 54), "LOAD LEVEL", load_level),
-        Button((screen_width/2, (screen_height/2)+40), (300, 54), "SETTINGS", settings),
-        Button((screen_width/2, (screen_height/2)+120), (300, 54), "QUIT", quit_game)
+        ColorfulButton((screen_width/2, (screen_height/2)-120), (300, 54), "BEGIN YOUR QUEST", start_game),
+        ColorfulButton((screen_width/2, (screen_height/2)-40), (300, 54), "LOAD LEVEL", load_level),
+        ColorfulButton((screen_width/2, (screen_height/2)+40), (300, 54), "SETTINGS", settings),
+        ColorfulButton((screen_width/2, (screen_height/2)+120), (300, 54), "QUIT", quit_game)
     ]
+
+    global hertz_ee
+    if hertz_ee:
+        background_img = pygame.image.load("assets/Background/hertz_passion.png")
+        for widget in widgets:
+            widget.default_color = (137, 148, 153)
+            widget.hover_color = (169, 169, 169)
 
     return widgets, background_img
 
 def start_game():
+    global timer
+    timer = Timer()
+
     # Always Loads Level 1
     lvlf = open("currentLevel.txt", "w")
     lvlf.write("1")
@@ -399,6 +413,9 @@ def start_game():
     display_tut(window)
 
 def load_level():
+    global timer
+    timer = Timer()
+
     # Loads level based on what current level you're on in
     lvlfile = open("currentLevel.txt", "r")
     currlvl = lvlfile.read()
@@ -465,16 +482,55 @@ def quit_game():
     pygame.quit()
     sys.exit()
 
+konami = False
 def display_main_menu(screen):
+    global konami
     widgets, background_img = scale_window_main(screen)
+    secret_code = [pygame.K_h, pygame.K_e, pygame.K_r, pygame.K_t, pygame.K_z]
+    buffer = []
+
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
+
+    KONAMI = [pygame.K_UP, pygame.K_UP, pygame.K_DOWN, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_b, pygame.K_a]
+    code, index = [], 0
 
     running = True
     while running:
+        key = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.VIDEORESIZE:
                 widgets, background_img = scale_window_main(screen)   # rescales visuals for new resolution
+            elif event.type == pygame.KEYDOWN:
+                if len(buffer) == 0 or buffer[-1] != event.key:
+                    buffer.append(event.key)
+
+                    if len(buffer) > 5:
+                        buffer.pop(0)
+
+                    if buffer == secret_code:
+                        global hertz_ee
+                        hertz_ee = not hertz_ee
+                        widgets, background_img = scale_window_main(screen)
+                if konami == False:
+                    if event.key == KONAMI[index]:
+                        code.append(event.key)
+                        index += 1
+                        if code == KONAMI:
+                            index = 0
+                            if int(max_level_unlocked) < 15:
+                                tkinter.messagebox.showinfo("A secret?","Check the character selection screen...")
+                                print('KONAMI!')
+                                konami = True
+                            else:
+                                tkinter.messagebox.showinfo("You did it!","You have already unlocked all 4 characters so the easter egg won't do anything, but good job finding it! :)")
+                    else:
+                        code = []
+                        index = 0
+
+                    
 
             # checks for buttons clicked
             for widget in widgets:
@@ -493,21 +549,27 @@ def display_main_menu(screen):
 
 def display_competitive_main_menu(screen):
     while True:
-        match show_competitive_main_menu(screen):
+        global hertz_ee
+        return_to, hertz_ee = show_competitive_main_menu(screen, hertz_ee)
+        match return_to:
             case "START":
                 start_game()
             case "LOAD":
                 load_level()
             case"CHALLENGE MODE":
-                try:
-                    requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/", timeout=5)
-                except requests.ConnectionError:
-                    tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, any progress made will not be saved to the leaderboard.")
-                timer.reset_timer()#Reset timer before starting competitive mode
-                loadLevel(screen,cOne)#Load Competitive Level One
+                if testConnection():
+                    global timer
+                    timer = CompetitiveTimer()
+                    timer.start_timer()
+                    loadLevel(screen,cOne)
+                else:
+                    tkinter.messagebox.showerror("Error", "Please connect to the Internet to play competitive mode.")
             case "LEADERBOARD":
-                info = retrieve_data_php()
-                display_leaderboard(window, info)
+                if testConnection():
+                  info = retrieve_data_php()
+                  display_leaderboard(window, info)
+                else:
+                    tkinter.messagebox.showerror("Error", "Unable to connect to leaderboard. Please connect to the Internet.")
             case "SETTINGS":
                 settings()
 
@@ -944,6 +1006,7 @@ if max_level_unlocked == "" or int(max_level_unlocked) < int(max_level):
 
 # onClick events for each character and the OK button
 def click_Celia():
+    global konami
     global current_character
     global character_text
     global selected_text
@@ -970,6 +1033,7 @@ def click_Celia():
 
 
 def click_Malcolm():
+    global konami
     global current_character
     global character_text
     global selected_text
@@ -981,7 +1045,7 @@ def click_Malcolm():
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if max_level_unlocked != "" and int(max_level_unlocked) >= 5:
+    if max_level_unlocked != "" and int(max_level_unlocked) >= 5 or konami == True:
         current_character = "Malcolm"
         powerup_read = "Double jump in air"
         cooldown_read = ""
@@ -1005,11 +1069,12 @@ def click_Maia():
     global powerup_text
     global cooldown_read
     global cooldown_text
+    global konami
 
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if max_level_unlocked != "" and int(max_level_unlocked) >= 10:
+    if max_level_unlocked != "" and int(max_level_unlocked) >= 10 or konami == True:
         current_character = "Maia"
         powerup_read = "Walk through shrubs for 5 seconds (15 sec cooldown)"
         cooldown_read = ""
@@ -1033,12 +1098,12 @@ def click_Oscar():
     global powerup_text
     global cooldown_read
     global cooldown_text
-
+    global konami
 
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if max_level_unlocked != "" and int(max_level_unlocked) >= 15:
+    if max_level_unlocked != "" and int(max_level_unlocked) >= 15 or konami == True:
         current_character = "Oscar"
         powerup_read = "Walk through shrubs and spikes for 5 seconds (30 sec cooldown)"
         cooldown_read = "Can also double jump in air"
@@ -1094,6 +1159,7 @@ def check_update():
     global powerup_text
     global cooldown_text
     global char_text_color
+    global konami
 
     check_unlocked_level()
 
@@ -1103,32 +1169,54 @@ def check_update():
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if current_character == "" or max_level_unlocked == "" or int(max_level_unlocked) < 5:
+    if current_character == "":
         f.close()
         f = open("CurrentCharacter.txt", "w")
         f.write("Celia")
         f.close()
         f = open("CurrentCharacter.txt", "r")
         click_Celia()
-    elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (current_character == "Maia" and int(max_level_unlocked) < 10) or (current_character == "Oscar" and int(max_level_unlocked) < 15):
-        f.close()
-        f = open("CurrentCharacter.txt", "w")
-        f.write("Celia")
-        f.close()
-        f = open("CurrentCharacter.txt", "r")
-        click_Celia()
-    elif current_character == "Celia":
-        char_text_color = "darkgreen"
-        click_Celia()
-    elif current_character == "Malcolm":
-        char_text_color = "darkorange4"
-        click_Malcolm()
-    elif current_character == "Maia":
-        char_text_color = "maroon3"
-        click_Maia()
-    elif current_character == "Oscar":
-        char_text_color = "indigo"
-        click_Oscar()
+
+    if konami == False:
+        if max_level_unlocked == "" or int(max_level_unlocked) < 5:
+            f.close()
+            f = open("CurrentCharacter.txt", "w")
+            f.write("Celia")
+            f.close()
+            f = open("CurrentCharacter.txt", "r")
+            click_Celia()
+        elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (current_character == "Maia" and int(max_level_unlocked) < 10) or (current_character == "Oscar" and int(max_level_unlocked) < 15):
+            f.close()
+            f = open("CurrentCharacter.txt", "w")
+            f.write("Celia")
+            f.close()
+            f = open("CurrentCharacter.txt", "r")
+            click_Celia()
+        elif current_character == "Celia":
+            char_text_color = "darkgreen"
+            click_Celia()
+        elif current_character == "Malcolm":
+            char_text_color = "darkorange4"
+            click_Malcolm()
+        elif current_character == "Maia":
+            char_text_color = "maroon3"
+            click_Maia()
+        elif current_character == "Oscar":
+            char_text_color = "indigo"
+            click_Oscar()
+    elif konami == True:
+        if current_character == "Celia":
+            char_text_color = "darkgreen"
+            click_Celia()
+        elif current_character == "Malcolm":
+            char_text_color = "darkorange4"
+            click_Malcolm()
+        elif current_character == "Maia":
+            char_text_color = "maroon3"
+            click_Maia()
+        elif current_character == "Oscar":
+            char_text_color = "indigo"
+            click_Oscar()
     f = open("CurrentCharacter.txt", "r")
     selected_text = character_select_font.render("You are currently playing as", False, "Black")
     character_text = character_select_font.render(current_character, False, char_text_color)
@@ -1139,27 +1227,36 @@ def check_update():
 
 def check_unlocked_level():
     global current_character
+    global konami
 
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if max_level_unlocked == "" or int(max_level_unlocked) < 5:
-        current_character = "Celia"
-        f = open("CurrentCharacter.txt", "w")
-        f.write("Celia")
-        f.close()
-        Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png'))
-        Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMalcolm.png'))
-        Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
-        Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
-    elif int(max_level_unlocked) < 10:
-        Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
-        Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
-    elif int(max_level_unlocked) < 15:
-        Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+    if konami == False:
+        if max_level_unlocked == "" or int(max_level_unlocked) < 5:
+            current_character = "Celia"
+            f = open("CurrentCharacter.txt", "w")
+            f.write("Celia")
+            f.close()
+            Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png'))
+            Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMalcolm.png'))
+            Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
+            Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+        elif int(max_level_unlocked) < 10:
+            Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
+            Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+        elif int(max_level_unlocked) < 15:
+            Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+
+    # if konami == True:
+    #     Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png'))
+    #     Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Malcolm.png'))
+    #     Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Maia.png'))
+    #     Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Oscar.png'))
 
 
 def display_choose_character(window):
+    global konami
     background = pygame.image.load("assets/Background/BetLvlBackground.png")
     size = pygame.display.get_window_size()
     screen_width, screen_height = size[0], size[1]
@@ -1169,6 +1266,7 @@ def display_choose_character(window):
     check_update()
     check_unlocked_level()
 
+    print(konami, "Konami!")
 
     running = True
     while running:
@@ -1439,6 +1537,54 @@ def display_level_twenty_page(screen):
         widget.draw(screen)
         pygame.display.flip()
 
+def beat_competitive_page(screen):
+    screen_width, screen_height = screen.get_size()
+
+    background_img = pygame.image.load("assets\Background\BetlvlBackground.png")
+    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
+
+    widget = Button((screen_width/2, (screen_height/2)+20), (300, 54), "RETURN TO MAIN", return_main)
+
+    if testConnection():
+        namef = open("competitive.txt", "r")
+        username = namef.read()
+        namef.close()
+        timeval = timer.return_time()
+        characterf = open("CurrentCharacter.txt", "r")
+        character = characterf.read()
+        characterf.close()
+        insert_data_php(username, timeval, character)
+    else:
+        tkinter.messagebox.showerror("Error","You are unable to connect to the database, your data has not been saved to the leaderboard")
+
+    minutes = math.floor(currtime / 60)
+    seconds = round(currtime  - (minutes * 60), 2)
+    hours = math.floor(minutes / 60)
+    minutes = minutes  - (hours * 60)
+
+    betweenlvl = True
+    while betweenlvl:
+        for event in pygame.event.get():
+            #event handler
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+            widget.handle_event(event)
+
+        screen.blit(background_img, (0,0))
+        draw_text("Congratulations!", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-190))
+        draw_text("You Finished Competitive Mode in:", pygame.font.Font(None, 72),(34, 90, 48), ((screen_width/2), (screen_height/2)-130))
+        if hours < 1:
+            draw_text(str(minutes) + " minutes and " + str(seconds) + " seconds!", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-80))
+        else:
+            if hours > 99:
+                draw_text("99 hours 99 minutes and 99.99 seconds!", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-80))
+            else:
+                draw_text(str(hours) + " hours " + str(minutes) + " minutes and " + str(seconds) + " seconds!", pygame.font.Font(None, 48),(34, 90, 48), ((screen_width/2), (screen_height/2)-80))
+
+        widget.draw(screen)
+        pygame.display.flip()
+
 
 ##############################################################
 ##############################################################
@@ -1483,9 +1629,10 @@ class Level():
 
 
 def draw(window, background, bg_image,player,level,offset):
-    for tile in background:
-        offtile=(tile.__getitem__(0)+offset,tile.__getitem__(1))
-        window.blit(bg_image, offtile)
+    #for tile in background:
+    #    offtile=(tile.__getitem__(0)+offset,tile.__getitem__(1))
+    #    window.blit(bg_image, offtile)
+    window.blit(bg_image, (offset,0))
 
     for object in level.object_list:
         object.draw(window,offset)
@@ -1617,24 +1764,15 @@ def collide(player, level, dx):
                 # ADD ONE TO COMPLETED LEVELS
                 #ENDLEVEL = True
                 if level.is_comp:
-                    timer.stop_timer()
-                    timef = open("levelTime.txt", "w")
-                    timef.write(str(timer.return_time()))
-                    timef.close()
-                    if level.next_level!=None:
-                        loadLevel(window,level.next_level)#Move to the next competitive level
+                    if testConnection():
+                        if level.next_level!=None:
+                            loadLevel(window,level.next_level)#Move to the next competitive level
+                        else:
+                            timer.stop_timer()
+                            beat_competitive_page(window)
                     else:
-                        namef = open("competitive.txt", "r")
-                        username = namef.read()
-                        namef.close()
-                        timef = open("levelTime.txt", "r")
-                        timeval = timef.read()
-                        timef.close()
-                        characterf = open("CurrentCharacter.txt", "r")
-                        character = characterf.read()
-                        characterf.close()
-                        insert_data_php(username, timeval, character)
-                        display_level_twenty_page(window)
+                        tkinter.messagebox.showerror("Error", "Lost Internet connection. Please reconnect to the Internet to play competitive mode.")
+                        display_competitive_main_menu(window)
                 else:
                     timer.stop_timer()
                     lvlf = open("currentLevel.txt", "r")
@@ -1700,7 +1838,7 @@ def getInput(player, level):
                     if object.name=="ladder":
                         player.on_ladder=True
                         player.in_air=False
-                        player.rect.x=object.rect.x-15#set x value to Ladder x Valued
+                        player.rect.x=object.rect.x-15#set x value to Ladder x Valued  object.rect.x-object.rect.width/2?
                         #player.rect.y=player.rect.y+1
                         g=1
             if g==0:
@@ -1791,7 +1929,12 @@ def getInput(player, level):
                 getOverlap(player,player.reachBox,level)
 
         if keys[pygame.K_ESCAPE]:
-            timer.stop_timer()
+            if timer.stop_timer() == False:
+                tkinter.messagebox.showerror("Error", "Lost Internet connection. Please reconnect to the Internet to play competitive mode.")
+                if os.path.exists("competitive.txt"):
+                        display_competitive_main_menu(window)
+                else:
+                    display_main_menu(window)
 
             global last_pause_time
             time_since_last = timer.return_time() - last_pause_time
@@ -1803,7 +1946,12 @@ def getInput(player, level):
                         display_main_menu(window)
                 last_pause_time = timer.return_time()
 
-            timer.start_timer()
+            if timer.start_timer() == False:
+                tkinter.messagebox.showerror("Error", "Lost Internet connection. Please reconnect to the Internet to play competitive mode.")
+                if os.path.exists("competitive.txt"):
+                        display_competitive_main_menu(window)
+                else:
+                    display_main_menu(window)
 
         if current_character == "Malcolm":
             if keys[pygame.K_q] and player.jump_count == 1 and player.in_air:
@@ -2074,7 +2222,7 @@ levelFive=Level(lFive,50,625,"CaveBackground1.png")
 ######################## LEVEL 06 ############################
 ##############################################################
 lSix=[]
-lSix.append(Void(0,800,1115,15))
+lSix.append(Void(0,800,1050,15))
 lSix.append(Platform(0,114,103,58,WHITE))##Start
 lSix.append(Platform(0,0,1200,13,GRAY))
 lSix.append(Platform(0,172,34,628,GRAY))
@@ -2098,7 +2246,12 @@ lSix.extend(mpo6_1)
 lSix.append(mp6_2)
 lSix.extend(mpo6_2)
 
-lSix.append(MovePlat(281, 405, 200, 51, 34, 860))
+lSix.append(MovePlat(281, 405, 200, 51, 34, 825))#right bound changed from 860
+
+
+fixSpike=BlackLSpike(830,410)
+lSix.append(fixSpike)
+
 
 # Spikes at bottom
 lSix.append(BlackSpike(35,662))
@@ -2147,6 +2300,7 @@ lSix.append(Platform(884,457,85,30,WHITE))
 lSix.append(Platform(1081,566,85,30,WHITE))
 lSix.append(Platform(884,665,85,30,WHITE))
 lSix.append(Platform(1081,770,85,30,WHITE))
+lSix.append(Ladder(1078,770))
 lSix.append(lBorderLeft)
 lSix.append(lBorderRight)
 # End Level 6
@@ -2561,7 +2715,7 @@ levelFourteen=Level(lFourteen,1125,174,"newlvl-13-16-background.png")
 ######################## LEVEL 15 ############################
 ##############################################################
 lFifteen = []
-lFifteen.append(Water(0,800,1200,1,BLACK))
+lFifteen.append(Water(60,800,1200,1,BLACK))
 lFifteen.append(Platform(1124,128,76,33,WHITE))
 lFifteen.append(Platform(662,142,82,19,WHITE))
 lFifteen.append(Platform(634,250,142,33,WHITE))
@@ -3053,8 +3207,8 @@ lNineteen.append(GreenRSpike(0,210))
 lNineteen.append(GreenRSpike(0,244))
 
 lNineteen.append(FallPlat(0,300,85,15,BEIGE))
-lNineteen.append(FallPlat(121,269,25,17,BEIGE))
-lNineteen.append(smallShrub(115,217))
+lNineteen.append(FallPlat(116,269,25,17,BEIGE))#moved left from x 121
+lNineteen.append(smallShrub(110,217))#moved left from x 115
 
 lNineteen.append(FallPlat(191,289,25,17,BEIGE))
 lNineteen.append(FallPlat(262,230,25,17,BEIGE))
@@ -3213,24 +3367,41 @@ mp5plat1 = Platform(1102,444,73,23,ORANGE)
 lNineteen.append(mp5plat1)
 lNineteen.append(MovePlatVert(1123,330,30,23,172,331,[mp5plat1]))
 
+sSpike=SmallSpike(352,710)
+lNineteen.append(sSpike)
+sSpike2=SmallSpike(503,710)
+lNineteen.append(sSpike2)
+sSpike9=SmallSpike(423,710)
+lNineteen.append(sSpike9)
 mp6plat1 = Platform(352,662,11,48,ORANGE)
 lNineteen.append(mp6plat1)
 mp6plat2 = Platform(503,662,11,48,ORANGE)
 lNineteen.append(mp6plat2)
-lNineteen.append(MovePlatVert(423,662,11,48,620,740,[mp6plat1, mp6plat2]))
+lNineteen.append(MovePlatVert(423,662,11,48,620,740,[mp6plat1, mp6plat2,sSpike,sSpike2,sSpike9]))
 
-
+sSpike3=SmallSpike(583,710)
+lNineteen.append(sSpike3)
+sSpike4=SmallSpike(731,710)
+lNineteen.append(sSpike4)
+sSpike8=SmallSpike(657,710)
+lNineteen.append(sSpike8)
 mp7plat1 = Platform(583,662,11,48,ORANGE)
 lNineteen.append(mp7plat1)
 mp7plat2 = Platform(731,662,11,48,ORANGE)
 lNineteen.append(mp7plat2)
-lNineteen.append(MovePlatVert(657,662,11,48,620,740,[mp7plat1, mp7plat2]))
+lNineteen.append(MovePlatVert(657,662,11,48,620,740,[mp7plat1, mp7plat2,sSpike3,sSpike4,sSpike8]))
 
+sSpike5=SmallSpike(884,710)
+lNineteen.append(sSpike5)
+sSpike6=SmallSpike(1035,710)
+lNineteen.append(sSpike6)
+sSpike7=SmallSpike(955,710)
+lNineteen.append(sSpike7)
 mp8plat1 = Platform(884,662,11,48,ORANGE)
 lNineteen.append(mp8plat1)
 mp8plat2 = Platform(1035,662,11,48,ORANGE)
 lNineteen.append(mp8plat2)
-lNineteen.append(MovePlatVert(955,662,11,48,620,740,[mp8plat1, mp8plat2]))
+lNineteen.append(MovePlatVert(955,662,11,48,620,740,[mp8plat1, mp8plat2,sSpike5,sSpike6,sSpike7]))
 lNineteen.append(Platform(1190,0,10,591,WHITE))#fixes bug with right level border
 
 lNineteen.append(endSign(1150,716))
@@ -3351,12 +3522,89 @@ lTwenty.append(l20mp4sp2)
 l20mp4 = MovePlatVert(402,179,37,29,131,250,[l20mp4sp1,l20mp4sp2])
 lTwenty.append(l20mp4)
 
-lTwenty.append(endSign(1150,147))
+lTwenty.append(goldShears(1150,147))
 lTwenty.append(lBorderRight)
 lTwenty.append(lBorderLeft)
 
-levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
-#levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")
+# levelTwenty=Level(lTwenty,1120,5,"newlvl-20-background.png")
+levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
+
+# takes level list and replaces sign location with new (x,y)
+def moveSigns(levelList, x, y):
+    for i in range(len(levelList)):
+        if type(levelList[i]) == endSign:
+            levelList[i] = endSign(x, y)
+    return levelList
+
+lOne = moveSigns(lOne, -40,584)
+lTwo = moveSigns(lTwo, -40,509)
+lThree = moveSigns(lThree, 145,-40)
+lFour = moveSigns(lFour, 20,-40)
+lFive = moveSigns(lFive, 1200,74)
+
+lSix = moveSigns(lSix, 1086,800)
+lSix.append(Platform(884,770,194,30,WHITE))
+lSix.append(BlackSpike(884, 737))
+lSix.append(BlackSpike(922, 737))
+lSix.append(BlackSpike(960, 737))
+lSix.append(BlackSpike(998, 737))
+
+lSeven = moveSigns(lSeven, 1200,mpl3_y-40)
+lEight = moveSigns(lEight, 945,-40)
+lNine = moveSigns(lNine, 22,-75)
+lTen = moveSigns(lTen, -40,107)
+lEleven = moveSigns(lEleven, -40,564)
+lTwelve = moveSigns(lTwelve, -40,133)
+lthirteen = moveSigns(lthirteen, -40,201)
+lFourteen = moveSigns(lFourteen, -40,88)
+lFifteen = moveSigns(lFifteen, -30,800)
+lSixteen = moveSigns(lSixteen, -40,700)
+lSeventeen = moveSigns(lSeventeen, -40,190)
+lEighteen = moveSigns(lEighteen, -40,726)
+lNineteen = moveSigns(lNineteen, 1200,716)
+#lTwenty = moveSigns(lTwenty, 1200,147)
+
+lOne.append(lBorderRight)
+lOne.append(lBorderLeft)
+lTwo.append(lBorderRight)
+lTwo.append(lBorderLeft)
+lThree.append(lBorderRight)
+lThree.append(lBorderLeft)
+lFour.append(lBorderRight)
+lFour.append(lBorderLeft)
+lFive.append(lBorderRight)
+lFive.append(lBorderLeft)
+lFive.append(lBorderRight)
+lSix.append(lBorderLeft)
+lSix.append(lBorderRight)
+lSeven.append(lBorderLeft)
+lSeven.append(lBorderRight)
+lEight.append(lBorderLeft)
+lEight.append(lBorderRight)
+lNine.append(lBorderLeft)
+lNine.append(lBorderRight)
+lTen.append(lBorderLeft)
+lTen.append(lBorderRight)
+lEleven.append(lBorderLeft)
+lEleven.append(lBorderRight)
+lTwelve.append(lBorderLeft)
+lTwelve.append(lBorderRight)
+lthirteen.append(lBorderLeft)
+lthirteen.append(lBorderRight)
+lFourteen.append(lBorderLeft)
+lFourteen.append(lBorderRight)
+lFifteen.append(lBorderLeft)
+lFifteen.append(lBorderRight)
+lSixteen.append(lBorderLeft)
+lSixteen.append(lBorderRight)
+lSeventeen.append(lBorderLeft)
+lSeventeen.append(lBorderRight)
+lEighteen.append(lBorderLeft)
+lEighteen.append(lBorderRight)
+lNineteen.append(lBorderLeft)
+lNineteen.append(lBorderRight)
+
+
 
 cOne=Level(lOne,1135,639,"Level 1 to 3 bkgrnd.png")#Comp Level One, uses same object list(Changed background path to remove tutorial)
 cTwo=Level(lTwo,1135,538,"Level 1 to 3 bkgrnd.png")
@@ -3364,10 +3612,10 @@ cThree=Level(lThree,1100,470,"Level 1 to 3 bkgrnd.png")
 cFour=Level(lFour,1100,635,"CaveBackground1.png")
 cFive=Level(lFive,50,625,"CaveBackground1.png")
 cSix=Level(lSix,25,50,"CaveBackground1.png")
-cSeven=Level(lSeven,1040,225,"CaveBackground1.png")
+cSeven=Level(lSeven,1050,15,"CaveBackground1.png")
 cEight=Level(lEight,70,590,"mysticalBackground.png")
-cNine=Level(lNine,872,645,"mysticalBackground.png")
-cTen=Level(lTen,60,630,"mysticalBackground.png")
+cNine=Level(lNine,918,685,"mysticalBackground.png")
+cTen=Level(lTen,10,630,"mysticalBackground.png")
 cEleven=Level(lEleven,1125,80,"newlvl-11-12-background.png")
 cTwelve=Level(lTwelve,1125,536,"newlvl-11-12-background.png")
 cThirteen=Level(lthirteen,1130,93,"newlvl-13-16-background.png")
@@ -3377,7 +3625,7 @@ cSixteen=Level(lSixteen,0,0,"newlvl-13-16-background.png")
 cSeventeen=Level(lSeventeen,1120,650,"newlvl-13-16-background.png")
 cEighteen=Level(lEighteen,1130,185,"newlvl-17-18-background.png")
 cNineteen=Level(lNineteen,35,65,"newlvl-19-background.png")
-cTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")
+cTwenty=Level(lTwenty,5,690,"newlvl-20-background.png")
 cOne.is_comp=True
 cOne.next_level=cTwo
 cTwo.is_comp=True
@@ -3419,8 +3667,6 @@ cNineteen.next_level=cTwenty
 cTwenty.is_comp=True
 
 
-
-
 def loadLevel(window, level):
     level.reset()
     level.object_list.append(fullScreenLeft)
@@ -3433,7 +3679,7 @@ def loadLevel(window, level):
     check_size=(1200,800)
     if not level.is_comp:
         timer.reset_timer()
-    timer.start_timer()
+        timer.start_timer()
     offset=0
     global last_pause_time
     last_pause_time = 0
@@ -3465,7 +3711,24 @@ def loadLevel(window, level):
     pygame.quit()
     quit()
 
+def testConnection():
+    global servers
+    if len(servers) == 0:
+        servers = ['time.nist.gov', 'time.google.com', 'time.windows.com', 'pool.ntp.org', 'north-america.pool.ntp.org']
+    server_copy = servers.copy()
+    
+    for server in servers:
+        try:
+            ntplib.NTPClient().request(server)
+            servers = server_copy
+            print(servers)
+            return True
+        except:
+            server_copy.remove(server)
+    return False
+
 if __name__ == "__main__":
+    hertz_ee = False
     if os.path.exists("competitive.txt"):
         display_competitive_main_menu(window)
     else:
