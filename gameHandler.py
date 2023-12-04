@@ -3233,7 +3233,7 @@ lSixteen = moveSigns(lSixteen, -40,700)
 lSeventeen = moveSigns(lSeventeen, -40,190)
 lEighteen = moveSigns(lEighteen, -40,726)
 lNineteen = moveSigns(lNineteen, 1200,716)
-lTwenty = moveSigns(lTwenty, 1200,147)
+#lTwenty = moveSigns(lTwenty, 1200,147)
 
 lOne.append(lBorderRight)
 lOne.append(lBorderLeft)
