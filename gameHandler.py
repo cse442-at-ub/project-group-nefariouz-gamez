@@ -15,6 +15,7 @@ from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
 from competitiveMainMenu import show_competitive_main_menu
 from level_timer import *
+import ntplib
 
 from os import listdir
 from os.path import isfile, join
@@ -68,6 +69,8 @@ window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
 global timer
 global last_pause_time
 global hertz_ee
+global servers
+servers = ['time.nist.gov', 'time.google.com', 'time.windows.com', 'pool.ntp.org', 'north-america.pool.ntp.org']
 
 ##############################################################
 ##############################################################
@@ -547,19 +550,18 @@ def display_competitive_main_menu(screen):
             case "LOAD":
                 load_level()
             case"CHALLENGE MODE":
-                try:
-                    requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/", timeout=5)
+                if testConnection():
                     global timer
-                    timer = CompetitiveTimer() # Switch Timers
-                except:
+                    timer = CompetitiveTimer()
+                    timer.start_timer()
+                    loadLevel(screen,cOne)
+                else:
                     tkinter.messagebox.showerror("Error", "Please connect to the Internet to play competitive mode.")
-                    continue
-                timer.start_timer()
-                loadLevel(screen,cOne) # Load Competitive Level One
             case "LEADERBOARD":
-                try:
-                    requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/", timeout=5)
-                except:
+                if testConnection():
+                    pass
+                    # GO TO LEADERBOARD HERE
+                else:
                     tkinter.messagebox.showerror("Error", "Unable to connect to leaderboard. Please connect to the Internet.")
             case "SETTINGS":
                 settings()
@@ -1306,11 +1308,12 @@ def beat_competitive_page(screen):
     widget = Button((screen_width/2, (screen_height/2)+20), (300, 54), "RETURN TO MAIN", return_main)
 
     currtime = timer.return_time()
-    try:
-        requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/")
+    if testConnection():
         # THIS IS WHERE ITEMS CAN BE SENT TO DATABASE @JOSH
-    except:
+        pass
+    else:
         tkinter.messagebox.showerror("Error","You are unable to connect to the database, your data has not been saved to the leaderboard")
+
     minutes = math.floor(currtime / 60)
     seconds = round(currtime  - (minutes * 60), 2)
     hours = math.floor(minutes / 60)
@@ -1518,16 +1521,15 @@ def collide(player, level, dx):
                 # ADD ONE TO COMPLETED LEVELS
                 #ENDLEVEL = True
                 if level.is_comp:
-                    try:
-                        requests.get("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/")
-                    except:
+                    if testConnection():
+                        if level.next_level!=None:
+                            loadLevel(window,level.next_level)#Move to the next competitive level
+                        else:
+                            timer.stop_timer()
+                            beat_competitive_page(window)
+                    else:
                         tkinter.messagebox.showerror("Error", "Lost Internet connection. Please reconnect to the Internet to play competitive mode.")
                         display_competitive_main_menu(window)
-                    if level.next_level!=None:
-                        loadLevel(window,level.next_level)#Move to the next competitive level
-                    else:
-                       timer.stop_timer()
-                       beat_competitive_page(window)
                 else:
                     timer.stop_timer()
                     lvlf = open("currentLevel.txt", "r")
@@ -3319,6 +3321,48 @@ lEighteen = moveSigns(lEighteen, -40,726)
 lNineteen = moveSigns(lNineteen, 1200,716)
 lTwenty = moveSigns(lTwenty, 1200,147)
 
+lOne.append(lBorderRight)
+lOne.append(lBorderLeft)
+lTwo.append(lBorderRight)
+lTwo.append(lBorderLeft)
+lThree.append(lBorderRight)
+lThree.append(lBorderLeft)
+lFour.append(lBorderRight)
+lFour.append(lBorderLeft)
+lFive.append(lBorderRight)
+lFive.append(lBorderLeft)
+lFive.append(lBorderRight)
+lSix.append(lBorderLeft)
+lSix.append(lBorderRight)
+lSeven.append(lBorderLeft)
+lSeven.append(lBorderRight)
+lEight.append(lBorderLeft)
+lEight.append(lBorderRight)
+lNine.append(lBorderLeft)
+lNine.append(lBorderRight)
+lTen.append(lBorderLeft)
+lTen.append(lBorderRight)
+lEleven.append(lBorderLeft)
+lEleven.append(lBorderRight)
+lTwelve.append(lBorderLeft)
+lTwelve.append(lBorderRight)
+lthirteen.append(lBorderLeft)
+lthirteen.append(lBorderRight)
+lFourteen.append(lBorderLeft)
+lFourteen.append(lBorderRight)
+lFifteen.append(lBorderLeft)
+lFifteen.append(lBorderRight)
+lSixteen.append(lBorderLeft)
+lSixteen.append(lBorderRight)
+lSeventeen.append(lBorderLeft)
+lSeventeen.append(lBorderRight)
+lEighteen.append(lBorderLeft)
+lEighteen.append(lBorderRight)
+lNineteen.append(lBorderLeft)
+lNineteen.append(lBorderRight)
+
+
+
 cOne=Level(lOne,1135,639,"Level 1 to 3 bkgrnd.png")#Comp Level One, uses same object list(Changed background path to remove tutorial)
 cTwo=Level(lTwo,1135,538,"Level 1 to 3 bkgrnd.png")
 cThree=Level(lThree,1100,470,"Level 1 to 3 bkgrnd.png")
@@ -3423,6 +3467,22 @@ def loadLevel(window, level):
 
     pygame.quit()
     quit()
+
+def testConnection():
+    global servers
+    if len(servers) == 0:
+        servers = ['time.nist.gov', 'time.google.com', 'time.windows.com', 'pool.ntp.org', 'north-america.pool.ntp.org']
+    server_copy = servers.copy()
+    
+    for server in servers:
+        try:
+            ntplib.NTPClient().request(server)
+            servers = server_copy
+            print(servers)
+            return True
+        except:
+            server_copy.remove(server)
+    return False
 
 if __name__ == "__main__":
     hertz_ee = False

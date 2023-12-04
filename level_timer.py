@@ -36,27 +36,33 @@ class CompetitiveTimer:
 
     # Call run_timer at level start
     def start_timer(self):
-        server_copy = ['time.nist.gov', 'time.google.com', 'time.windows.com', 'pool.ntp.org', 'north-america.pool.ntp.org']
+        if len(self.servers) == 0:
+            self.servers = ['time.nist.gov', 'time.google.com', 'time.windows.com', 'pool.ntp.org', 'north-america.pool.ntp.org']
+        server_copy = self.servers.copy()
+
         for server in self.servers:
             try:
                 self.start_time = self.client.request(server).tx_time
+                self.servers = server_copy
                 return True
             except:
                 server_copy.remove(server)
-        self.servers = server_copy
         return False
 
     # Call stop_timer for both pausing and ending a level
     def stop_timer(self):
-        server_copy = ['time.nist.gov', 'time.google.com', 'time.windows.com', 'pool.ntp.org', 'north-america.pool.ntp.org']
+        if len(self.servers) == 0:
+            self.servers = ['time.nist.gov', 'time.google.com', 'time.windows.com', 'pool.ntp.org', 'north-america.pool.ntp.org']
+        server_copy = self.servers.copy()
+
         for server in self.servers:
             try:
                 current_time = self.client.request(server).tx_time
                 self.total_time += (current_time - self.start_time)
+                self.servers = server_copy
                 return True
             except:
                 server_copy.remove(server)
-        self.servers = server_copy
         return False
 
     # Call reset_timer before starting a new level
