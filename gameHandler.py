@@ -6,6 +6,7 @@ import math
 import pygame
 import sys
 import tkinter
+import json
 from tkinter import messagebox
 import requests
 
@@ -20,6 +21,8 @@ import ntplib
 from os import listdir
 from os.path import isfile, join
 #from pygame.sprite import _Group
+from time import gmtime, strftime
+
 
 pygame.init()
 
@@ -471,6 +474,10 @@ def settings():
     display_settings_page(window)
     print("SETTINGS")
 
+def leaderboard():
+    display_leaderboard(window)
+    print("LEADERBOARD")
+
 def quit_game():
     pygame.quit()
     sys.exit()
@@ -559,12 +566,46 @@ def display_competitive_main_menu(screen):
                     tkinter.messagebox.showerror("Error", "Please connect to the Internet to play competitive mode.")
             case "LEADERBOARD":
                 if testConnection():
-                    pass
-                    # GO TO LEADERBOARD HERE
+                  info = retrieve_data_php()
+                  display_leaderboard(window, info)
                 else:
                     tkinter.messagebox.showerror("Error", "Unable to connect to leaderboard. Please connect to the Internet.")
             case "SETTINGS":
                 settings()
+
+
+# Function to insert data into the database via PHP endpoint
+def insert_data_php(username, time, character):
+    mode = 1
+    data = retrieve_data_php()
+    for lists in data:
+        if username in lists and character in lists:
+            mode = 2
+    try:
+        url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
+        payload = {'username': username, 'time': time, 'character': character, 'mode': mode}
+        response = requests.post(url, data=payload)
+    except requests.ConnectionError:
+        tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, your data has not been saved to the leaderboard")
+
+
+# Function to retrieve data from the database via PHP endpoint
+def retrieve_data_php():
+    try:
+        url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            ret = []
+            for lists in data:
+                add = []
+                for vals in lists.values():
+                    add.append(vals)
+                ret.append(add)
+            print(ret)
+            return ret
+    except requests.ConnectionError:
+        tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, leaderboard cannot be updated")
 
 
 ##############################################################
@@ -661,12 +702,24 @@ def return_main():
         display_competitive_main_menu(window)
     elif lvlint > 20:
         if user_name != '':
-            open("competitive.txt", "x").close()
-            print(user_name)
-            wlvlfile = open("currentLevel.txt", "w")
-            wlvlfile.write("1")
-            wlvlfile.close()
-            display_competitive_main_menu(window)
+            nametaken = 0
+            checkForName = retrieve_data_php()
+            for lists in checkForName:
+                if user_name in lists:
+                    nametaken = 1
+            if nametaken == 1:
+                tkinter.messagebox.showwarning("Warning","Sorry, the username you've entered is already in use, please try another name.")
+            else:
+                #name available, so need to add blank entry to db
+                insert_data_php(user_name, '999999', 'nameholder')
+                open("competitive.txt", "x").close()
+                writeName = open("competitive.txt", "w")
+                writeName.write(user_name)
+                writeName.close()
+                wlvlfile = open("currentLevel.txt", "w")
+                wlvlfile.write("1")
+                wlvlfile.close()
+                display_competitive_main_menu(window)
         else:
             tkinter.messagebox.showwarning("Warning","Please Enter a Name Before Returning to Menu")
     else:
@@ -701,6 +754,191 @@ def display_settings_page(screen):
 
         for widget in widgets:
             widget.draw(screen)
+
+        pygame.display.flip()
+
+    pygame.quit()
+
+
+##############################################################
+##############################################################
+#################### LEADERBOARD SCREEN ######################
+##############################################################
+##############################################################
+
+class LeaderboardSlot:
+    def __init__(self, pos: tuple, size: tuple, text: str, action=None):
+        self.pos = pos
+        self.size = size
+        self.rect = pygame.Rect(self.pos[0] - (self.size[0] / 2), self.pos[1] - (self.size[1] / 2), self.size[0],
+                                self.size[1])
+        self.text = text
+        self.action = action
+        self.color = (190, 190, 190)
+
+    def draw(self, screen):
+        button_surface = pygame.Surface((self.size[0], self.size[1]), pygame.SRCALPHA)
+        button_surface.set_alpha(210)
+        pygame.draw.rect(button_surface, self.color, (0, 0, self.size[0], self.size[1]), border_radius=7)
+
+        font = pygame.font.Font(None, 36)
+        text_surface = font.render(self.text, True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=(self.size[0] / 2, self.size[1] / 2))
+        button_surface.blit(text_surface, text_rect)
+        button_rect = button_surface.get_rect(center=(self.pos[0], self.pos[1]))
+
+        screen.blit(button_surface, button_rect)
+
+def dummyReturn():
+    return
+
+
+def display_leaderboard(screen, data):
+    sorted_entries = sorted(data, key=lambda x: float(x[1]))
+    
+    no_duplicates, logged = [], []
+    for entry in sorted_entries:
+        username = entry[0]
+        if username not in logged:
+            logged.append(username)
+            no_duplicates.append(entry)
+
+    top_10 = no_duplicates[:10]
+
+    readName = open("competitive.txt", "r")
+    current_user = readName.read()
+    current_user_time, current_user_character, current_user_position = "N/A", "N/A", "N/A"
+    readName.close()
+
+    for entry in no_duplicates:
+        if current_user in entry:
+            if entry[1] != 999999 and entry[2] != "nameholder":
+                current_user_time, current_user_character, current_user_position = entry[1], entry[2], no_duplicates.index(entry) + 1
+
+    positions = []
+    screen_width, screen_height = screen.get_size()
+    background_img = pygame.image.load("assets/Background/BetlvlBackground.png")
+    background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
+    widgets = [
+        LeaderboardSlot((screen_width/2, (screen_height*.185)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.255)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.325)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.395)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.465)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.535)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.605)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.685)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.755)), (screen_width*.7, 45), "", dummyReturn),
+        LeaderboardSlot((screen_width/2, (screen_height*.825)), (screen_width*.7, 45), "", dummyReturn),
+
+        LeaderboardSlot((screen_width/2, (screen_height*.935)), (screen_width*.7, 45), "", dummyReturn),
+
+        Button((screen_width * .08, (screen_height * .06)), (150, 54), "MENU", return_main)
+    ]
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.VIDEORESIZE:
+                screen_width, screen_height = screen.get_size()
+                widgets = [
+                    LeaderboardSlot((screen_width/2, (screen_height*.185)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.255)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.325)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.395)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.465)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.535)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.605)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.685)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.755)), (screen_width*.7, 45), "", dummyReturn),
+                    LeaderboardSlot((screen_width/2, (screen_height*.825)), (screen_width*.7, 45), "", dummyReturn),
+
+                    LeaderboardSlot((screen_width/2, (screen_height*.935)), (screen_width*.7, 45), "", dummyReturn),
+
+                    Button((screen_width * .08, (screen_height * .06)), (150, 54), "MENU", return_main)
+                ]
+                background_img = pygame.image.load("assets/Background/BetlvlBackground.png")
+                background_img = pygame.transform.scale(background_img, (screen_width, screen_height))
+
+            for widget in widgets:
+                if type(widget) == Button:
+                    widget.handle_event(event)
+            
+            count = 0
+            for widget in widgets:
+                positions.append(widget.pos)
+                count += 1
+                if count == 10:
+                    count = 0
+                    break
+
+        # render background and widgets
+        screen.blit(background_img, (0, 0))
+
+        draw_text("TOP 10 LEADERBOARD", pygame.font.Font(None, 50), (0, 0, 0), ((screen_width/2, (screen_height * .065))))
+        draw_text("NAME", pygame.font.Font(None, 36), (0, 0, 0), ((screen_width * .18, (screen_height * .135))))
+        draw_text("TIME", pygame.font.Font(None, 36), (0, 0, 0), ((screen_width * .5, (screen_height * .135))))
+        draw_text("CHARACTER", pygame.font.Font(None, 36), (0, 0, 0), ((screen_width * .78, (screen_height * .135))))
+
+        for widget in widgets:
+            widget.draw(screen)
+
+        leaderboard_entry_font = pygame.font.Font(None, 36)
+        for i in zip(top_10, positions):
+            user, user_time, character, height = i[0][0], i[0][1], i[0][2], i[1][1]
+            
+            userText = leaderboard_entry_font.render(user, False, (34, 90, 48))
+            userTextRect = userText.get_rect()
+            userTextRect.left, userTextRect.centery = screen_width * .16, height
+
+            characterText = leaderboard_entry_font.render(character, False, (34, 90, 48))
+            characterTextRect = characterText.get_rect()
+            characterTextRect.right, characterTextRect.centery = screen_width * .84, height
+
+            screen.blit(userText, userTextRect)
+            correct_time = strftime("%M:%S", gmtime(float(user_time)))
+            draw_text(correct_time, pygame.font.Font(None, 36), (34, 90, 48), (screen_width * .5, height))
+            screen.blit(characterText, characterTextRect)
+
+        first, second, third = pygame.image.load("assets/leaderboard/first.png"), pygame.image.load("assets/leaderboard/second.png"), pygame.image.load("assets/leaderboard/third.png")
+        firstRect, secondRect, thirdRect = first.get_rect(), second.get_rect(), third.get_rect()
+        firstRect.left, firstRect.centery = widgets[0].pos[0] * .21, widgets[0].pos[1]
+        secondRect.left, secondRect.centery = widgets[1].pos[0] * .21, widgets[1].pos[1]
+        thirdRect.left, thirdRect.centery = widgets[2].pos[0] * .21, widgets[2].pos[1]
+
+        screen.blit(first, firstRect)
+        screen.blit(second, secondRect)
+        screen.blit(third, thirdRect)
+
+        for i in range(3, 10):
+            height = widgets[i].pos[1]
+            draw_text("#" + str(i + 1), pygame.font.Font(None, 40), (0, 0, 0), ((screen_width * .125, (height))))
+
+        
+        height = widgets[10].pos[1]
+
+        if current_user_position != "N/A":
+            draw_text("#" + str(current_user_position), pygame.font.Font(None, 40), (0, 0, 0), ((screen_width * .125, (height))))
+        
+        userText = leaderboard_entry_font.render(current_user, False, (34, 90, 48))
+        userTextRect = userText.get_rect()
+        userTextRect.left, userTextRect.centery = screen_width * .16, height
+
+        characterText = leaderboard_entry_font.render(current_user_character, False, (34, 90, 48))
+        characterTextRect = characterText.get_rect()
+        characterTextRect.right, characterTextRect.centery = screen_width * .84, height
+
+        screen.blit(userText, userTextRect)
+
+        if current_user_time == "N/A":
+            draw_text(current_user_time, pygame.font.Font(None, 36), (34, 90, 48), (screen_width * .5, height))
+        else:
+            correct_time = strftime("%M:%S", gmtime(float(current_user_time)))
+            draw_text(correct_time, pygame.font.Font(None, 36), (34, 90, 48), (screen_width * .5, height))
+
+        screen.blit(characterText, characterTextRect)
 
         pygame.display.flip()
 
@@ -1307,10 +1545,15 @@ def beat_competitive_page(screen):
 
     widget = Button((screen_width/2, (screen_height/2)+20), (300, 54), "RETURN TO MAIN", return_main)
 
-    currtime = timer.return_time()
     if testConnection():
-        # THIS IS WHERE ITEMS CAN BE SENT TO DATABASE @JOSH
-        pass
+        namef = open("competitive.txt", "r")
+        username = namef.read()
+        namef.close()
+        timeval = timer.return_time()
+        characterf = open("CurrentCharacter.txt", "r")
+        character = characterf.read()
+        characterf.close()
+        insert_data_php(username, timeval, character)
     else:
         tkinter.messagebox.showerror("Error","You are unable to connect to the database, your data has not been saved to the leaderboard")
 
