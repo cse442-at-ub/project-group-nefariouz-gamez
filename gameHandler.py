@@ -530,7 +530,7 @@ def display_main_menu(screen):
                         code = []
                         index = 0
 
-                    
+
 
             # checks for buttons clicked
             for widget in widgets:
@@ -795,7 +795,7 @@ def dummyReturn():
 
 def display_leaderboard(screen, data):
     sorted_entries = sorted(data, key=lambda x: float(x[1]))
-    
+
     no_duplicates, logged = [], []
     for entry in sorted_entries:
         username = entry[0]
@@ -865,7 +865,7 @@ def display_leaderboard(screen, data):
             for widget in widgets:
                 if type(widget) == Button:
                     widget.handle_event(event)
-            
+
             count = 0
             for widget in widgets:
                 positions.append(widget.pos)
@@ -888,7 +888,7 @@ def display_leaderboard(screen, data):
         leaderboard_entry_font = pygame.font.Font(None, 36)
         for i in zip(top_10, positions):
             user, user_time, character, height = i[0][0], i[0][1], i[0][2], i[1][1]
-            
+
             userText = leaderboard_entry_font.render(user, False, (34, 90, 48))
             userTextRect = userText.get_rect()
             userTextRect.left, userTextRect.centery = screen_width * .16, height
@@ -916,12 +916,12 @@ def display_leaderboard(screen, data):
             height = widgets[i].pos[1]
             draw_text("#" + str(i + 1), pygame.font.Font(None, 40), (0, 0, 0), ((screen_width * .125, (height))))
 
-        
+
         height = widgets[10].pos[1]
 
         if current_user_position != "N/A":
             draw_text("#" + str(current_user_position), pygame.font.Font(None, 40), (0, 0, 0), ((screen_width * .125, (height))))
-        
+
         userText = leaderboard_entry_font.render(current_user, False, (34, 90, 48))
         userTextRect = userText.get_rect()
         userTextRect.left, userTextRect.centery = screen_width * .16, height
@@ -1545,15 +1545,15 @@ def beat_competitive_page(screen):
 
     widget = Button((screen_width/2, (screen_height/2)+20), (300, 54), "RETURN TO MAIN", return_main)
 
+    currtime = timer.return_time()
     if testConnection():
         namef = open("competitive.txt", "r")
         username = namef.read()
         namef.close()
-        timeval = timer.return_time()
         characterf = open("CurrentCharacter.txt", "r")
         character = characterf.read()
         characterf.close()
-        insert_data_php(username, timeval, character)
+        insert_data_php(username, currtime, character)
     else:
         tkinter.messagebox.showerror("Error","You are unable to connect to the database, your data has not been saved to the leaderboard")
 
@@ -3716,12 +3716,11 @@ def testConnection():
     if len(servers) == 0:
         servers = ['time.nist.gov', 'time.google.com', 'time.windows.com', 'pool.ntp.org', 'north-america.pool.ntp.org']
     server_copy = servers.copy()
-    
+
     for server in servers:
         try:
             ntplib.NTPClient().request(server)
             servers = server_copy
-            print(servers)
             return True
         except:
             server_copy.remove(server)
