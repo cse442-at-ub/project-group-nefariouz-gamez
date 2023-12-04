@@ -68,7 +68,9 @@ user_name = ''
 window = pygame.display.set_mode((WIDTH, HEIGHT),pygame.RESIZABLE)
 global timer
 global last_pause_time
-
+global hertz_ee
+global servers
+servers = ['time.nist.gov', 'time.google.com', 'time.windows.com', 'pool.ntp.org', 'north-america.pool.ntp.org']
 
 ##############################################################
 ##############################################################
@@ -376,15 +378,23 @@ def scale_window_main(screen):
     screen_width, screen_height = screen.get_size()   # find screen dimensions
 
     background_img = pygame.image.load("assets/Background/TitleNoShear.png")
+
     background_img = pygame.transform.scale(background_img, (screen_width, screen_height))   # scale background to resolution
 
     # creates widgets based on screen size
     widgets = [
-        Button((screen_width/2, (screen_height/2)-120), (300, 54), "BEGIN YOUR QUEST", start_game),
-        Button((screen_width/2, (screen_height/2)-40), (300, 54), "LOAD LEVEL", load_level),
-        Button((screen_width/2, (screen_height/2)+40), (300, 54), "SETTINGS", settings),
-        Button((screen_width/2, (screen_height/2)+120), (300, 54), "QUIT", quit_game)
+        ColorfulButton((screen_width/2, (screen_height/2)-120), (300, 54), "BEGIN YOUR QUEST", start_game),
+        ColorfulButton((screen_width/2, (screen_height/2)-40), (300, 54), "LOAD LEVEL", load_level),
+        ColorfulButton((screen_width/2, (screen_height/2)+40), (300, 54), "SETTINGS", settings),
+        ColorfulButton((screen_width/2, (screen_height/2)+120), (300, 54), "QUIT", quit_game)
     ]
+
+    global hertz_ee
+    if hertz_ee:
+        background_img = pygame.image.load("assets/Background/hertz_passion.png")
+        for widget in widgets:
+            widget.default_color = (137, 148, 153)
+            widget.hover_color = (169, 169, 169)
 
     return widgets, background_img
 
@@ -465,16 +475,55 @@ def quit_game():
     pygame.quit()
     sys.exit()
 
+konami = False
 def display_main_menu(screen):
+    global konami
     widgets, background_img = scale_window_main(screen)
+    secret_code = [pygame.K_h, pygame.K_e, pygame.K_r, pygame.K_t, pygame.K_z]
+    buffer = []
+
+    maxlevelread = open("MaxUnlocked.txt", "r")
+    max_level_unlocked = maxlevelread.read()
+
+    KONAMI = [pygame.K_UP, pygame.K_UP, pygame.K_DOWN, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_b, pygame.K_a]
+    code, index = [], 0
 
     running = True
     while running:
+        key = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.VIDEORESIZE:
                 widgets, background_img = scale_window_main(screen)   # rescales visuals for new resolution
+            elif event.type == pygame.KEYDOWN:
+                if len(buffer) == 0 or buffer[-1] != event.key:
+                    buffer.append(event.key)
+
+                    if len(buffer) > 5:
+                        buffer.pop(0)
+
+                    if buffer == secret_code:
+                        global hertz_ee
+                        hertz_ee = not hertz_ee
+                        widgets, background_img = scale_window_main(screen)
+                if konami == False:
+                    if event.key == KONAMI[index]:
+                        code.append(event.key)
+                        index += 1
+                        if code == KONAMI:
+                            index = 0
+                            if int(max_level_unlocked) < 15:
+                                tkinter.messagebox.showinfo("A secret?","Check the character selection screen...")
+                                print('KONAMI!')
+                                konami = True
+                            else:
+                                tkinter.messagebox.showinfo("You did it!","You have already unlocked all 4 characters so the easter egg won't do anything, but good job finding it! :)")
+                    else:
+                        code = []
+                        index = 0
+
+                    
 
             # checks for buttons clicked
             for widget in widgets:
@@ -493,25 +542,26 @@ def display_main_menu(screen):
 
 def display_competitive_main_menu(screen):
     while True:
-        match show_competitive_main_menu(screen):
+        global hertz_ee
+        return_to, hertz_ee = show_competitive_main_menu(screen, hertz_ee)
+        match return_to:
             case "START":
                 start_game()
             case "LOAD":
                 load_level()
             case"CHALLENGE MODE":
-                try:
-                    ntplib.NTPClient().request('time.nist.gov')
+                if testConnection():
                     global timer
-                    timer = CompetitiveTimer() # Switch Timers
-                except:
+                    timer = CompetitiveTimer()
+                    timer.start_timer()
+                    loadLevel(screen,cOne)
+                else:
                     tkinter.messagebox.showerror("Error", "Please connect to the Internet to play competitive mode.")
-                    continue
-                timer.start_timer()
-                loadLevel(screen,cOne) # Load Competitive Level One
             case "LEADERBOARD":
-                try:
-                    ntplib.NTPClient().request('time.nist.gov')
-                except:
+                if testConnection():
+                    pass
+                    # GO TO LEADERBOARD HERE
+                else:
                     tkinter.messagebox.showerror("Error", "Unable to connect to leaderboard. Please connect to the Internet.")
             case "SETTINGS":
                 settings()
@@ -718,6 +768,7 @@ if max_level_unlocked == "" or int(max_level_unlocked) < int(max_level):
 
 # onClick events for each character and the OK button
 def click_Celia():
+    global konami
     global current_character
     global character_text
     global selected_text
@@ -744,6 +795,7 @@ def click_Celia():
 
 
 def click_Malcolm():
+    global konami
     global current_character
     global character_text
     global selected_text
@@ -755,7 +807,7 @@ def click_Malcolm():
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if max_level_unlocked != "" and int(max_level_unlocked) >= 5:
+    if max_level_unlocked != "" and int(max_level_unlocked) >= 5 or konami == True:
         current_character = "Malcolm"
         powerup_read = "Double jump in air"
         cooldown_read = ""
@@ -779,11 +831,12 @@ def click_Maia():
     global powerup_text
     global cooldown_read
     global cooldown_text
+    global konami
 
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if max_level_unlocked != "" and int(max_level_unlocked) >= 10:
+    if max_level_unlocked != "" and int(max_level_unlocked) >= 10 or konami == True:
         current_character = "Maia"
         powerup_read = "Walk through shrubs for 5 seconds (15 sec cooldown)"
         cooldown_read = ""
@@ -807,12 +860,12 @@ def click_Oscar():
     global powerup_text
     global cooldown_read
     global cooldown_text
-
+    global konami
 
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if max_level_unlocked != "" and int(max_level_unlocked) >= 15:
+    if max_level_unlocked != "" and int(max_level_unlocked) >= 15 or konami == True:
         current_character = "Oscar"
         powerup_read = "Walk through shrubs and spikes for 5 seconds (30 sec cooldown)"
         cooldown_read = "Can also double jump in air"
@@ -868,6 +921,7 @@ def check_update():
     global powerup_text
     global cooldown_text
     global char_text_color
+    global konami
 
     check_unlocked_level()
 
@@ -877,32 +931,54 @@ def check_update():
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if current_character == "" or max_level_unlocked == "" or int(max_level_unlocked) < 5:
+    if current_character == "":
         f.close()
         f = open("CurrentCharacter.txt", "w")
         f.write("Celia")
         f.close()
         f = open("CurrentCharacter.txt", "r")
         click_Celia()
-    elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (current_character == "Maia" and int(max_level_unlocked) < 10) or (current_character == "Oscar" and int(max_level_unlocked) < 15):
-        f.close()
-        f = open("CurrentCharacter.txt", "w")
-        f.write("Celia")
-        f.close()
-        f = open("CurrentCharacter.txt", "r")
-        click_Celia()
-    elif current_character == "Celia":
-        char_text_color = "darkgreen"
-        click_Celia()
-    elif current_character == "Malcolm":
-        char_text_color = "darkorange4"
-        click_Malcolm()
-    elif current_character == "Maia":
-        char_text_color = "maroon3"
-        click_Maia()
-    elif current_character == "Oscar":
-        char_text_color = "indigo"
-        click_Oscar()
+
+    if konami == False:
+        if max_level_unlocked == "" or int(max_level_unlocked) < 5:
+            f.close()
+            f = open("CurrentCharacter.txt", "w")
+            f.write("Celia")
+            f.close()
+            f = open("CurrentCharacter.txt", "r")
+            click_Celia()
+        elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (current_character == "Maia" and int(max_level_unlocked) < 10) or (current_character == "Oscar" and int(max_level_unlocked) < 15):
+            f.close()
+            f = open("CurrentCharacter.txt", "w")
+            f.write("Celia")
+            f.close()
+            f = open("CurrentCharacter.txt", "r")
+            click_Celia()
+        elif current_character == "Celia":
+            char_text_color = "darkgreen"
+            click_Celia()
+        elif current_character == "Malcolm":
+            char_text_color = "darkorange4"
+            click_Malcolm()
+        elif current_character == "Maia":
+            char_text_color = "maroon3"
+            click_Maia()
+        elif current_character == "Oscar":
+            char_text_color = "indigo"
+            click_Oscar()
+    elif konami == True:
+        if current_character == "Celia":
+            char_text_color = "darkgreen"
+            click_Celia()
+        elif current_character == "Malcolm":
+            char_text_color = "darkorange4"
+            click_Malcolm()
+        elif current_character == "Maia":
+            char_text_color = "maroon3"
+            click_Maia()
+        elif current_character == "Oscar":
+            char_text_color = "indigo"
+            click_Oscar()
     f = open("CurrentCharacter.txt", "r")
     selected_text = character_select_font.render("You are currently playing as", False, "Black")
     character_text = character_select_font.render(current_character, False, char_text_color)
@@ -913,27 +989,36 @@ def check_update():
 
 def check_unlocked_level():
     global current_character
+    global konami
 
     maxlevelread = open("MaxUnlocked.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
-    if max_level_unlocked == "" or int(max_level_unlocked) < 5:
-        current_character = "Celia"
-        f = open("CurrentCharacter.txt", "w")
-        f.write("Celia")
-        f.close()
-        Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png'))
-        Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMalcolm.png'))
-        Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
-        Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
-    elif int(max_level_unlocked) < 10:
-        Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
-        Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
-    elif int(max_level_unlocked) < 15:
-        Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+    if konami == False:
+        if max_level_unlocked == "" or int(max_level_unlocked) < 5:
+            current_character = "Celia"
+            f = open("CurrentCharacter.txt", "w")
+            f.write("Celia")
+            f.close()
+            Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png'))
+            Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMalcolm.png'))
+            Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
+            Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+        elif int(max_level_unlocked) < 10:
+            Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedMaia.png'))
+            Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+        elif int(max_level_unlocked) < 15:
+            Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'LockedOscar.png'))
+
+    # if konami == True:
+    #     Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png'))
+    #     Malcolm.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Malcolm.png'))
+    #     Maia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Maia.png'))
+    #     Oscar.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Oscar.png'))
 
 
 def display_choose_character(window):
+    global konami
     background = pygame.image.load("assets/Background/BetLvlBackground.png")
     size = pygame.display.get_window_size()
     screen_width, screen_height = size[0], size[1]
@@ -943,6 +1028,7 @@ def display_choose_character(window):
     check_update()
     check_unlocked_level()
 
+    print(konami, "Konami!")
 
     running = True
     while running:
@@ -1222,11 +1308,12 @@ def beat_competitive_page(screen):
     widget = Button((screen_width/2, (screen_height/2)+20), (300, 54), "RETURN TO MAIN", return_main)
 
     currtime = timer.return_time()
-    try:
-        ntplib.NTPClient().request('time.nist.gov')
+    if testConnection():
         # THIS IS WHERE ITEMS CAN BE SENT TO DATABASE @JOSH
-    except:
+        pass
+    else:
         tkinter.messagebox.showerror("Error","You are unable to connect to the database, your data has not been saved to the leaderboard")
+
     minutes = math.floor(currtime / 60)
     seconds = round(currtime  - (minutes * 60), 2)
     hours = math.floor(minutes / 60)
@@ -1434,16 +1521,15 @@ def collide(player, level, dx):
                 # ADD ONE TO COMPLETED LEVELS
                 #ENDLEVEL = True
                 if level.is_comp:
-                    try:
-                        ntplib.NTPClient().request('time.nist.gov')
-                    except:
+                    if testConnection():
+                        if level.next_level!=None:
+                            loadLevel(window,level.next_level)#Move to the next competitive level
+                        else:
+                            timer.stop_timer()
+                            beat_competitive_page(window)
+                    else:
                         tkinter.messagebox.showerror("Error", "Lost Internet connection. Please reconnect to the Internet to play competitive mode.")
                         display_competitive_main_menu(window)
-                    if level.next_level!=None:
-                        loadLevel(window,level.next_level)#Move to the next competitive level
-                    else:
-                       timer.stop_timer()
-                       beat_competitive_page(window)
                 else:
                     timer.stop_timer()
                     lvlf = open("currentLevel.txt", "r")
@@ -3382,7 +3468,24 @@ def loadLevel(window, level):
     pygame.quit()
     quit()
 
+def testConnection():
+    global servers
+    if len(servers) == 0:
+        servers = ['time.nist.gov', 'time.google.com', 'time.windows.com', 'pool.ntp.org', 'north-america.pool.ntp.org']
+    server_copy = servers.copy()
+    
+    for server in servers:
+        try:
+            ntplib.NTPClient().request(server)
+            servers = server_copy
+            print(servers)
+            return True
+        except:
+            server_copy.remove(server)
+    return False
+
 if __name__ == "__main__":
+    hertz_ee = False
     if os.path.exists("competitive.txt"):
         display_competitive_main_menu(window)
     else:
