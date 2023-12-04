@@ -565,11 +565,12 @@ def display_competitive_main_menu(screen):
                 else:
                     tkinter.messagebox.showerror("Error", "Please connect to the Internet to play competitive mode.")
             case "LEADERBOARD":
-                if testConnection():
+                try:
                   info = retrieve_data_php()
-                  display_leaderboard(window, info)
-                else:
+                except:
                     tkinter.messagebox.showerror("Error", "Unable to connect to leaderboard. Please connect to the Internet.")
+                    continue
+                display_leaderboard(window, info)
             case "SETTINGS":
                 settings()
 
@@ -581,31 +582,26 @@ def insert_data_php(username, time, character):
     for lists in data:
         if username in lists and character in lists:
             mode = 2
-    try:
-        url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
-        payload = {'username': username, 'time': time, 'character': character, 'mode': mode}
-        response = requests.post(url, data=payload)
-    except requests.ConnectionError:
-        tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, your data has not been saved to the leaderboard")
+    url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
+    payload = {'username': username, 'time': time, 'character': character, 'mode': mode}
+    response = requests.post(url, data=payload)
+
 
 
 # Function to retrieve data from the database via PHP endpoint
 def retrieve_data_php():
-    try:
-        url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            ret = []
-            for lists in data:
-                add = []
-                for vals in lists.values():
-                    add.append(vals)
-                ret.append(add)
-            print(ret)
-            return ret
-    except requests.ConnectionError:
-        tkinter.messagebox.showwarning("Warning","You are unable to connect to the database, leaderboard cannot be updated")
+    url = 'https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442ai/dbinteract.php'
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        ret = []
+        for lists in data:
+            add = []
+            for vals in lists.values():
+                add.append(vals)
+            ret.append(add)
+        print(ret)
+        return ret
 
 
 ##############################################################
@@ -703,7 +699,11 @@ def return_main():
     elif lvlint > 20:
         if user_name != '':
             nametaken = 0
-            checkForName = retrieve_data_php()
+            try:
+                checkForName = retrieve_data_php()
+            except:
+                    tkinter.messagebox.showwarning("Warning","Please Connect to the Internet and Try Again.")
+                    return
             for lists in checkForName:
                 if user_name in lists:
                     nametaken = 1
@@ -711,7 +711,11 @@ def return_main():
                 tkinter.messagebox.showwarning("Warning","Sorry, the username you've entered is already in use, please try another name.")
             else:
                 #name available, so need to add blank entry to db
-                insert_data_php(user_name, '999999', 'nameholder')
+                try:
+                    insert_data_php(user_name, '999999', 'nameholder')
+                except:
+                    tkinter.messagebox.showwarning("Warning","Please Connect to the Internet and Try Again.")
+                    return
                 open("competitive.txt", "x").close()
                 writeName = open("competitive.txt", "w")
                 writeName.write(user_name)
@@ -1546,7 +1550,7 @@ def beat_competitive_page(screen):
     widget = Button((screen_width/2, (screen_height/2)+20), (300, 54), "RETURN TO MAIN", return_main)
 
     currtime = timer.return_time()
-    if testConnection():
+    try:
         namef = open("competitive.txt", "r")
         username = namef.read()
         namef.close()
@@ -1554,7 +1558,7 @@ def beat_competitive_page(screen):
         character = characterf.read()
         characterf.close()
         insert_data_php(username, currtime, character)
-    else:
+    except:
         tkinter.messagebox.showerror("Error","You are unable to connect to the database, your data has not been saved to the leaderboard")
 
     minutes = math.floor(currtime / 60)
