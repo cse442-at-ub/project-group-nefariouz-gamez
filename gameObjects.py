@@ -314,6 +314,13 @@ class GoldRSpike(Spike):##RIGHT FACING GOLD SPIKE
         self.original_mask=pygame.mask.from_surface(self.image)
         self.original_image=pygame.image.load("assets\Traps\Spikes\GoldRSpike.png")
 
+class SmallSpike(Spike):##RIGHT FACING GOLD SPIKE
+    def __init__(self,x,y):
+        super().__init__(x,y)
+        self.image=pygame.image.load("assets\Traps\Spikes\SmallDSpike.png")
+        self.mask=pygame.mask.from_surface(self.image)
+        self.original_mask=pygame.mask.from_surface(self.image)
+        self.original_image=pygame.image.load("assets\Traps\Spikes\SmallDSpike.png")
 
 class SideSpike(Spike):
     def __init__(self, x, y):
@@ -679,6 +686,18 @@ class endSign(Object):
         self.original_y=y#THIS
         self.original_mask = pygame.mask.from_surface(self.image)
         self.original_image = pygame.image.load("assets/Special/EndSign.png")
+
+
+class goldShears(Object):
+    def __init__(self, x, y):
+        super().__init__(x, y, 40, 40)
+        self.name = "end sign"
+        self.image=pygame.image.load("assets\Special\GoldenShears.png")
+        self.mask= pygame.mask.from_surface(self.image)
+        self.original_x=x#THIS
+        self.original_y=y#THIS
+        self.original_mask = pygame.mask.from_surface(self.image)
+        self.original_image = pygame.image.load("assets\Special\GoldenShears.png")
 
 class AnglePlat(Object):#205 125
     def __init__(self, x, y):
