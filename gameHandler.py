@@ -526,6 +526,7 @@ def display_main_menu(screen):
                                 konami = True
                             else:
                                 tkinter.messagebox.showinfo("You did it!","You have already unlocked all 4 characters so the easter egg won't do anything, but good job finding it! :)")
+                                konami = True
                     else:
                         code = []
                         index = 0
