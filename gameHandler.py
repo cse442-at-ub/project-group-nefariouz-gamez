@@ -26,6 +26,9 @@ from time import gmtime, strftime
 
 pygame.init()
 
+gameIcon = pygame.image.load("assets/Traps/SmallShrub/SmallShrub.png")
+pygame.display.set_icon(gameIcon)
+
 def assignVolume():
     vol_states = []   # Ex. [1, 1, False] -> music slider pos (start at 100%), sfx slider pos (start at 100%), checkbox status (starts unchecked)
 
