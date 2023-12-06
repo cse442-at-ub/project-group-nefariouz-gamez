@@ -549,6 +549,7 @@ def display_main_menu(screen):
         pygame.display.flip()
 
     pygame.quit()
+    sys.exit()
 
 
 def display_competitive_main_menu(screen):
@@ -655,6 +656,7 @@ def display_tut(screen):
         pygame.display.flip()
 
     pygame.quit()
+    sys.exit()
 
 ##############################################################
 ##############################################################
@@ -766,6 +768,7 @@ def display_settings_page(screen):
         pygame.display.flip()
 
     pygame.quit()
+    sys.exit()
 
 
 ##############################################################
@@ -951,6 +954,7 @@ def display_leaderboard(screen, data):
         pygame.display.flip()
 
     pygame.quit()
+    sys.exit()
 
 
 ##############################################################
@@ -1328,6 +1332,7 @@ def display_choose_character(window):
         pygame.display.update()
 
     pygame.quit()
+    sys.exit()
 
 
 ##############################################################
@@ -1442,6 +1447,7 @@ def display_between_level_page(screen):
 
         pygame.display.flip()
     pygame.quit()
+    sys.exit()
 
 
 ##############################################################
@@ -1517,6 +1523,7 @@ def display_endgame_level_page(screen):
         screen.blit(text_surface, (input_rect.x+10, input_rect.y+15))
         pygame.display.flip()
     pygame.quit()
+    sys.exit()
 
 def display_level_twenty_page(screen):
     screen_width, screen_height = screen.get_size()
@@ -1534,6 +1541,7 @@ def display_level_twenty_page(screen):
             #event handler
             if event.type == pygame.QUIT:
                 pygame.quit()
+                sys.exit()
 
             widget.handle_event(event)
 
@@ -1576,6 +1584,7 @@ def beat_competitive_page(screen):
             #event handler
             if event.type == pygame.QUIT:
                 pygame.quit()
+                sys.exit()
 
             widget.handle_event(event)
 
@@ -3717,7 +3726,7 @@ def loadLevel(window, level):
         draw(window, background, bg_image,playerOne,level,offset)
 
     pygame.quit()
-    quit()
+    sys.exit()
 
 def testConnection():
     global servers
