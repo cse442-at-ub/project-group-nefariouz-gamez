@@ -3,7 +3,7 @@
 
 # build_exe_options = {
 #     "packages": ["os", "pygame"],
-#     "include_files": ["assets/", "audioLevels.txt", "CurrentCharacter.txt", "currentLevel.txt", "MaxUnlocked.txt"]
+#     "include_files": ["assets/", "assets/txt/al.txt", "assets/txt/cc.txt", "assets/txt/cl.txt", "assets/txt/mu.txt"]
 # }
 
 # base = None
