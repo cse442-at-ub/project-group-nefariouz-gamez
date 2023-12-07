@@ -2737,7 +2737,7 @@ lFifteen.append(Platform(1124,128,76,33,WHITE))
 lFifteen.append(Platform(662,142,82,19,WHITE))
 lFifteen.append(Platform(634,250,142,33,WHITE))
 lFifteen.append(Platform(454,501,218,15,WHITE))
-lFifteen.append(Platform(0,767,44,33,WHITE))
+lFifteen.append(Platform(0,767,48,33,WHITE))#End platform
 
 lFifteen.append(FallPlat(452,429,222,15,BEIGE,[]))
 lFifteen.append(GreenSpike(452,467))
@@ -2784,7 +2784,7 @@ lFifteen.append(l15mp4)
 lFifteen.append(Ladder(1124,128))
 lFifteen.append(Ladder(711,142))
 lFifteen.append(Ladder(634,250))
-lFifteen.append(Ladder(6,767))
+lFifteen.append(Ladder(15,767))#end ladder
 lFifteen.append(SmallPurpleShrub(660,90))
 lFifteen.append(SmallPurpleShrub(660,198))
 
