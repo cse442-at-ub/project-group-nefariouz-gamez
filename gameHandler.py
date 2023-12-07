@@ -139,8 +139,8 @@ class Player(pygame.sprite.Sprite):
         self.chop = False
         self.chop_count = 0
 
-        self.reachBox=Platform(x-15,y-15,width*2.5,height*1.2,WHITE)#Invisible bounding box for interacting with objects
-        self.reachBox.surface=pygame.Surface((width*3,height*1.5))
+        self.reachBox=Platform(x-20,y-15,width*2.8,height*1.2,WHITE)#Invisible bounding box for interacting with objects
+        self.reachBox.surface=pygame.Surface((width*3.3,height*1.5))
         self.reachBox.mask = pygame.mask.from_surface(self.reachBox.surface)
 
         self.powerup_timer = 0
@@ -156,7 +156,7 @@ class Player(pygame.sprite.Sprite):
     def reset(self,level):
         #print("RESET")
         self.rect=pygame.Rect(level.init_x, level.init_y,self.wO,self.hO)
-        self.reachBox.x=self.rect.x-15
+        self.reachBox.x=self.rect.x-20
         self.reachBox.y=self.rect.y-15
         self.feetBox.rect.x=self.rect.x+13
         self.feetBox.rect.y=self.rect.y+(self.rect.height-3)
@@ -169,7 +169,7 @@ class Player(pygame.sprite.Sprite):
     def move(self, dx, dy):
         self.rect.x += dx
         self.rect.y += dy
-        self.reachBox.rect.x=self.rect.x-15
+        self.reachBox.rect.x=self.rect.x-20
         self.reachBox.rect.y=self.rect.y-15
 
         self.feetBox.rect.x=self.rect.x+13
@@ -1686,6 +1686,8 @@ def handle_vertical_collision(player, level, dy):
                 continue
             elif(object.name == "void" or object.name=="water"):
                 print("hit a void/water in vert")
+                print(player.rect.x)
+                print(player.rect.y)
                 player.x_velocity=0
                 player.y_velocity=0#Helps 0 out if gravity is huge
                 player.powerup_timer = 0
@@ -1998,7 +2000,7 @@ def getInput(player, level):
 BLACK=(0,0,0)
 fullScreenLeft=Void(-2000,0,1990,2000,BLACK,None)
 fullScreenRight=Void(1210,0,2000,2000,BLACK,None)
-fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
+fullScreenBottom=Void(-2000,800,5200,2000,BLACK,None)
 
 
 ##############################################################
@@ -2006,7 +2008,7 @@ fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
 ##############################################################
 lOne=[]
 lBorderLeft=Platform(-10,0,10,800,BLACK)
-lBorderRight=Platform(1201,0,10,800,BLACK)
+lBorderRight=Platform(1200,0,10,800,BLACK)
 #Player starting position (1100, 644)
 #background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
 start=Platform(890,670,152,75,WHITE)
@@ -3301,20 +3303,20 @@ lNineteen.append(GreenRSpike(-5,540))
 lNineteen.append(GreenRSpike(-5,575))
 lNineteen.append(GreenRSpike(-5,610))
 
-lNineteen.append(FallPlat(21,757,70,9,BEIGE))
-lNineteen.append(FallPlat(96,757,70,9,BEIGE))
-lNineteen.append(FallPlat(171,757,70,9,BEIGE))
-lNineteen.append(FallPlat(246,757,70,9,BEIGE))
-lNineteen.append(FallPlat(321,757,70,9,BEIGE))
-lNineteen.append(FallPlat(396,757,70,9,BEIGE))
-lNineteen.append(FallPlat(471,757,70,9,BEIGE))
-lNineteen.append(FallPlat(553,757,70,9,BEIGE))
-lNineteen.append(FallPlat(628,757,70,9,BEIGE))
-lNineteen.append(FallPlat(703,757,70,9,BEIGE))
-lNineteen.append(FallPlat(778,757,70,9,BEIGE))
-lNineteen.append(FallPlat(853,757,70,9,BEIGE))
-lNineteen.append(FallPlat(928,757,70,9,BEIGE))
-lNineteen.append(FallPlat(1003,757,70,9,BEIGE))
+lNineteen.append(FallPlat(21,757,74,9,BEIGE))
+lNineteen.append(FallPlat(96,757,74,9,BEIGE))
+lNineteen.append(FallPlat(171,757,74,9,BEIGE))
+lNineteen.append(FallPlat(246,757,74,9,BEIGE))
+lNineteen.append(FallPlat(321,757,74,9,BEIGE))
+lNineteen.append(FallPlat(396,757,74,9,BEIGE))
+lNineteen.append(FallPlat(471,757,80,9,BEIGE))#made 10 wider
+lNineteen.append(FallPlat(553,757,74,9,BEIGE))
+lNineteen.append(FallPlat(628,757,74,9,BEIGE))
+lNineteen.append(FallPlat(703,757,74,9,BEIGE))
+lNineteen.append(FallPlat(778,757,74,9,BEIGE))
+lNineteen.append(FallPlat(853,757,74,9,BEIGE))
+lNineteen.append(FallPlat(928,757,74,9,BEIGE))
+lNineteen.append(FallPlat(1003,757,77,9,BEIGE))#made 7 wider
 
 lNineteen.append(GreenSpike(19,767))
 lNineteen.append(GreenSpike(56,767))
@@ -3371,7 +3373,7 @@ mp3plat1 = Platform(925,433,73,23,ORANGE)
 lNineteen.append(mp3plat1)
 mp3sp1 = GreenSpike(934,400)
 lNineteen.append(mp3sp1)
-lNineteen.append(MovePlatVert(946,322,30,23,172,333,[mp3sp1,mp3plat1]))
+lNineteen.append(MovePlatVert(946,322,30,23,172,325,[mp3sp1,mp3plat1]))#lower bound changed from 333 to 325
 
 mp4plat1 = Platform(1017,417,73,23,ORANGE)
 lNineteen.append(mp4plat1)
@@ -3379,11 +3381,11 @@ mp4sp1 = GreenSpike(1017,384)
 lNineteen.append(mp4sp1)
 mp4sh1 = smallShrub(1029,237)
 lNineteen.append(mp4sh1)
-lNineteen.append(MovePlatVert(1038,289,30,23,172,310,[mp4sp1,mp4sh1,mp4plat1]))
+lNineteen.append(MovePlatVert(1038,289,30,23,172,335,[mp4sp1,mp4sh1,mp4plat1]))#lower bound changed from 310 to 335
 
 mp5plat1 = Platform(1102,444,73,23,ORANGE)
 lNineteen.append(mp5plat1)
-lNineteen.append(MovePlatVert(1123,330,30,23,172,331,[mp5plat1]))
+lNineteen.append(MovePlatVert(1123,330,30,23,172,360,[mp5plat1]))#lower bound changed from 331 to 360
 
 sSpike=SmallSpike(352,710)
 lNineteen.append(sSpike)
@@ -3425,6 +3427,7 @@ lNineteen.append(Platform(1190,0,10,591,WHITE))#fixes bug with right level borde
 lNineteen.append(endSign(1150,716))
 lNineteen.append(lBorderRight)
 lNineteen.append(lBorderLeft)
+lNineteen.append(Void(0,-10,50,2,BLACK))
 levelNineteen=Level(lNineteen,35,65,"newlvl-19-background.png")
 
 
@@ -3575,7 +3578,7 @@ lEleven = moveSigns(lEleven, -39,564)
 lTwelve = moveSigns(lTwelve, -39,133)
 lthirteen = moveSigns(lthirteen, -39,201)
 lFourteen = moveSigns(lFourteen, -39,88)
-lFifteen = moveSigns(lFifteen, -18,800)
+lFifteen = moveSigns(lFifteen, 10,795)#testing at 10,795 was originally -18, 800
 lSixteen = moveSigns(lSixteen, -39,700)
 lSeventeen = moveSigns(lSeventeen, -39,190)
 lEighteen = moveSigns(lEighteen, -39,726)
