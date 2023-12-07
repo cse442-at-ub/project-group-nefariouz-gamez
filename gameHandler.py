@@ -10,7 +10,7 @@ import json
 from tkinter import messagebox
 import requests
 
-from gameObjects import Object, goldShears, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,SmallSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
+from gameObjects import Object, goldShears, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,SmallSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike, compSign
 from MenuWidgets import *
 from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
@@ -3551,35 +3551,35 @@ levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
 def moveSigns(levelList, x, y):
     for i in range(len(levelList)):
         if type(levelList[i]) == endSign:
-            levelList[i] = endSign(x, y)
+            levelList[i] = compSign(x, y)
     return levelList
 
-lOne = moveSigns(lOne, -40,584)
-lTwo = moveSigns(lTwo, -40,509)
-lThree = moveSigns(lThree, 145,-40)
-lFour = moveSigns(lFour, 20,-40)
-lFive = moveSigns(lFive, 1200,74)
+lOne = moveSigns(lOne, -35,584)
+lTwo = moveSigns(lTwo, -35,509)
+lThree = moveSigns(lThree, 145,-35)
+lFour = moveSigns(lFour, 20,-35)
+lFive = moveSigns(lFive, 1195,74)
 
-lSix = moveSigns(lSix, 1086,800)
+lSix = moveSigns(lSix, 1086,795)
 lSix.append(Platform(884,770,194,30,WHITE))
 lSix.append(BlackSpike(884, 737))
 lSix.append(BlackSpike(922, 737))
 lSix.append(BlackSpike(960, 737))
 lSix.append(BlackSpike(998, 737))
 
-lSeven = moveSigns(lSeven, 1200,mpl3_y-40)
-lEight = moveSigns(lEight, 945,-40)
-lNine = moveSigns(lNine, 22,-75)
-lTen = moveSigns(lTen, -40,107)
-lEleven = moveSigns(lEleven, -40,564)
-lTwelve = moveSigns(lTwelve, -40,133)
-lthirteen = moveSigns(lthirteen, -40,201)
-lFourteen = moveSigns(lFourteen, -40,88)
-lFifteen = moveSigns(lFifteen, -20,800)
-lSixteen = moveSigns(lSixteen, -40,700)
-lSeventeen = moveSigns(lSeventeen, -40,190)
-lEighteen = moveSigns(lEighteen, -40,726)
-lNineteen = moveSigns(lNineteen, 1200,716)
+lSeven = moveSigns(lSeven, 1200,mpl3_y-35)
+lEight = moveSigns(lEight, 945,-35)
+lNine = moveSigns(lNine, 22,-45)
+lTen = moveSigns(lTen, -25,107)
+lEleven = moveSigns(lEleven, -35,564)
+lTwelve = moveSigns(lTwelve, -35,133)
+lthirteen = moveSigns(lthirteen, -35,201)
+lFourteen = moveSigns(lFourteen, -35,88)
+lFifteen = moveSigns(lFifteen, -15,800)
+lSixteen = moveSigns(lSixteen, -35,700)
+lSeventeen = moveSigns(lSeventeen, -35,190)
+lEighteen = moveSigns(lEighteen, -30,726)
+lNineteen = moveSigns(lNineteen, 1195,716)
 #lTwenty = moveSigns(lTwenty, 1200,147)
 
 lOne.append(lBorderRight)
