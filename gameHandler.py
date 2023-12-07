@@ -1686,6 +1686,8 @@ def handle_vertical_collision(player, level, dy):
                 continue
             elif(object.name == "void" or object.name=="water"):
                 print("hit a void/water in vert")
+                print(player.rect.x)
+                print(player.rect.y)
                 player.x_velocity=0
                 player.y_velocity=0#Helps 0 out if gravity is huge
                 player.powerup_timer = 0
@@ -3301,20 +3303,20 @@ lNineteen.append(GreenRSpike(-5,540))
 lNineteen.append(GreenRSpike(-5,575))
 lNineteen.append(GreenRSpike(-5,610))
 
-lNineteen.append(FallPlat(21,757,70,9,BEIGE))
-lNineteen.append(FallPlat(96,757,70,9,BEIGE))
-lNineteen.append(FallPlat(171,757,70,9,BEIGE))
-lNineteen.append(FallPlat(246,757,70,9,BEIGE))
-lNineteen.append(FallPlat(321,757,70,9,BEIGE))
-lNineteen.append(FallPlat(396,757,70,9,BEIGE))
-lNineteen.append(FallPlat(471,757,70,9,BEIGE))
-lNineteen.append(FallPlat(553,757,70,9,BEIGE))
-lNineteen.append(FallPlat(628,757,70,9,BEIGE))
-lNineteen.append(FallPlat(703,757,70,9,BEIGE))
-lNineteen.append(FallPlat(778,757,70,9,BEIGE))
-lNineteen.append(FallPlat(853,757,70,9,BEIGE))
-lNineteen.append(FallPlat(928,757,70,9,BEIGE))
-lNineteen.append(FallPlat(1003,757,70,9,BEIGE))
+lNineteen.append(FallPlat(21,757,74,9,BEIGE))
+lNineteen.append(FallPlat(96,757,74,9,BEIGE))
+lNineteen.append(FallPlat(171,757,74,9,BEIGE))
+lNineteen.append(FallPlat(246,757,74,9,BEIGE))
+lNineteen.append(FallPlat(321,757,74,9,BEIGE))
+lNineteen.append(FallPlat(396,757,74,9,BEIGE))
+lNineteen.append(FallPlat(471,757,80,9,BEIGE))#made 10 wider
+lNineteen.append(FallPlat(553,757,74,9,BEIGE))
+lNineteen.append(FallPlat(628,757,74,9,BEIGE))
+lNineteen.append(FallPlat(703,757,74,9,BEIGE))
+lNineteen.append(FallPlat(778,757,74,9,BEIGE))
+lNineteen.append(FallPlat(853,757,74,9,BEIGE))
+lNineteen.append(FallPlat(928,757,74,9,BEIGE))
+lNineteen.append(FallPlat(1003,757,77,9,BEIGE))#made 7 wider
 
 lNineteen.append(GreenSpike(19,767))
 lNineteen.append(GreenSpike(56,767))
@@ -3371,7 +3373,7 @@ mp3plat1 = Platform(925,433,73,23,ORANGE)
 lNineteen.append(mp3plat1)
 mp3sp1 = GreenSpike(934,400)
 lNineteen.append(mp3sp1)
-lNineteen.append(MovePlatVert(946,322,30,23,172,333,[mp3sp1,mp3plat1]))
+lNineteen.append(MovePlatVert(946,322,30,23,172,325,[mp3sp1,mp3plat1]))#lower bound changed from 333 to 325
 
 mp4plat1 = Platform(1017,417,73,23,ORANGE)
 lNineteen.append(mp4plat1)
@@ -3379,11 +3381,11 @@ mp4sp1 = GreenSpike(1017,384)
 lNineteen.append(mp4sp1)
 mp4sh1 = smallShrub(1029,237)
 lNineteen.append(mp4sh1)
-lNineteen.append(MovePlatVert(1038,289,30,23,172,310,[mp4sp1,mp4sh1,mp4plat1]))
+lNineteen.append(MovePlatVert(1038,289,30,23,172,335,[mp4sp1,mp4sh1,mp4plat1]))#lower bound changed from 310 to 335
 
 mp5plat1 = Platform(1102,444,73,23,ORANGE)
 lNineteen.append(mp5plat1)
-lNineteen.append(MovePlatVert(1123,330,30,23,172,331,[mp5plat1]))
+lNineteen.append(MovePlatVert(1123,330,30,23,172,360,[mp5plat1]))#lower bound changed from 331 to 360
 
 sSpike=SmallSpike(352,710)
 lNineteen.append(sSpike)
