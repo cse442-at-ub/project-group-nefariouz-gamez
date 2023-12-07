@@ -3425,6 +3425,7 @@ lNineteen.append(Platform(1190,0,10,591,WHITE))#fixes bug with right level borde
 lNineteen.append(endSign(1150,716))
 lNineteen.append(lBorderRight)
 lNineteen.append(lBorderLeft)
+lNineteen.append(Void(0,-10,50,2,BLACK))
 levelNineteen=Level(lNineteen,35,65,"newlvl-19-background.png")
 
 
