@@ -3,7 +3,7 @@
 
 # build_exe_options = {
 #     "packages": ["os", "pygame"],
-#     "include_files": ["assets/", "audioLevels.txt", "CurrentCharacter.txt", "currentLevel.txt", "MaxUnlocked.txt"]
+#     "include_files": ["assets/"]
 # }
 
 # base = None
@@ -13,7 +13,22 @@
 # setup(
 #     name = "Shrubbery Quest",
 #     version = "1.0",
-#     description = "Your Pygame application!",
+#     description = "Shrubbery Quest, the best competitive platforming game",
 #     options = {"build_exe": build_exe_options},
 #     executables = [Executable("gameHandler.py", base=base, icon="assets/exe-logo.ico", target_name="Shrubbery Quest.exe")]
 # )
+
+# To make exe:
+# uncomment code above
+
+# create virtual env
+# path/to/python3.11.7 -m venv venv
+
+# activate env
+# venv/scripts/activate
+
+# pip install modules:
+# pip install pygame requests ntplib cx_Freeze
+
+# create exe build:
+# python setup.py build

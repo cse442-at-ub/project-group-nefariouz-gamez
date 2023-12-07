@@ -32,7 +32,7 @@ pygame.display.set_icon(gameIcon)
 def assignVolume():
     vol_states = []   # Ex. [1, 1, False] -> music slider pos (start at 100%), sfx slider pos (start at 100%), checkbox status (starts unchecked)
 
-    with open("audioLevels.txt", "r") as audioFile:
+    with open("assets/txt/al.txt", "r") as audioFile:
         for line in audioFile:
             line = line.strip()
             if line.lower() == "true":
@@ -52,7 +52,7 @@ VOLUME_STATES = assignVolume()
 # VOLUME_STATES = [1, 1, False]   # music slider pos (start at 100%), sfx slider pos (start at 100%), checkbox status (starts unchecked)
 pygame.mixer.music.load("assets/audio/background_music.mp3")   # https://www.youtube.com/watch?v=cTDSFCC9rQ4
 pygame.mixer.music.play(loops=-1)   # play and loop music indefinitely
-pygame.mixer.music.set_volume(VOLUME_STATES[0])   # initialize max volume of music from audioLevels.txt
+pygame.mixer.music.set_volume(VOLUME_STATES[0])   # initialize max volume of music from assets/txt/al.txt
 
 if VOLUME_STATES[2]:   # if previously muted is True
     pygame.mixer.music.pause()
@@ -231,20 +231,20 @@ class Player(pygame.sprite.Sprite):
         self.chop = True
 
     def end_chop(self):
-        with open('audioLevels.txt', 'r') as audioFile:
+        with open('assets/txt/al.txt', 'r') as audioFile:
             lines = audioFile.readlines()
         if lines[2].strip().lower() == "false":
             hitTree.set_volume(float(lines[1]))
             hitTree.play()
 
     def update_sprite(self):
-        f = open("CurrentCharacter.txt", "r")
+        f = open("assets/txt/cc.txt", "r")
         current_character = f.read()
 
         if current_character == "":
             current_character = "Celia"
             f.close()
-            f = open("CurrentCharacter.txt", "w")
+            f = open("assets/txt/cc.txt", "w")
             f.write("Celia")
 
         #print("Spritesheet to be opened:", current_character)
@@ -409,7 +409,7 @@ def start_game():
     timer = Timer()
 
     # Always Loads Level 1
-    lvlf = open("currentLevel.txt", "w")
+    lvlf = open("assets/txt/cl.txt", "w")
     lvlf.write("1")
     lvlf.close()
 
@@ -420,7 +420,7 @@ def load_level():
     timer = Timer()
 
     # Loads level based on what current level you're on in
-    lvlfile = open("currentLevel.txt", "r")
+    lvlfile = open("assets/txt/cl.txt", "r")
     currlvl = lvlfile.read()
 
     match currlvl:
@@ -463,10 +463,10 @@ def load_level():
         case "20":
             loadLevel(window, levelTwenty)
         case "21":
-            lvlf = open("currentLevel.txt", "r")
+            lvlf = open("assets/txt/cl.txt", "r")
             levelnum = int(lvlf.read())
             levelnum -= 1
-            lvlf = open("currentLevel.txt", "w")
+            lvlf = open("assets/txt/cl.txt", "w")
             lvlf.write(str(levelnum))
             lvlf.close()
             loadLevel(window, levelTwenty)
@@ -492,7 +492,7 @@ def display_main_menu(screen):
     secret_code = [pygame.K_h, pygame.K_e, pygame.K_r, pygame.K_t, pygame.K_z]
     buffer = []
 
-    maxlevelread = open("MaxUnlocked.txt", "r")
+    maxlevelread = open("assets/txt/mu.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
     KONAMI = [pygame.K_UP, pygame.K_UP, pygame.K_DOWN, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_b, pygame.K_a]
@@ -549,6 +549,7 @@ def display_main_menu(screen):
         pygame.display.flip()
 
     pygame.quit()
+    sys.exit()
 
 
 def display_competitive_main_menu(screen):
@@ -655,6 +656,7 @@ def display_tut(screen):
         pygame.display.flip()
 
     pygame.quit()
+    sys.exit()
 
 ##############################################################
 ##############################################################
@@ -695,7 +697,7 @@ def choose_character():
     print("CHOOSE CHARACTER")
 
 def return_main():
-    lvlfile = open("currentLevel.txt", "r")
+    lvlfile = open("assets/txt/cl.txt", "r")
     currlvl = lvlfile.read()
     lvlint = int(currlvl)
     if os.path.exists("competitive.txt"):
@@ -724,7 +726,7 @@ def return_main():
                 writeName = open("competitive.txt", "w")
                 writeName.write(user_name)
                 writeName.close()
-                wlvlfile = open("currentLevel.txt", "w")
+                wlvlfile = open("assets/txt/cl.txt", "w")
                 wlvlfile.write("1")
                 wlvlfile.close()
                 display_competitive_main_menu(window)
@@ -766,6 +768,7 @@ def display_settings_page(screen):
         pygame.display.flip()
 
     pygame.quit()
+    sys.exit()
 
 
 ##############################################################
@@ -951,6 +954,7 @@ def display_leaderboard(screen, data):
         pygame.display.flip()
 
     pygame.quit()
+    sys.exit()
 
 
 ##############################################################
@@ -961,27 +965,27 @@ def display_leaderboard(screen, data):
 
 character_select_font = pygame.font.Font(None, 32)
 
-f = open("CurrentCharacter.txt", "r")
+f = open("assets/txt/cc.txt", "r")
 current_character = f.read()
 powerup_read, cooldown_read = "", ""
 
-maxlevelread = open("MaxUnlocked.txt", "r")
+maxlevelread = open("assets/txt/mu.txt", "r")
 max_level_unlocked = maxlevelread.read()
 if current_character == "" or max_level_unlocked == "" or int(max_level_unlocked) < 5:
     current_character = "Celia"
     f.close()
-    f = open("CurrentCharacter.txt", "w")
+    f = open("assets/txt/cc.txt", "w")
     f.write("Celia")
     f.close()
-    f = open("CurrentCharacter.txt", "r")
+    f = open("assets/txt/cc.txt", "r")
     powerup_read = "N/A"
 elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (current_character == "Maia" and int(max_level_unlocked) < 10) or (current_character == "Oscar" and int(max_level_unlocked) < 15):
     current_character = "Celia"
     f.close()
-    f = open("CurrentCharacter.txt", "w")
+    f = open("assets/txt/cc.txt", "w")
     f.write("Celia")
     f.close()
-    f = open("CurrentCharacter.txt", "r")
+    f = open("assets/txt/cc.txt", "r")
     powerup_read = "N/A"
 
 char_text_color = "black"
@@ -1001,14 +1005,14 @@ powerup_text = character_select_font.render("Power-up: " + str(powerup_read), Fa
 cooldown_text = character_select_font.render(cooldown_read, False, "Black")
 print(current_character)
 
-clevel = open("currentLevel.txt", "r")
+clevel = open("assets/txt/cl.txt", "r")
 current_level = clevel.read()
 max_level = str(int(current_level) - 1)
 clevel.close()
 maxlevelread.close()
 if max_level_unlocked == "" or int(max_level_unlocked) < int(max_level):
     max_level_unlocked = max_level
-    w_max = open("MaxUnlocked.txt", "w")
+    w_max = open("assets/txt/mu.txt", "w")
     w_max.write(str(max_level_unlocked))
     w_max.close()
 
@@ -1050,7 +1054,7 @@ def click_Malcolm():
     global cooldown_read
     global cooldown_text
 
-    maxlevelread = open("MaxUnlocked.txt", "r")
+    maxlevelread = open("assets/txt/mu.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
     if max_level_unlocked != "" and int(max_level_unlocked) >= 5 or konami == True:
@@ -1079,7 +1083,7 @@ def click_Maia():
     global cooldown_text
     global konami
 
-    maxlevelread = open("MaxUnlocked.txt", "r")
+    maxlevelread = open("assets/txt/mu.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
     if max_level_unlocked != "" and int(max_level_unlocked) >= 10 or konami == True:
@@ -1108,7 +1112,7 @@ def click_Oscar():
     global cooldown_text
     global konami
 
-    maxlevelread = open("MaxUnlocked.txt", "r")
+    maxlevelread = open("assets/txt/mu.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
     if max_level_unlocked != "" and int(max_level_unlocked) >= 15 or konami == True:
@@ -1127,13 +1131,13 @@ def click_Oscar():
     check_unlocked_level()
 
 
-# confirms player's selected choice, writes character's name to "CurrentCharacter.txt"
+# confirms player's selected choice, writes character's name to "assets/txt/cc.txt"
 def click_OK():
     global current_character
-    f = open("CurrentCharacter.txt", "w")
+    f = open("assets/txt/cc.txt", "w")
     f.write(current_character)
     f.close()
-    f = open("CurrentCharacter.txt", "r")
+    f = open("assets/txt/cc.txt", "r")
     print("Final selection =", f.read())
     display_settings_page(window)
 
@@ -1171,34 +1175,34 @@ def check_update():
 
     check_unlocked_level()
 
-    f = open("CurrentCharacter.txt", "r")
+    f = open("assets/txt/cc.txt", "r")
     current_character = f.read()
     print(current_character)
-    maxlevelread = open("MaxUnlocked.txt", "r")
+    maxlevelread = open("assets/txt/mu.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
     if current_character == "":
         f.close()
-        f = open("CurrentCharacter.txt", "w")
+        f = open("assets/txt/cc.txt", "w")
         f.write("Celia")
         f.close()
-        f = open("CurrentCharacter.txt", "r")
+        f = open("assets/txt/cc.txt", "r")
         click_Celia()
 
     if konami == False:
         if max_level_unlocked == "" or int(max_level_unlocked) < 5:
             f.close()
-            f = open("CurrentCharacter.txt", "w")
+            f = open("assets/txt/cc.txt", "w")
             f.write("Celia")
             f.close()
-            f = open("CurrentCharacter.txt", "r")
+            f = open("assets/txt/cc.txt", "r")
             click_Celia()
         elif (current_character == "Malcolm" and int(max_level_unlocked) < 5) or (current_character == "Maia" and int(max_level_unlocked) < 10) or (current_character == "Oscar" and int(max_level_unlocked) < 15):
             f.close()
-            f = open("CurrentCharacter.txt", "w")
+            f = open("assets/txt/cc.txt", "w")
             f.write("Celia")
             f.close()
-            f = open("CurrentCharacter.txt", "r")
+            f = open("assets/txt/cc.txt", "r")
             click_Celia()
         elif current_character == "Celia":
             char_text_color = "darkgreen"
@@ -1225,7 +1229,7 @@ def check_update():
         elif current_character == "Oscar":
             char_text_color = "indigo"
             click_Oscar()
-    f = open("CurrentCharacter.txt", "r")
+    f = open("assets/txt/cc.txt", "r")
     selected_text = character_select_font.render("You are currently playing as", False, "Black")
     character_text = character_select_font.render(current_character, False, char_text_color)
     powerup_text = character_select_font.render("Power-up: " + str(powerup_read), False, "Black")
@@ -1237,13 +1241,13 @@ def check_unlocked_level():
     global current_character
     global konami
 
-    maxlevelread = open("MaxUnlocked.txt", "r")
+    maxlevelread = open("assets/txt/mu.txt", "r")
     max_level_unlocked = maxlevelread.read()
 
     if konami == False:
         if max_level_unlocked == "" or int(max_level_unlocked) < 5:
             current_character = "Celia"
-            f = open("CurrentCharacter.txt", "w")
+            f = open("assets/txt/cc.txt", "w")
             f.write("Celia")
             f.close()
             Celia.image = pygame.image.load(os.path.join('assets', 'CharacterProfiles', 'Celia.png'))
@@ -1328,6 +1332,7 @@ def display_choose_character(window):
         pygame.display.update()
 
     pygame.quit()
+    sys.exit()
 
 
 ##############################################################
@@ -1352,7 +1357,7 @@ def scale_window_between(screen):
 
 
 def continuelvl():
-    lvlf = open("currentLevel.txt", "r")
+    lvlf = open("assets/txt/cl.txt", "r")
     currlvl = lvlf.read()
 
     match currlvl:
@@ -1402,18 +1407,18 @@ def display_between_level_page(screen):
     widgets, screen_width, screen_height, background_img = scale_window_between(screen)
 
     #get level num
-    lvlf = open("currentLevel.txt", "r")
+    lvlf = open("assets/txt/cl.txt", "r")
     currlvl = lvlf.read()
     printlvl = str(int(currlvl) - 1)
     lvlf.close()
 
-    maxlevelread = open("MaxUnlocked.txt", "r")
+    maxlevelread = open("assets/txt/mu.txt", "r")
     max_level_unlocked = maxlevelread.read()
     maxlevelread.close()
 
     if max_level_unlocked == "" or int(max_level_unlocked) < int(printlvl):
         max_level_unlocked = printlvl
-        w_max = open("MaxUnlocked.txt", "w")
+        w_max = open("assets/txt/mu.txt", "w")
         w_max.write(str(max_level_unlocked))
         w_max.close()
 
@@ -1442,6 +1447,7 @@ def display_between_level_page(screen):
 
         pygame.display.flip()
     pygame.quit()
+    sys.exit()
 
 
 ##############################################################
@@ -1468,7 +1474,7 @@ def display_endgame_level_page(screen):
     widgets, screen_width, screen_height, background_img = scale_window_endgame(screen)
 
     #get level num
-    lvlf = open("currentLevel.txt", "r")
+    lvlf = open("assets/txt/cl.txt", "r")
     currlvl = lvlf.read()
     printlvl = str(int(currlvl) - 1)
     lvlf.close()
@@ -1517,6 +1523,7 @@ def display_endgame_level_page(screen):
         screen.blit(text_surface, (input_rect.x+10, input_rect.y+15))
         pygame.display.flip()
     pygame.quit()
+    sys.exit()
 
 def display_level_twenty_page(screen):
     screen_width, screen_height = screen.get_size()
@@ -1534,6 +1541,7 @@ def display_level_twenty_page(screen):
             #event handler
             if event.type == pygame.QUIT:
                 pygame.quit()
+                sys.exit()
 
             widget.handle_event(event)
 
@@ -1558,7 +1566,7 @@ def beat_competitive_page(screen):
         namef = open("competitive.txt", "r")
         username = namef.read()
         namef.close()
-        characterf = open("CurrentCharacter.txt", "r")
+        characterf = open("assets/txt/cc.txt", "r")
         character = characterf.read()
         characterf.close()
         insert_data_php(username, currtime, character)
@@ -1576,6 +1584,7 @@ def beat_competitive_page(screen):
             #event handler
             if event.type == pygame.QUIT:
                 pygame.quit()
+                sys.exit()
 
             widget.handle_event(event)
 
@@ -1783,10 +1792,10 @@ def collide(player, level, dx):
                         display_competitive_main_menu(window)
                 else:
                     timer.stop_timer()
-                    lvlf = open("currentLevel.txt", "r")
+                    lvlf = open("assets/txt/cl.txt", "r")
                     levelnum = int(lvlf.read())
                     levelnum += 1
-                    lvlf = open("currentLevel.txt", "w")
+                    lvlf = open("assets/txt/cl.txt", "w")
                     lvlf.write(str(levelnum))
                     lvlf.close()
                     # THEN OPEN BETWEEN LEVEL MENU
@@ -3717,7 +3726,7 @@ def loadLevel(window, level):
         draw(window, background, bg_image,playerOne,level,offset)
 
     pygame.quit()
-    quit()
+    sys.exit()
 
 def testConnection():
     global servers

@@ -79,10 +79,10 @@ class Checkbox:
             self.checked = not self.checked
             states[2] = self.checked
 
-            with open('audioLevels.txt', 'r') as audioFile:
+            with open('assets/txt/al.txt', 'r') as audioFile:
                 lines = audioFile.readlines()
             lines[2] = str(states[2])
-            with open('audioLevels.txt', 'w') as audioFile:
+            with open('assets/txt/al.txt', 'w') as audioFile:
                 audioFile.writelines(lines)
 
             if self.checked:
@@ -131,19 +131,19 @@ class Slider:
         self.button_pos = (int(x_val), int(self.pos[1]))
         if self.audio == 'music':
             states[0] = 1-((self.slider_right-x_val)/300)
-            with open('audioLevels.txt', 'r') as audioFile:
+            with open('assets/txt/al.txt', 'r') as audioFile:
                 lines = audioFile.readlines()
             lines[0] = str(states[0]) + "\n"
-            with open('audioLevels.txt', 'w') as audioFile:
+            with open('assets/txt/al.txt', 'w') as audioFile:
                 audioFile.writelines(lines)
 
         elif self.audio == 'sfx':
             states[1] = 1-((self.slider_right-x_val)/300)
 
-            with open('audioLevels.txt', 'r') as audioFile:
+            with open('assets/txt/al.txt', 'r') as audioFile:
                 lines = audioFile.readlines()
             lines[1] = str(states[1]) + "\n"
-            with open('audioLevels.txt', 'w') as audioFile:
+            with open('assets/txt/al.txt', 'w') as audioFile:
                 audioFile.writelines(lines)
 
     def handle_event(self, mouse_pos, mouse, states):
