@@ -139,8 +139,8 @@ class Player(pygame.sprite.Sprite):
         self.chop = False
         self.chop_count = 0
 
-        self.reachBox=Platform(x-15,y-15,width*2.5,height*1.2,WHITE)#Invisible bounding box for interacting with objects
-        self.reachBox.surface=pygame.Surface((width*3,height*1.5))
+        self.reachBox=Platform(x-20,y-15,width*2.8,height*1.2,WHITE)#Invisible bounding box for interacting with objects
+        self.reachBox.surface=pygame.Surface((width*3.3,height*1.5))
         self.reachBox.mask = pygame.mask.from_surface(self.reachBox.surface)
 
         self.powerup_timer = 0
@@ -156,7 +156,7 @@ class Player(pygame.sprite.Sprite):
     def reset(self,level):
         #print("RESET")
         self.rect=pygame.Rect(level.init_x, level.init_y,self.wO,self.hO)
-        self.reachBox.x=self.rect.x-15
+        self.reachBox.x=self.rect.x-20
         self.reachBox.y=self.rect.y-15
         self.feetBox.rect.x=self.rect.x+13
         self.feetBox.rect.y=self.rect.y+(self.rect.height-3)
@@ -169,7 +169,7 @@ class Player(pygame.sprite.Sprite):
     def move(self, dx, dy):
         self.rect.x += dx
         self.rect.y += dy
-        self.reachBox.rect.x=self.rect.x-15
+        self.reachBox.rect.x=self.rect.x-20
         self.reachBox.rect.y=self.rect.y-15
 
         self.feetBox.rect.x=self.rect.x+13
@@ -1998,7 +1998,7 @@ def getInput(player, level):
 BLACK=(0,0,0)
 fullScreenLeft=Void(-2000,0,1990,2000,BLACK,None)
 fullScreenRight=Void(1210,0,2000,2000,BLACK,None)
-fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
+fullScreenBottom=Void(-2000,800,5200,2000,BLACK,None)
 
 
 ##############################################################
@@ -2006,7 +2006,7 @@ fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
 ##############################################################
 lOne=[]
 lBorderLeft=Platform(-10,0,10,800,BLACK)
-lBorderRight=Platform(1201,0,10,800,BLACK)
+lBorderRight=Platform(1200,0,10,800,BLACK)
 #Player starting position (1100, 644)
 #background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
 start=Platform(890,670,152,75,WHITE)
@@ -3576,7 +3576,7 @@ lEleven = moveSigns(lEleven, -39,564)
 lTwelve = moveSigns(lTwelve, -39,133)
 lthirteen = moveSigns(lthirteen, -39,201)
 lFourteen = moveSigns(lFourteen, -39,88)
-lFifteen = moveSigns(lFifteen, -18,800)
+lFifteen = moveSigns(lFifteen, 10,795)#testing at 10,795 was originally -18, 800
 lSixteen = moveSigns(lSixteen, -39,700)
 lSeventeen = moveSigns(lSeventeen, -39,190)
 lEighteen = moveSigns(lEighteen, -39,726)
