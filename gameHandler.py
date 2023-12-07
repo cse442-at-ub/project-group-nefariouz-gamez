@@ -3006,11 +3006,11 @@ lSeventeen.append(Platform(0,256,52,16,WHITE))
 
 l17mp4 = MovePlat(719,492,25,25,617,750)
 lSeventeen.append(l17mp4)
-l17mp6 = MovePlat(527,261,25,10,453,569)
+l17mp6 = MovePlat(527,255,25,10,453,569)#Raised from 261
 lSeventeen.append(l17mp6)
-l17mp7 = MovePlat(350,275,30,10,316,432)
+l17mp7 = MovePlat(350,250,30,10,316,432)#Raise from 275
 lSeventeen.append(l17mp7)
-l17mp8 = MovePlat(188,269,25,10,174,290)
+l17mp8 = MovePlat(188,250,25,10,174,290)#Raise from 269
 lSeventeen.append(l17mp8)
 
 
