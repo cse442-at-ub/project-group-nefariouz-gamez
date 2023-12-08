@@ -1874,7 +1874,7 @@ def getInput(player, level):
             for object in level.object_list:
                 if pygame.sprite.collide_mask(player,object):#if the player is colliding with it
                     if object.name=="ladder":#if the player is colliding with a ladder
-                        if player.rect.bottom<object.rect.bottom+7:#if the players feet are above the bottom of the object
+                        if player.rect.bottom<object.rect.bottom+3:#if the players feet are above the bottom of the object CHANGED FROM +7 TO +3
                             if g==0:#if the player has not yet been st
                                 g=1
                                 player.rect.x=object.rect.x-15#set x value to Ladder x Valued
@@ -2497,7 +2497,7 @@ lNine.append(mpLadder8_1)
 mpLadder8_1 = Ladder(593,128)
 lNine.append(MovePlat(497, 128, 129, 26, 462, 737, oList=[mpLadder8_1]))
 lNine.append(mpLadder8_1)
-lNine.append(Platform(295,153,129,12,WHITE))#Moved this platform up from 128 Y
+lNine.append(Platform(295,141,129,12,WHITE))#Moved this platform up
 lNine.append(Platform(200,117,24,17,WHITE))
 lNine.append(Platform(139,100,24,17,WHITE))
 lNine.append(Platform(0,100,105,17,WHITE))
@@ -3006,11 +3006,11 @@ lSeventeen.append(Platform(0,256,52,16,WHITE))
 
 l17mp4 = MovePlat(719,492,25,25,617,750)
 lSeventeen.append(l17mp4)
-l17mp6 = MovePlat(527,261,25,10,453,569)
+l17mp6 = MovePlat(527,255,25,10,453,569)#Raised from 261
 lSeventeen.append(l17mp6)
-l17mp7 = MovePlat(350,275,30,10,316,432)
+l17mp7 = MovePlat(350,250,30,10,316,432)#Raise from 275
 lSeventeen.append(l17mp7)
-l17mp8 = MovePlat(188,269,25,10,174,290)
+l17mp8 = MovePlat(188,250,25,10,174,290)#Raise from 269
 lSeventeen.append(l17mp8)
 
 
@@ -3079,9 +3079,9 @@ lEighteen = []
 
 #top left
 lEighteen.append(Platform(1129,259,74,16,WHITE))
-lEighteen.append(MovePlat(1049,259,30,14,1018,1121))
-lEighteen.append(MovePlat(949,259,30,14,898,1000))
-lEighteen.append(MovePlatVert(793,251,77,12,100,279))
+lEighteen.append(MovePlat(1049,245,30,14,1018,1121))#Moved Up from 259
+lEighteen.append(MovePlat(949,245,30,14,898,1000))
+lEighteen.append(MovePlatVert(793,251,77,12,100,256))#Original Lower Bound 278
 
 #roofspikes
 lEighteen.append(GreenDSpike(760,0))
@@ -3154,11 +3154,11 @@ lEighteen.append(Platform(455,478,40,28,WHITE))
 lEighteen.append(smallShrub(451,426))
 
 #vert movers
-lEighteen.append(MovePlatVert(541,524,77,12,430,545))
-lEighteen.append(MovePlatVert(647,486,77,12,430,555))
-lEighteen.append(MovePlatVert(737,512,77,12,430,565))
-lEighteen.append(MovePlatVert(840,465,77,12,430,550))
-lEighteen.append(MovePlatVert(940,512,77,12,430,560))
+lEighteen.append(MovePlatVert(541,524,77,12,430,510))#Original Lowbound 545
+lEighteen.append(MovePlatVert(647,486,77,12,430,515))#Original Lowbound 555
+lEighteen.append(MovePlatVert(737,512,77,12,430,520))#Original Lowbound 565
+lEighteen.append(MovePlatVert(840,465,77,12,430,525))#Original Lowbound 550
+lEighteen.append(MovePlatVert(940,512,77,12,430,530))#Original Lowbound 560
 
 #below movers plat/spikes
 lEighteen.append(GreenSpike(493,566))
@@ -3296,12 +3296,12 @@ lNineteen.append(GreenSpike(617,558))
 lNineteen.append(GreenSpike(651,558))
 
 
-lNineteen.append(GreenRSpike(-5,435))
-lNineteen.append(GreenRSpike(-5,470))
-lNineteen.append(GreenRSpike(-5,505))
-lNineteen.append(GreenRSpike(-5,540))
-lNineteen.append(GreenRSpike(-5,575))
-lNineteen.append(GreenRSpike(-5,610))
+lNineteen.append(GreenRSpike(-7,435))#Moved left 2 more from -5 to not be insanely difficult on celia
+lNineteen.append(GreenRSpike(-7,470))
+lNineteen.append(GreenRSpike(-7,505))
+lNineteen.append(GreenRSpike(-7,540))
+lNineteen.append(GreenRSpike(-7,575))
+lNineteen.append(GreenRSpike(-7,610))
 
 lNineteen.append(FallPlat(21,757,74,9,BEIGE))
 lNineteen.append(FallPlat(96,757,74,9,BEIGE))
@@ -3385,41 +3385,41 @@ lNineteen.append(MovePlatVert(1038,289,30,23,172,335,[mp4sp1,mp4sh1,mp4plat1]))#
 
 mp5plat1 = Platform(1102,444,73,23,ORANGE)
 lNineteen.append(mp5plat1)
-lNineteen.append(MovePlatVert(1123,330,30,23,172,360,[mp5plat1]))#lower bound changed from 331 to 360
+lNineteen.append(MovePlatVert(1123,330,30,23,172,370,[mp5plat1]))#lower bound changed from 331 to 370
 
-sSpike=SmallSpike(352,710)
+sSpike=SmallSpike(307,710)#original x 352 
 lNineteen.append(sSpike)
-sSpike2=SmallSpike(503,710)
+sSpike2=SmallSpike(485,710)#original x 503 
 lNineteen.append(sSpike2)
-sSpike9=SmallSpike(423,710)
+sSpike9=SmallSpike(398,710)#original x 423 
 lNineteen.append(sSpike9)
-mp6plat1 = Platform(352,662,11,48,ORANGE)
+mp6plat1 = Platform(307,662,11,48,ORANGE)
 lNineteen.append(mp6plat1)
-mp6plat2 = Platform(503,662,11,48,ORANGE)
+mp6plat2 = Platform(485,662,11,48,ORANGE)
 lNineteen.append(mp6plat2)
-lNineteen.append(MovePlatVert(423,662,11,48,620,740,[mp6plat1, mp6plat2,sSpike,sSpike2,sSpike9]))
+lNineteen.append(MovePlatVert(398,662,11,48,620,740,[mp6plat1, mp6plat2,sSpike,sSpike2,sSpike9]))
 
-sSpike3=SmallSpike(583,710)
+sSpike3=SmallSpike(583,710)#Original x 583
 lNineteen.append(sSpike3)
-sSpike4=SmallSpike(731,710)
+sSpike4=SmallSpike(755,710)#Original x 731
 lNineteen.append(sSpike4)
-sSpike8=SmallSpike(657,710)
+sSpike8=SmallSpike(670,710)#Original x 657
 lNineteen.append(sSpike8)
 mp7plat1 = Platform(583,662,11,48,ORANGE)
 lNineteen.append(mp7plat1)
-mp7plat2 = Platform(731,662,11,48,ORANGE)
+mp7plat2 = Platform(755,662,11,48,ORANGE)
 lNineteen.append(mp7plat2)
-lNineteen.append(MovePlatVert(657,662,11,48,620,740,[mp7plat1, mp7plat2,sSpike3,sSpike4,sSpike8]))
+lNineteen.append(MovePlatVert(670,662,11,48,620,740,[mp7plat1, mp7plat2,sSpike3,sSpike4,sSpike8]))
 
-sSpike5=SmallSpike(884,710)
+sSpike5=SmallSpike(860,710)#Original x 884
 lNineteen.append(sSpike5)
-sSpike6=SmallSpike(1035,710)
+sSpike6=SmallSpike(1040,710)#Original x 1035
 lNineteen.append(sSpike6)
-sSpike7=SmallSpike(955,710)
+sSpike7=SmallSpike(955,710)#Original x 955
 lNineteen.append(sSpike7)
-mp8plat1 = Platform(884,662,11,48,ORANGE)
+mp8plat1 = Platform(860,662,11,48,ORANGE)
 lNineteen.append(mp8plat1)
-mp8plat2 = Platform(1035,662,11,48,ORANGE)
+mp8plat2 = Platform(1040,662,11,48,ORANGE)
 lNineteen.append(mp8plat2)
 lNineteen.append(MovePlatVert(955,662,11,48,620,740,[mp8plat1, mp8plat2,sSpike5,sSpike6,sSpike7]))
 lNineteen.append(Platform(1190,0,10,591,WHITE))#fixes bug with right level border
@@ -3557,32 +3557,32 @@ def moveSigns(levelList, x, y):
             levelList[i] = compSign(x, y)
     return levelList
 
-lOne = moveSigns(lOne, -39,584)
-lTwo = moveSigns(lTwo, -39,509)
-lThree = moveSigns(lThree, 145,-39)
-lFour = moveSigns(lFour, 20,-39)
-lFive = moveSigns(lFive, 1199,74)
+lOne = moveSigns(lOne, -37,584)
+lTwo = moveSigns(lTwo, -37,509)
+lThree = moveSigns(lThree, 145,-37)
+lFour = moveSigns(lFour, 20,-37)
+lFive = moveSigns(lFive, 1197,74)
 
-lSix = moveSigns(lSix, 1086,799)
+lSix = moveSigns(lSix, 1086,797)
 lSix.append(Platform(884,770,194,30,WHITE))
 lSix.append(BlackSpike(884, 737))
 lSix.append(BlackSpike(922, 737))
 lSix.append(BlackSpike(960, 737))
 lSix.append(BlackSpike(998, 737))
 
-lSeven = moveSigns(lSeven, 1200,mpl3_y-39)
-lEight = moveSigns(lEight, 945,-39)
-lNine = moveSigns(lNine, 22,-45)
-lTen = moveSigns(lTen, -39,107)
-lEleven = moveSigns(lEleven, -39,564)
-lTwelve = moveSigns(lTwelve, -39,133)
-lthirteen = moveSigns(lthirteen, -39,201)
-lFourteen = moveSigns(lFourteen, -39,88)
+lSeven = moveSigns(lSeven, 1195,700)
+lEight = moveSigns(lEight, 945,-37)
+lNine = moveSigns(lNine, 11,-37)
+lTen = moveSigns(lTen, -37,107)
+lEleven = moveSigns(lEleven, -37,564)
+lTwelve = moveSigns(lTwelve, -37,133)
+lthirteen = moveSigns(lthirteen, -37,201)
+lFourteen = moveSigns(lFourteen, -37,88)
 lFifteen = moveSigns(lFifteen, 10,795)#testing at 10,795 was originally -18, 800
-lSixteen = moveSigns(lSixteen, -39,700)
-lSeventeen = moveSigns(lSeventeen, -39,190)
-lEighteen = moveSigns(lEighteen, -39,726)
-lNineteen = moveSigns(lNineteen, 1199,716)
+lSixteen = moveSigns(lSixteen, -37,700)
+lSeventeen = moveSigns(lSeventeen, -37,190)
+lEighteen = moveSigns(lEighteen, -37,726)
+lNineteen = moveSigns(lNineteen, 1197,716)
 #lTwenty = moveSigns(lTwenty, 1200,147)
 
 lOne.append(lBorderRight)
