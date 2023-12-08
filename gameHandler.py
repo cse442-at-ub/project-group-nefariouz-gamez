@@ -10,7 +10,7 @@ import json
 from tkinter import messagebox
 import requests
 
-from gameObjects import Object, goldShears, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,SmallSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike
+from gameObjects import Object, goldShears, Platform, Block, smallShrub, TallShrub, Spike, Water, FallPlat, Ladder, endSign, BlackSpike,SmallSpike,BlackLSpike,BlackRSpike,BlueSpike, SideSpike, ReverseSmallShrub, Void, MovePlat, MovePlatVert, MovePlatDiag, TallPinkShrub,TallPurpleShrub,TallRedShrub,SmallPinkShrub,SmallPurpleShrub,SmallRedShrub,RedSpike,BlueSpike,GoldSpike,GreenSpike,GoldDSpike,GoldLSpike,GoldRSpike,GreenDSpike,GreenLSpike,GreenRSpike, AnglePlat, AngleSpike, compSign
 from MenuWidgets import *
 from tutorial_page import show_tutorial
 from pause_menu import show_pause_menu
@@ -139,8 +139,8 @@ class Player(pygame.sprite.Sprite):
         self.chop = False
         self.chop_count = 0
 
-        self.reachBox=Platform(x-15,y-15,width*2.5,height*1.2,WHITE)#Invisible bounding box for interacting with objects
-        self.reachBox.surface=pygame.Surface((width*3,height*1.5))
+        self.reachBox=Platform(x-20,y-15,width*2.8,height*1.2,WHITE)#Invisible bounding box for interacting with objects
+        self.reachBox.surface=pygame.Surface((width*3.3,height*1.5))
         self.reachBox.mask = pygame.mask.from_surface(self.reachBox.surface)
 
         self.powerup_timer = 0
@@ -156,7 +156,7 @@ class Player(pygame.sprite.Sprite):
     def reset(self,level):
         #print("RESET")
         self.rect=pygame.Rect(level.init_x, level.init_y,self.wO,self.hO)
-        self.reachBox.x=self.rect.x-15
+        self.reachBox.x=self.rect.x-20
         self.reachBox.y=self.rect.y-15
         self.feetBox.rect.x=self.rect.x+13
         self.feetBox.rect.y=self.rect.y+(self.rect.height-3)
@@ -169,7 +169,7 @@ class Player(pygame.sprite.Sprite):
     def move(self, dx, dy):
         self.rect.x += dx
         self.rect.y += dy
-        self.reachBox.rect.x=self.rect.x-15
+        self.reachBox.rect.x=self.rect.x-20
         self.reachBox.rect.y=self.rect.y-15
 
         self.feetBox.rect.x=self.rect.x+13
@@ -1686,6 +1686,8 @@ def handle_vertical_collision(player, level, dy):
                 continue
             elif(object.name == "void" or object.name=="water"):
                 print("hit a void/water in vert")
+                print(player.rect.x)
+                print(player.rect.y)
                 player.x_velocity=0
                 player.y_velocity=0#Helps 0 out if gravity is huge
                 player.powerup_timer = 0
@@ -1872,7 +1874,7 @@ def getInput(player, level):
             for object in level.object_list:
                 if pygame.sprite.collide_mask(player,object):#if the player is colliding with it
                     if object.name=="ladder":#if the player is colliding with a ladder
-                        if player.rect.bottom<object.rect.bottom+7:#if the players feet are above the bottom of the object
+                        if player.rect.bottom<object.rect.bottom+3:#if the players feet are above the bottom of the object CHANGED FROM +7 TO +3
                             if g==0:#if the player has not yet been st
                                 g=1
                                 player.rect.x=object.rect.x-15#set x value to Ladder x Valued
@@ -1998,7 +2000,7 @@ def getInput(player, level):
 BLACK=(0,0,0)
 fullScreenLeft=Void(-2000,0,1990,2000,BLACK,None)
 fullScreenRight=Void(1210,0,2000,2000,BLACK,None)
-fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
+fullScreenBottom=Void(-2000,800,5200,2000,BLACK,None)
 
 
 ##############################################################
@@ -2006,7 +2008,7 @@ fullScreenBottom=Void(-2000,801,5200,2000,BLACK,None)
 ##############################################################
 lOne=[]
 lBorderLeft=Platform(-10,0,10,800,BLACK)
-lBorderRight=Platform(1201,0,10,800,BLACK)
+lBorderRight=Platform(1200,0,10,800,BLACK)
 #Player starting position (1100, 644)
 #background,bg_image = get_background("Level 1 to 3 bkgrnd.png")
 start=Platform(890,670,152,75,WHITE)
@@ -2495,7 +2497,7 @@ lNine.append(mpLadder8_1)
 mpLadder8_1 = Ladder(593,128)
 lNine.append(MovePlat(497, 128, 129, 26, 462, 737, oList=[mpLadder8_1]))
 lNine.append(mpLadder8_1)
-lNine.append(Platform(295,153,129,12,WHITE))#Moved this platform up from 128 Y
+lNine.append(Platform(295,141,129,12,WHITE))#Moved this platform up
 lNine.append(Platform(200,117,24,17,WHITE))
 lNine.append(Platform(139,100,24,17,WHITE))
 lNine.append(Platform(0,100,105,17,WHITE))
@@ -2558,7 +2560,7 @@ levelTen=Level(lTen,60,630,"mysticalBackground.png")
 ######################## LEVEL 11 ############################
 ##############################################################
 lEleven = []
-lEleven.append(Water(0,800,1200,1,BLACK))
+#lEleven.append(Water(0,800,1200,1,BLACK))
 lEleven.append(Platform(1026,147,174,33,WHITE))
 lEleven.append(Platform(752,243,174,33,WHITE))
 lEleven.append(Platform(545,324,205,33,WHITE))
@@ -2605,7 +2607,7 @@ levelEleven=Level(lEleven,1125,80,"newlvl-11-12-background.png")
 ######################## LEVEL 12 ############################
 ##############################################################
 lTwelve = []
-lTwelve.append(Water(0,800,1200,1,BLACK))
+#lTwelve.append(Water(0,800,1200,1,BLACK))
 lTwelve.append(Platform(1017,604,183,33,WHITE))
 lTwelve.append(Platform(652,604,327,33,WHITE))
 lTwelve.append(Platform(309,395,174,33,WHITE))
@@ -2646,7 +2648,7 @@ levelTwelve=Level(lTwelve,1125,536,"newlvl-11-12-background.png")
 ######################## LEVEL 13 ############################
 ##############################################################
 lthirteen = []
-lthirteen.append(Water(0,800,1200,1,BLACK))
+#lthirteen.append(Water(0,800,1200,1,BLACK))
 lthirteen.append(Platform(1061,173,139,33,WHITE))
 lthirteen.append(Platform(394,579,67,32,WHITE))
 lthirteen.append(Platform(250,611,96,32,WHITE))
@@ -2682,7 +2684,7 @@ levelThirteen=Level(lthirteen,1130,93,"newlvl-13-16-background.png")
 ######################## LEVEL 14 ############################
 ##############################################################
 lFourteen = []
-lFourteen.append(Water(0,800,1200,1,BLACK))
+#lFourteen.append(Water(0,800,1200,1,BLACK))
 lFourteen.append(Platform(1061,241,139,33,WHITE))
 lFourteen.append(Platform(1025,106,67,33,WHITE))
 lFourteen.append(Platform(499,425,145,33,WHITE))
@@ -2732,12 +2734,12 @@ levelFourteen=Level(lFourteen,1125,174,"newlvl-13-16-background.png")
 ######################## LEVEL 15 ############################
 ##############################################################
 lFifteen = []
-lFifteen.append(Water(60,800,1200,1,BLACK))
+#lFifteen.append(Water(60,800,1200,1,BLUE))
 lFifteen.append(Platform(1124,128,76,33,WHITE))
 lFifteen.append(Platform(662,142,82,19,WHITE))
 lFifteen.append(Platform(634,250,142,33,WHITE))
 lFifteen.append(Platform(454,501,218,15,WHITE))
-lFifteen.append(Platform(0,767,44,33,WHITE))
+lFifteen.append(Platform(0,767,48,33,WHITE))#End platform
 
 lFifteen.append(FallPlat(452,429,222,15,BEIGE,[]))
 lFifteen.append(GreenSpike(452,467))
@@ -2784,7 +2786,7 @@ lFifteen.append(l15mp4)
 lFifteen.append(Ladder(1124,128))
 lFifteen.append(Ladder(711,142))
 lFifteen.append(Ladder(634,250))
-lFifteen.append(Ladder(6,767))
+lFifteen.append(Ladder(15,767))#end ladder
 lFifteen.append(SmallPurpleShrub(660,90))
 lFifteen.append(SmallPurpleShrub(660,198))
 
@@ -2829,7 +2831,7 @@ levelFifteen=Level(lFifteen,1135,58,"newlvl-13-16-background.png")
 ######################## LEVEL 16 ############################
 ##############################################################
 lSixteen = []
-lSixteen.append(Water(0,800,1200,1,BLUE))
+#lSixteen.append(Water(0,800,1200,1,BLUE))
 lSixteen.append(Platform(0,118,440,30,WHITE))
 
 #spike platform 1
@@ -2945,10 +2947,10 @@ levelSixteen=Level(lSixteen,0,0,"newlvl-13-16-background.png")
 lSeventeen = []
 #bottom level
 #starting platforms
-lSeventeen.append(Platform(1070,634,68,33,WHITE))
-lSeventeen.append(Ladder(1100,634))
+lSeventeen.append(Platform(1060,634,68,33,WHITE))
+lSeventeen.append(Ladder(1090,634))
 lSeventeen.append(Platform(1114,741,107,33,WHITE))
-lSeventeen.append(Water(0,800,1200,1,BLUE))
+#lSeventeen.append(Water(0,800,1200,1,BLUE))
 lSeventeen.append(FallPlat(747,694,33,25,BEIGE))
 lSeventeen.append(FallPlat(653,711,33,25,BEIGE))
 lSeventeen.append(FallPlat(559,711,33,25,BEIGE))
@@ -2977,8 +2979,7 @@ lSeventeen.append(FallPlat(531,530,25,25,BEIGE))
 lSeventeen.append(Platform(766,484,434,16,WHITE))
 
 # top level
-lSeventeen.append(Ladder(1135,282))
-lSeventeen.append(Ladder(1135,382))
+
 lSeventeen.append(SmallPurpleShrub(1064,432))
 lSeventeen.append(SmallPurpleShrub(924,432))
 lSeventeen.append(SmallPurpleShrub(774,432))
@@ -2991,6 +2992,8 @@ lSeventeen.append(FallPlat(1100,224,25,25,BEIGE))
 lSeventeen.append(FallPlat(1060,197,25,25,BEIGE))
 lSeventeen.append(FallPlat(1015,168,25,25,BEIGE))
 lSeventeen.append(FallPlat(840,168,25,25,BEIGE))
+lSeventeen.append(Ladder(1140,282))
+lSeventeen.append(Ladder(1140,382))
 l17mp9 = MovePlat(900,130,35,15,880,990)
 lSeventeen.append(l17mp9)
 
@@ -3003,11 +3006,11 @@ lSeventeen.append(Platform(0,256,52,16,WHITE))
 
 l17mp4 = MovePlat(719,492,25,25,617,750)
 lSeventeen.append(l17mp4)
-l17mp6 = MovePlat(527,261,25,10,453,569)
+l17mp6 = MovePlat(527,255,25,10,453,569)#Raised from 261
 lSeventeen.append(l17mp6)
-l17mp7 = MovePlat(350,275,30,10,316,432)
+l17mp7 = MovePlat(350,250,30,10,316,432)#Raise from 275
 lSeventeen.append(l17mp7)
-l17mp8 = MovePlat(188,269,25,10,174,290)
+l17mp8 = MovePlat(188,250,25,10,174,290)#Raise from 269
 lSeventeen.append(l17mp8)
 
 
@@ -3072,13 +3075,13 @@ levelSeventeen=Level(lSeventeen,1120,650,"newlvl-13-16-background.png")
 ######################## LEVEL 18 ############################
 ##############################################################
 lEighteen = []
-lEighteen.append(Water(0,800,1200,1,BLUE))
+#lEighteen.append(Water(0,800,1200,1,BLUE))
 
 #top left
 lEighteen.append(Platform(1129,259,74,16,WHITE))
-lEighteen.append(MovePlat(1049,259,30,14,1018,1121))
-lEighteen.append(MovePlat(949,259,30,14,898,1000))
-lEighteen.append(MovePlatVert(793,251,77,12,100,279))
+lEighteen.append(MovePlat(1049,245,30,14,1018,1121))#Moved Up from 259
+lEighteen.append(MovePlat(949,245,30,14,898,1000))
+lEighteen.append(MovePlatVert(793,251,77,12,100,256))#Original Lower Bound 278
 
 #roofspikes
 lEighteen.append(GreenDSpike(760,0))
@@ -3151,11 +3154,11 @@ lEighteen.append(Platform(455,478,40,28,WHITE))
 lEighteen.append(smallShrub(451,426))
 
 #vert movers
-lEighteen.append(MovePlatVert(541,524,77,12,430,545))
-lEighteen.append(MovePlatVert(647,486,77,12,430,555))
-lEighteen.append(MovePlatVert(737,512,77,12,430,565))
-lEighteen.append(MovePlatVert(840,465,77,12,430,550))
-lEighteen.append(MovePlatVert(940,512,77,12,430,560))
+lEighteen.append(MovePlatVert(541,524,77,12,430,510))#Original Lowbound 545
+lEighteen.append(MovePlatVert(647,486,77,12,430,515))#Original Lowbound 555
+lEighteen.append(MovePlatVert(737,512,77,12,430,520))#Original Lowbound 565
+lEighteen.append(MovePlatVert(840,465,77,12,430,525))#Original Lowbound 550
+lEighteen.append(MovePlatVert(940,512,77,12,430,530))#Original Lowbound 560
 
 #below movers plat/spikes
 lEighteen.append(GreenSpike(493,566))
@@ -3293,27 +3296,27 @@ lNineteen.append(GreenSpike(617,558))
 lNineteen.append(GreenSpike(651,558))
 
 
-lNineteen.append(GreenRSpike(-5,435))
-lNineteen.append(GreenRSpike(-5,470))
-lNineteen.append(GreenRSpike(-5,505))
-lNineteen.append(GreenRSpike(-5,540))
-lNineteen.append(GreenRSpike(-5,575))
-lNineteen.append(GreenRSpike(-5,610))
+lNineteen.append(GreenRSpike(-7,435))#Moved left 2 more from -5 to not be insanely difficult on celia
+lNineteen.append(GreenRSpike(-7,470))
+lNineteen.append(GreenRSpike(-7,505))
+lNineteen.append(GreenRSpike(-7,540))
+lNineteen.append(GreenRSpike(-7,575))
+lNineteen.append(GreenRSpike(-7,610))
 
-lNineteen.append(FallPlat(21,757,70,9,BEIGE))
-lNineteen.append(FallPlat(96,757,70,9,BEIGE))
-lNineteen.append(FallPlat(171,757,70,9,BEIGE))
-lNineteen.append(FallPlat(246,757,70,9,BEIGE))
-lNineteen.append(FallPlat(321,757,70,9,BEIGE))
-lNineteen.append(FallPlat(396,757,70,9,BEIGE))
-lNineteen.append(FallPlat(471,757,70,9,BEIGE))
-lNineteen.append(FallPlat(553,757,70,9,BEIGE))
-lNineteen.append(FallPlat(628,757,70,9,BEIGE))
-lNineteen.append(FallPlat(703,757,70,9,BEIGE))
-lNineteen.append(FallPlat(778,757,70,9,BEIGE))
-lNineteen.append(FallPlat(853,757,70,9,BEIGE))
-lNineteen.append(FallPlat(928,757,70,9,BEIGE))
-lNineteen.append(FallPlat(1003,757,70,9,BEIGE))
+lNineteen.append(FallPlat(21,757,74,9,BEIGE))
+lNineteen.append(FallPlat(96,757,74,9,BEIGE))
+lNineteen.append(FallPlat(171,757,74,9,BEIGE))
+lNineteen.append(FallPlat(246,757,74,9,BEIGE))
+lNineteen.append(FallPlat(321,757,74,9,BEIGE))
+lNineteen.append(FallPlat(396,757,74,9,BEIGE))
+lNineteen.append(FallPlat(471,757,80,9,BEIGE))#made 10 wider
+lNineteen.append(FallPlat(553,757,74,9,BEIGE))
+lNineteen.append(FallPlat(628,757,74,9,BEIGE))
+lNineteen.append(FallPlat(703,757,74,9,BEIGE))
+lNineteen.append(FallPlat(778,757,74,9,BEIGE))
+lNineteen.append(FallPlat(853,757,74,9,BEIGE))
+lNineteen.append(FallPlat(928,757,74,9,BEIGE))
+lNineteen.append(FallPlat(1003,757,77,9,BEIGE))#made 7 wider
 
 lNineteen.append(GreenSpike(19,767))
 lNineteen.append(GreenSpike(56,767))
@@ -3370,7 +3373,7 @@ mp3plat1 = Platform(925,433,73,23,ORANGE)
 lNineteen.append(mp3plat1)
 mp3sp1 = GreenSpike(934,400)
 lNineteen.append(mp3sp1)
-lNineteen.append(MovePlatVert(946,322,30,23,172,333,[mp3sp1,mp3plat1]))
+lNineteen.append(MovePlatVert(946,322,30,23,172,325,[mp3sp1,mp3plat1]))#lower bound changed from 333 to 325
 
 mp4plat1 = Platform(1017,417,73,23,ORANGE)
 lNineteen.append(mp4plat1)
@@ -3378,45 +3381,45 @@ mp4sp1 = GreenSpike(1017,384)
 lNineteen.append(mp4sp1)
 mp4sh1 = smallShrub(1029,237)
 lNineteen.append(mp4sh1)
-lNineteen.append(MovePlatVert(1038,289,30,23,172,310,[mp4sp1,mp4sh1,mp4plat1]))
+lNineteen.append(MovePlatVert(1038,289,30,23,172,335,[mp4sp1,mp4sh1,mp4plat1]))#lower bound changed from 310 to 335
 
 mp5plat1 = Platform(1102,444,73,23,ORANGE)
 lNineteen.append(mp5plat1)
-lNineteen.append(MovePlatVert(1123,330,30,23,172,331,[mp5plat1]))
+lNineteen.append(MovePlatVert(1123,330,30,23,172,370,[mp5plat1]))#lower bound changed from 331 to 370
 
-sSpike=SmallSpike(352,710)
+sSpike=SmallSpike(307,710)#original x 352 
 lNineteen.append(sSpike)
-sSpike2=SmallSpike(503,710)
+sSpike2=SmallSpike(485,710)#original x 503 
 lNineteen.append(sSpike2)
-sSpike9=SmallSpike(423,710)
+sSpike9=SmallSpike(398,710)#original x 423 
 lNineteen.append(sSpike9)
-mp6plat1 = Platform(352,662,11,48,ORANGE)
+mp6plat1 = Platform(307,662,11,48,ORANGE)
 lNineteen.append(mp6plat1)
-mp6plat2 = Platform(503,662,11,48,ORANGE)
+mp6plat2 = Platform(485,662,11,48,ORANGE)
 lNineteen.append(mp6plat2)
-lNineteen.append(MovePlatVert(423,662,11,48,620,740,[mp6plat1, mp6plat2,sSpike,sSpike2,sSpike9]))
+lNineteen.append(MovePlatVert(398,662,11,48,620,740,[mp6plat1, mp6plat2,sSpike,sSpike2,sSpike9]))
 
-sSpike3=SmallSpike(583,710)
+sSpike3=SmallSpike(583,710)#Original x 583
 lNineteen.append(sSpike3)
-sSpike4=SmallSpike(731,710)
+sSpike4=SmallSpike(755,710)#Original x 731
 lNineteen.append(sSpike4)
-sSpike8=SmallSpike(657,710)
+sSpike8=SmallSpike(670,710)#Original x 657
 lNineteen.append(sSpike8)
 mp7plat1 = Platform(583,662,11,48,ORANGE)
 lNineteen.append(mp7plat1)
-mp7plat2 = Platform(731,662,11,48,ORANGE)
+mp7plat2 = Platform(755,662,11,48,ORANGE)
 lNineteen.append(mp7plat2)
-lNineteen.append(MovePlatVert(657,662,11,48,620,740,[mp7plat1, mp7plat2,sSpike3,sSpike4,sSpike8]))
+lNineteen.append(MovePlatVert(670,662,11,48,620,740,[mp7plat1, mp7plat2,sSpike3,sSpike4,sSpike8]))
 
-sSpike5=SmallSpike(884,710)
+sSpike5=SmallSpike(860,710)#Original x 884
 lNineteen.append(sSpike5)
-sSpike6=SmallSpike(1035,710)
+sSpike6=SmallSpike(1040,710)#Original x 1035
 lNineteen.append(sSpike6)
-sSpike7=SmallSpike(955,710)
+sSpike7=SmallSpike(955,710)#Original x 955
 lNineteen.append(sSpike7)
-mp8plat1 = Platform(884,662,11,48,ORANGE)
+mp8plat1 = Platform(860,662,11,48,ORANGE)
 lNineteen.append(mp8plat1)
-mp8plat2 = Platform(1035,662,11,48,ORANGE)
+mp8plat2 = Platform(1040,662,11,48,ORANGE)
 lNineteen.append(mp8plat2)
 lNineteen.append(MovePlatVert(955,662,11,48,620,740,[mp8plat1, mp8plat2,sSpike5,sSpike6,sSpike7]))
 lNineteen.append(Platform(1190,0,10,591,WHITE))#fixes bug with right level border
@@ -3424,6 +3427,7 @@ lNineteen.append(Platform(1190,0,10,591,WHITE))#fixes bug with right level borde
 lNineteen.append(endSign(1150,716))
 lNineteen.append(lBorderRight)
 lNineteen.append(lBorderLeft)
+lNineteen.append(Void(0,-10,50,2,BLACK))
 levelNineteen=Level(lNineteen,35,65,"newlvl-19-background.png")
 
 
@@ -3433,7 +3437,7 @@ levelNineteen=Level(lNineteen,35,65,"newlvl-19-background.png")
 ##############################################################
 lTwenty = []
 
-lTwenty.append(Water(0,780,1200,40,BLUE))
+#lTwenty.append(Water(0,780,1200,40,BLUE))
 lTwenty.append(Platform(0,757,120,43,WHITE))
 lTwenty.append(Platform(598,645,311,22,WHITE))
 lTwenty.append(Platform(598,432,311,22,WHITE))
@@ -3550,35 +3554,35 @@ levelTwenty=Level(lTwenty,15,650,"newlvl-20-background.png")#Starting 15,650
 def moveSigns(levelList, x, y):
     for i in range(len(levelList)):
         if type(levelList[i]) == endSign:
-            levelList[i] = endSign(x, y)
+            levelList[i] = compSign(x, y)
     return levelList
 
-lOne = moveSigns(lOne, -40,584)
-lTwo = moveSigns(lTwo, -40,509)
-lThree = moveSigns(lThree, 145,-40)
-lFour = moveSigns(lFour, 20,-40)
-lFive = moveSigns(lFive, 1200,74)
+lOne = moveSigns(lOne, -37,584)
+lTwo = moveSigns(lTwo, -37,509)
+lThree = moveSigns(lThree, 145,-37)
+lFour = moveSigns(lFour, 20,-37)
+lFive = moveSigns(lFive, 1197,74)
 
-lSix = moveSigns(lSix, 1086,800)
+lSix = moveSigns(lSix, 1086,797)
 lSix.append(Platform(884,770,194,30,WHITE))
 lSix.append(BlackSpike(884, 737))
 lSix.append(BlackSpike(922, 737))
 lSix.append(BlackSpike(960, 737))
 lSix.append(BlackSpike(998, 737))
 
-lSeven = moveSigns(lSeven, 1200,mpl3_y-40)
-lEight = moveSigns(lEight, 945,-40)
-lNine = moveSigns(lNine, 22,-75)
-lTen = moveSigns(lTen, -40,107)
-lEleven = moveSigns(lEleven, -40,564)
-lTwelve = moveSigns(lTwelve, -40,133)
-lthirteen = moveSigns(lthirteen, -40,201)
-lFourteen = moveSigns(lFourteen, -40,88)
-lFifteen = moveSigns(lFifteen, -20,800)
-lSixteen = moveSigns(lSixteen, -40,700)
-lSeventeen = moveSigns(lSeventeen, -40,190)
-lEighteen = moveSigns(lEighteen, -40,726)
-lNineteen = moveSigns(lNineteen, 1200,716)
+lSeven = moveSigns(lSeven, 1195,700)
+lEight = moveSigns(lEight, 945,-37)
+lNine = moveSigns(lNine, 11,-37)
+lTen = moveSigns(lTen, -37,107)
+lEleven = moveSigns(lEleven, -37,564)
+lTwelve = moveSigns(lTwelve, -37,133)
+lthirteen = moveSigns(lthirteen, -37,201)
+lFourteen = moveSigns(lFourteen, -37,88)
+lFifteen = moveSigns(lFifteen, 10,795)#testing at 10,795 was originally -18, 800
+lSixteen = moveSigns(lSixteen, -37,700)
+lSeventeen = moveSigns(lSeventeen, -37,190)
+lEighteen = moveSigns(lEighteen, -37,726)
+lNineteen = moveSigns(lNineteen, 1197,716)
 #lTwenty = moveSigns(lTwenty, 1200,147)
 
 lOne.append(lBorderRight)
