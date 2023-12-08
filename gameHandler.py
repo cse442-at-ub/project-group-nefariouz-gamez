@@ -3296,12 +3296,12 @@ lNineteen.append(GreenSpike(617,558))
 lNineteen.append(GreenSpike(651,558))
 
 
-lNineteen.append(GreenRSpike(-5,435))
-lNineteen.append(GreenRSpike(-5,470))
-lNineteen.append(GreenRSpike(-5,505))
-lNineteen.append(GreenRSpike(-5,540))
-lNineteen.append(GreenRSpike(-5,575))
-lNineteen.append(GreenRSpike(-5,610))
+lNineteen.append(GreenRSpike(-7,435))#Moved left 2 more from -5 to not be insanely difficult on celia
+lNineteen.append(GreenRSpike(-7,470))
+lNineteen.append(GreenRSpike(-7,505))
+lNineteen.append(GreenRSpike(-7,540))
+lNineteen.append(GreenRSpike(-7,575))
+lNineteen.append(GreenRSpike(-7,610))
 
 lNineteen.append(FallPlat(21,757,74,9,BEIGE))
 lNineteen.append(FallPlat(96,757,74,9,BEIGE))
@@ -3385,41 +3385,41 @@ lNineteen.append(MovePlatVert(1038,289,30,23,172,335,[mp4sp1,mp4sh1,mp4plat1]))#
 
 mp5plat1 = Platform(1102,444,73,23,ORANGE)
 lNineteen.append(mp5plat1)
-lNineteen.append(MovePlatVert(1123,330,30,23,172,360,[mp5plat1]))#lower bound changed from 331 to 360
+lNineteen.append(MovePlatVert(1123,330,30,23,172,370,[mp5plat1]))#lower bound changed from 331 to 370
 
-sSpike=SmallSpike(352,710)
+sSpike=SmallSpike(307,710)#original x 352 
 lNineteen.append(sSpike)
-sSpike2=SmallSpike(503,710)
+sSpike2=SmallSpike(485,710)#original x 503 
 lNineteen.append(sSpike2)
-sSpike9=SmallSpike(423,710)
+sSpike9=SmallSpike(398,710)#original x 423 
 lNineteen.append(sSpike9)
-mp6plat1 = Platform(352,662,11,48,ORANGE)
+mp6plat1 = Platform(307,662,11,48,ORANGE)
 lNineteen.append(mp6plat1)
-mp6plat2 = Platform(503,662,11,48,ORANGE)
+mp6plat2 = Platform(485,662,11,48,ORANGE)
 lNineteen.append(mp6plat2)
-lNineteen.append(MovePlatVert(423,662,11,48,620,740,[mp6plat1, mp6plat2,sSpike,sSpike2,sSpike9]))
+lNineteen.append(MovePlatVert(398,662,11,48,620,740,[mp6plat1, mp6plat2,sSpike,sSpike2,sSpike9]))
 
-sSpike3=SmallSpike(583,710)
+sSpike3=SmallSpike(583,710)#Original x 583
 lNineteen.append(sSpike3)
-sSpike4=SmallSpike(731,710)
+sSpike4=SmallSpike(755,710)#Original x 731
 lNineteen.append(sSpike4)
-sSpike8=SmallSpike(657,710)
+sSpike8=SmallSpike(670,710)#Original x 657
 lNineteen.append(sSpike8)
 mp7plat1 = Platform(583,662,11,48,ORANGE)
 lNineteen.append(mp7plat1)
-mp7plat2 = Platform(731,662,11,48,ORANGE)
+mp7plat2 = Platform(755,662,11,48,ORANGE)
 lNineteen.append(mp7plat2)
-lNineteen.append(MovePlatVert(657,662,11,48,620,740,[mp7plat1, mp7plat2,sSpike3,sSpike4,sSpike8]))
+lNineteen.append(MovePlatVert(670,662,11,48,620,740,[mp7plat1, mp7plat2,sSpike3,sSpike4,sSpike8]))
 
-sSpike5=SmallSpike(884,710)
+sSpike5=SmallSpike(860,710)#Original x 884
 lNineteen.append(sSpike5)
-sSpike6=SmallSpike(1035,710)
+sSpike6=SmallSpike(1040,710)#Original x 1035
 lNineteen.append(sSpike6)
-sSpike7=SmallSpike(955,710)
+sSpike7=SmallSpike(955,710)#Original x 955
 lNineteen.append(sSpike7)
-mp8plat1 = Platform(884,662,11,48,ORANGE)
+mp8plat1 = Platform(860,662,11,48,ORANGE)
 lNineteen.append(mp8plat1)
-mp8plat2 = Platform(1035,662,11,48,ORANGE)
+mp8plat2 = Platform(1040,662,11,48,ORANGE)
 lNineteen.append(mp8plat2)
 lNineteen.append(MovePlatVert(955,662,11,48,620,740,[mp8plat1, mp8plat2,sSpike5,sSpike6,sSpike7]))
 lNineteen.append(Platform(1190,0,10,591,WHITE))#fixes bug with right level border
