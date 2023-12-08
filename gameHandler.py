@@ -1874,7 +1874,7 @@ def getInput(player, level):
             for object in level.object_list:
                 if pygame.sprite.collide_mask(player,object):#if the player is colliding with it
                     if object.name=="ladder":#if the player is colliding with a ladder
-                        if player.rect.bottom<object.rect.bottom+7:#if the players feet are above the bottom of the object
+                        if player.rect.bottom<object.rect.bottom+3:#if the players feet are above the bottom of the object CHANGED FROM +7 TO +3
                             if g==0:#if the player has not yet been st
                                 g=1
                                 player.rect.x=object.rect.x-15#set x value to Ladder x Valued
@@ -2497,7 +2497,7 @@ lNine.append(mpLadder8_1)
 mpLadder8_1 = Ladder(593,128)
 lNine.append(MovePlat(497, 128, 129, 26, 462, 737, oList=[mpLadder8_1]))
 lNine.append(mpLadder8_1)
-lNine.append(Platform(295,153,129,12,WHITE))#Moved this platform up from 128 Y
+lNine.append(Platform(295,141,129,12,WHITE))#Moved this platform up
 lNine.append(Platform(200,117,24,17,WHITE))
 lNine.append(Platform(139,100,24,17,WHITE))
 lNine.append(Platform(0,100,105,17,WHITE))
