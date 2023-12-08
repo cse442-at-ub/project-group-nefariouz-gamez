@@ -1874,7 +1874,7 @@ def getInput(player, level):
             for object in level.object_list:
                 if pygame.sprite.collide_mask(player,object):#if the player is colliding with it
                     if object.name=="ladder":#if the player is colliding with a ladder
-                        if player.rect.bottom<object.rect.bottom+7:#if the players feet are above the bottom of the object
+                        if player.rect.bottom<object.rect.bottom+3:#if the players feet are above the bottom of the object CHANGED FROM +7 TO +3
                             if g==0:#if the player has not yet been st
                                 g=1
                                 player.rect.x=object.rect.x-15#set x value to Ladder x Valued
@@ -2497,7 +2497,7 @@ lNine.append(mpLadder8_1)
 mpLadder8_1 = Ladder(593,128)
 lNine.append(MovePlat(497, 128, 129, 26, 462, 737, oList=[mpLadder8_1]))
 lNine.append(mpLadder8_1)
-lNine.append(Platform(295,153,129,12,WHITE))#Moved this platform up from 128 Y
+lNine.append(Platform(295,141,129,12,WHITE))#Moved this platform up
 lNine.append(Platform(200,117,24,17,WHITE))
 lNine.append(Platform(139,100,24,17,WHITE))
 lNine.append(Platform(0,100,105,17,WHITE))
@@ -3006,11 +3006,11 @@ lSeventeen.append(Platform(0,256,52,16,WHITE))
 
 l17mp4 = MovePlat(719,492,25,25,617,750)
 lSeventeen.append(l17mp4)
-l17mp6 = MovePlat(527,261,25,10,453,569)
+l17mp6 = MovePlat(527,255,25,10,453,569)#Raised from 261
 lSeventeen.append(l17mp6)
-l17mp7 = MovePlat(350,275,30,10,316,432)
+l17mp7 = MovePlat(350,250,30,10,316,432)#Raise from 275
 lSeventeen.append(l17mp7)
-l17mp8 = MovePlat(188,269,25,10,174,290)
+l17mp8 = MovePlat(188,250,25,10,174,290)#Raise from 269
 lSeventeen.append(l17mp8)
 
 
@@ -3079,9 +3079,9 @@ lEighteen = []
 
 #top left
 lEighteen.append(Platform(1129,259,74,16,WHITE))
-lEighteen.append(MovePlat(1049,259,30,14,1018,1121))
-lEighteen.append(MovePlat(949,259,30,14,898,1000))
-lEighteen.append(MovePlatVert(793,251,77,12,100,279))
+lEighteen.append(MovePlat(1049,245,30,14,1018,1121))#Moved Up from 259
+lEighteen.append(MovePlat(949,245,30,14,898,1000))
+lEighteen.append(MovePlatVert(793,251,77,12,100,256))#Original Lower Bound 278
 
 #roofspikes
 lEighteen.append(GreenDSpike(760,0))
@@ -3154,11 +3154,11 @@ lEighteen.append(Platform(455,478,40,28,WHITE))
 lEighteen.append(smallShrub(451,426))
 
 #vert movers
-lEighteen.append(MovePlatVert(541,524,77,12,430,545))
-lEighteen.append(MovePlatVert(647,486,77,12,430,555))
-lEighteen.append(MovePlatVert(737,512,77,12,430,565))
-lEighteen.append(MovePlatVert(840,465,77,12,430,550))
-lEighteen.append(MovePlatVert(940,512,77,12,430,560))
+lEighteen.append(MovePlatVert(541,524,77,12,430,510))#Original Lowbound 545
+lEighteen.append(MovePlatVert(647,486,77,12,430,515))#Original Lowbound 555
+lEighteen.append(MovePlatVert(737,512,77,12,430,520))#Original Lowbound 565
+lEighteen.append(MovePlatVert(840,465,77,12,430,525))#Original Lowbound 550
+lEighteen.append(MovePlatVert(940,512,77,12,430,530))#Original Lowbound 560
 
 #below movers plat/spikes
 lEighteen.append(GreenSpike(493,566))
