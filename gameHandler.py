@@ -3079,9 +3079,9 @@ lEighteen = []
 
 #top left
 lEighteen.append(Platform(1129,259,74,16,WHITE))
-lEighteen.append(MovePlat(1049,259,30,14,1018,1121))
-lEighteen.append(MovePlat(949,259,30,14,898,1000))
-lEighteen.append(MovePlatVert(793,251,77,12,100,279))
+lEighteen.append(MovePlat(1049,245,30,14,1018,1121))#Moved Up from 259
+lEighteen.append(MovePlat(949,245,30,14,898,1000))
+lEighteen.append(MovePlatVert(793,251,77,12,100,256))#Original Lower Bound 278
 
 #roofspikes
 lEighteen.append(GreenDSpike(760,0))
@@ -3154,11 +3154,11 @@ lEighteen.append(Platform(455,478,40,28,WHITE))
 lEighteen.append(smallShrub(451,426))
 
 #vert movers
-lEighteen.append(MovePlatVert(541,524,77,12,430,545))
-lEighteen.append(MovePlatVert(647,486,77,12,430,555))
-lEighteen.append(MovePlatVert(737,512,77,12,430,565))
-lEighteen.append(MovePlatVert(840,465,77,12,430,550))
-lEighteen.append(MovePlatVert(940,512,77,12,430,560))
+lEighteen.append(MovePlatVert(541,524,77,12,430,510))#Original Lowbound 545
+lEighteen.append(MovePlatVert(647,486,77,12,430,515))#Original Lowbound 555
+lEighteen.append(MovePlatVert(737,512,77,12,430,520))#Original Lowbound 565
+lEighteen.append(MovePlatVert(840,465,77,12,430,525))#Original Lowbound 550
+lEighteen.append(MovePlatVert(940,512,77,12,430,530))#Original Lowbound 560
 
 #below movers plat/spikes
 lEighteen.append(GreenSpike(493,566))
